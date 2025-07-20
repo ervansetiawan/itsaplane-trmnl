@@ -167,10 +167,11 @@ def closest_flight():
 
     flight_data_json = fecth_flight_data_json(lat, lon, radius)
     if flight_data_json is None:
-        return jsonify({"error": "No flights found within the specified radius"}), 404
+        return jsonify({"error": "No aircraft detected"}), 404
 
     closest_flight_json = get_closest_flight(flight_data_json, prefer_airliners)
-
+    if closest_flight_json is None: # pragma: no cover
+        return jsonify({"error": "No aircraft detected"}), 404
     flight = closest_flight_json.get('flight', 'Unknown')
 
     if closest_flight_json:
