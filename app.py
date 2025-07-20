@@ -76,7 +76,7 @@ def closest_flight():
     lon = request.args.get('lon')
     radius = request.args.get('radius')
   
-    preferAirliners = int(request.args.get('preferAirliners', '0'))
+    preferAirliners = int(request.args.get('preferAirliners', '1'))
 
     print(f"Fetching closest flight data for lat: {lat}, lon: {lon}, radius: {radius} miles")
 
@@ -100,12 +100,9 @@ def closest_flight():
             return jsonify({"error": "No aircraft found within the specified radius"}), 404
 
         while index < number_of_aircraft:
-
             category = closest_response_json['ac'][index].get('category', '') 
-            print(preferAirliners==0)
             if((preferAirliners == 0) or (category == 'A3' or category == 'A4' or category == 'A5')):
                 dist = int(closest_response_json.get('ac', [{}])[index].get('dst', '0'))
-                print(f"Checking flight at index {index}: {closest_response_json.get('ac', [{}])[index].get('flight', 'Unknown')} with distance {dist} miles")
                 if dist < closest_dist:
                     flight = closest_response_json.get('ac', [{}])[index].get('flight')
                     closest_dist = dist
@@ -144,23 +141,23 @@ def closest_flight():
             fields = [
                 ('emergency', lambda v: v, False),
                 ('category', str, ''),
-                ('squawk', str, '0'),
-                ('track', int, 0),
+                ('squawk', lambda v: v, '0'),
+                ('track', lambda v: v, 0),
                 ('lat', lambda v: v, '0'),
                 ('lon', lambda v: v, '0'),
                 ('alt_baro', lambda v: v, '0'),
                 ('alt_geo', lambda v: v, '0'),
                 ('registration', lambda v: v, 'Unknown'),
-                ('gs', int, 0),
-                ('baro_rate', int, 0),
+                ('gs', lambda v: v, 0),
+                ('baro_rate', lambda v: v, 0),
                 ('geom_rate', lambda v: v, '0'),
                 ('dir', lambda v: v, '0'),
                 ('rsi', lambda v: v, '0'),
-                ('dst', int, 0),
+                ('dst', lambda v: v, 0),
                 ('nav_modes', lambda v: v, 'Unknown'),
                 ('nav_qnh', lambda v: v, '0'),
                 ('nav_altitude_mcp', lambda v: v, '0'),
-                ('nav_heading', int, 0),
+                ('nav_heading', lambda v: v, 0),
             ]
             ac = closest_response_json.get('ac', [{}])[index_closest]
             for key, cast, default in fields:
