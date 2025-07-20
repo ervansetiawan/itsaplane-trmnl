@@ -1,8 +1,5 @@
 import os
 from flask import Flask, jsonify, request 
-from google import genai
-from google.genai import types
-from PIL import Image
 from io import BytesIO 
 
 import markdown2
@@ -208,17 +205,6 @@ def closest_flight():
 
                 flight_data['distance_journey'] = int(calculate_distance(float(origin_lat), float(origin_lon), float(dest_lat), float(dest_lon)))
                 flight_data['distance_to_dest'] = int(calculate_distance(float(flight_data['lat']), float(flight_data['lon']), float(dest_lat), float(dest_lon)))
-
-            try:
-                if flight_data['model']  is not None:
-                    print("Generating image for flight: " + flight_data['model'])
-                    image = create_image("An image of aircraft " + flight_data['model'] + " with white background and no airline markings, showing the entire aircraft body. The aircraft body is gray and white, facing right. Image height is 50 pixels and width of 150 pixels. Aircraft is facing right.", "gemini-native-image.png")
-            except Exception as e:
-                print(f"Error generating image: {e}")
-                image = None
-
-            if image:
-                flight_data['image_url'] = image
 
             return jsonify(flight_data)
         else:
