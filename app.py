@@ -166,9 +166,11 @@ def closest_flight():
         return jsonify({"error": "Latitude, longitude, and radius are required parameters"}), 400
 
     flight_data_json = fecth_flight_data_json(lat, lon, radius)
-    closest_flight_json = get_closest_flight(flight_data_json, prefer_airliners)
-    if closest_flight_json is None:
+    if flight_data_json is None:
         return jsonify({"error": "No flights found within the specified radius"}), 404
+
+    closest_flight_json = get_closest_flight(flight_data_json, prefer_airliners)
+
     flight = closest_flight_json.get('flight', 'Unknown')
 
     if closest_flight_json:
