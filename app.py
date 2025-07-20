@@ -7,6 +7,22 @@ import json
 
 app = Flask(__name__)
 
+def get_aircraft_logo(aircraft_code):
+    """
+    Returns the logo filename for the given aircraft code.
+    If no logo is found, returns a default logo filename.
+    """
+    logos_dir = os.path.join(os.path.dirname(__file__), 'logos')
+    logo_filenames = [f for f in os.listdir(logos_dir) if os.path.isfile(os.path.join(logos_dir, f))]
+
+    # Check if the aircraft type has a corresponding logo
+    for logo in logo_filenames:
+        if aircraft_code.lower() in logo.lower():
+            return logo
+
+    # Return None if no specific logo is found
+    return None
+
 # read aircrafts.csv and return a list of dictionaries
 def get_aircraft_model(aircraft_type):  
     aircrafts = []
@@ -189,6 +205,9 @@ def closest_flight():
                     flight_data['airport_codes'] = code[0] + '-' + code[1] 
                 
             flight_data['airline_code'] = route_response_json[0].get(('airline_code'), [])
+            flight_data['logo'] = get_aircraft_logo(flight_data['airline_code'])
+            print(f"Logo for airline code {flight_data['airline_code']}: {flight_data['logo']}")
+
             flight_data['airports'] = route_response_json[0].get('_airports', 'Unknown')
 
             if (flight_data['airports'] and len(flight_data['airports']) > 1):
