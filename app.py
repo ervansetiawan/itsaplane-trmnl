@@ -2,8 +2,6 @@ import os
 from flask import Flask, jsonify, request 
 from io import BytesIO 
 
-import markdown2
- 
 import requests
 import json
 
