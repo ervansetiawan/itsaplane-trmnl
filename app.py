@@ -1,9 +1,13 @@
+""" pytmrnl - A terminal for tracking aircraft """
+
 import os
-from flask import Flask, jsonify, request 
-from io import BytesIO 
+import json
+from math import radians, sin, cos, sqrt, atan2
 
 import requests
-import json
+
+
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
@@ -13,7 +17,8 @@ def get_aircraft_logo(aircraft_code):
     If no logo is found, returns a default logo filename.
     """
     logos_dir = os.path.join(os.path.dirname(__file__), 'logos')
-    logo_filenames = [f for f in os.listdir(logos_dir) if os.path.isfile(os.path.join(logos_dir, f))]
+    logo_filenames = [f for f in os.listdir(logos_dir)
+                      if os.path.isfile(os.path.join(logos_dir, f))]
 
     # Check if the aircraft type has a corresponding logo
     for logo in logo_filenames:
@@ -24,9 +29,12 @@ def get_aircraft_logo(aircraft_code):
     return None
 
 # read aircrafts.csv and return a list of dictionaries
-def get_aircraft_model(aircraft_type):  
+def get_aircraft_model(aircraft_type):
+    """Reads aircrafts.csv and returns the model for the given aircraft type."""
+    if not aircraft_type:
+        return None
     aircrafts = []
-    with open('aircrafts.csv', 'r') as file:
+    with open('aircrafts.csv', 'r', encoding='utf-8') as file:
         lines = file.readlines()
         for line in lines[1:]:  # Skip the header
             parts = line.strip().split(',')
@@ -63,8 +71,7 @@ def degrees_to_compass_direction(degrees):
 
 # calculate distance between two coordinates and return the distance in miles
 def calculate_distance(lat1, lon1, lat2, lon2):
-    from math import radians, sin, cos, sqrt, atan2
-
+    """Calculates the distance between two geographical coordinates using the Haversine formula."""
     # Convert latitude and longitude from degrees to radians
     lat1, lon1, lat2, lon2 = map(radians, [lat1, lon1, lat2, lon2])
 
@@ -73,33 +80,37 @@ def calculate_distance(lat1, lon1, lat2, lon2):
     dlat = lat2 - lat1
     a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
     c = 2 * atan2(sqrt(a), sqrt(1 - a))
-    
+
     # Radius of Earth in miles (mean radius)
-    r = 3958.8  
+    r = 3958.8
     return r * c
 
 def rate_to_arrow(rate):
+    """Converts a rate value to an arrow symbol."""
+
     if int(rate) < 0:
         return '&#9660;'
     elif int(rate) > 0:
         return '&#9650;'
     else:
         return ''
-    
+
 @app.route('/closest_flight', methods=['GET'])
 def closest_flight():
+    """ Fetches the closest flight data based on latitude, longitude, and radius."""
     lat = request.args.get('lat')
     lon = request.args.get('lon')
     radius = request.args.get('radius')
-  
-    preferAirliners = int(request.args.get('preferAirliners', '1'))
+
+    prefer_airliners = int(request.args.get('preferAirliners', '1'))
 
     print(f"Fetching closest flight data for lat: {lat}, lon: {lon}, radius: {radius} miles")
 
     if lat is None or lon is None or radius is None:
-        return jsonify({"error": "Latitude, longitude, and radius are required parameters"}), 400   
+        return jsonify({"error": "Latitude, longitude, and radius are required parameters"}), 400
 
-    closest_response = requests.get(f'https://api.adsb.lol/v2/lat/{lat}/lon/{lon}/dist/{radius}')
+    closest_response = requests.get(f'https://api.adsb.lol/v2/lat/{lat}/lon/{lon}/dist/{radius}',
+                                    timeout=10)
 
     if closest_response.status_code == 200:
         closest_response_json = closest_response.json()
@@ -116,18 +127,19 @@ def closest_flight():
             return jsonify({"error": "No aircraft found within the specified radius"}), 404
 
         while index < number_of_aircraft:
-            category = closest_response_json['ac'][index].get('category', '') 
-            if((preferAirliners == 0) or (category == 'A3' or category == 'A4' or category == 'A5')):
+            category = closest_response_json['ac'][index].get('category', '')
+            if((prefer_airliners == 0) or
+               (category == 'A3' or category == 'A4' or category == 'A5')):
                 dist = int(closest_response_json.get('ac', [{}])[index].get('dst', '0'))
                 if dist < closest_dist:
                     flight = closest_response_json.get('ac', [{}])[index].get('flight')
                     closest_dist = dist
                     index_closest = index
-
             index += 1
-   
-        print(f"Closest flight found: {flight} at index {index_closest} with distance {closest_dist} miles")
-      
+        print(
+            f"Closest flight found: {flight} at index {index_closest} "
+            f"with distance {closest_dist} miles"
+        )
         # call https://api.adsb.lol/0/routeset to get the route data using POST method
         # pass in the request body as JSON
         planes = {
@@ -140,7 +152,11 @@ def closest_flight():
             ]
         }
 
-        route_response = requests.post('https://api.adsb.lol/api/0/routeset', data=json.dumps(planes), headers={'Content-Type': 'application/json', 'Accept': 'application/json'})
+        route_response = requests.post('https://api.adsb.lol/api/0/routeset',
+                                       data=json.dumps(planes),
+                                       timeout=10,
+                                       headers={'Content-Type': 'application/json',
+                                                'Accept': 'application/json'})
 
         print(f"Route response status code: {route_response.status_code}")
         if route_response.status_code == 200:
@@ -149,10 +165,10 @@ def closest_flight():
             flight_data= {}
 
             flight_data['flight'] = flight
-            flight_data['type'] = closest_response_json.get('ac', [{}])[index_closest].get('t', 'Unknown')
-            
-            flight_data['model'] = get_aircraft_model(flight_data['type'])         
-                     
+            flight_data['type'] = closest_response_json.get('ac',
+                                                            [{}])[index_closest].get('t', 'Unknown')
+            flight_data['model'] = get_aircraft_model(flight_data['type'])
+
             # Define the fields to extract: (key, type, default)
             fields = [
                 ('emergency', lambda v: v, False),
@@ -184,26 +200,22 @@ def closest_flight():
 
             # Determine the heading symbol based on the track value
             # Initialize heading_symbol
-            
-            flight_data['track'] = degrees_to_compass_direction(flight_data['track']) + " " + str(flight_data['track']) + "°"
-
-            flight_data['dir'] = degrees_to_compass_direction(flight_data['dir']) + " " + str(flight_data['dir']) + "°"
-
-            flight_data['nav_heading'] = degrees_to_compass_direction(flight_data['nav_heading']) + " " + str(flight_data['nav_heading']) + "°"
+            for k in ['track', 'dir', 'nav_heading']:
+                flight_data[k] = f"{degrees_to_compass_direction(flight_data[k])} {flight_data[k]}°"
 
             # assign _airport_codes_iata to flight_data['route_iata']
-            # if _airport_codes_iata is not present, assign an empty list       
+            # if _airport_codes_iata is not present, assign an empty list
             flight_data['route_iata'] = route_response_json[0].get(('_airport_codes_iata'), [])
 
             flight_data['airport_codes'] = route_response_json[0].get(('airport_codes'), [])
 
-            if flight_data['airport_codes']:  
+            if flight_data['airport_codes']:
                 code = flight_data['airport_codes'].split('-')
                 if len(code) == 3:
                     # Keep only the first two segments
                     # flight_data['airport_codes'] = code[0] + '-' + code[1]
-                    flight_data['airport_codes'] = code[0] + '-' + code[1] 
-                
+                    flight_data['airport_codes'] = code[0] + '-' + code[1]
+
             flight_data['airline_code'] = route_response_json[0].get(('airline_code'), [])
             flight_data['logo'] = get_aircraft_logo(flight_data['airline_code'])
             print(f"Logo for airline code {flight_data['airline_code']}: {flight_data['logo']}")
@@ -217,15 +229,15 @@ def closest_flight():
                 dest_lat = route_response_json[0].get('_airports')[1].get('lat', '0')
                 dest_lon = route_response_json[0].get('_airports')[1].get('lon', '0')
 
-                flight_data['distance_journey'] = int(calculate_distance(float(origin_lat), float(origin_lon), float(dest_lat), float(dest_lon)))
-                flight_data['distance_to_dest'] = int(calculate_distance(float(flight_data['lat']), float(flight_data['lon']), float(dest_lat), float(dest_lon)))
+                flight_data['distance_journey'] = int(calculate_distance(float(origin_lat),
+                                                                         float(origin_lon),
+                                                                         float(dest_lat),
+                                                                         float(dest_lon)))
+                flight_data['distance_to_dest'] = int(calculate_distance(float(flight_data['lat']),
+                                                                         float(flight_data['lon']),
+                                                                         float(dest_lat),
+                                                                         float(dest_lon)))
 
             return jsonify(flight_data)
-        else:
-            return jsonify({"error": "Route data not found"}), 404
-    else:
-        return jsonify({"error": "Closest flight data not found"}), 500
-
-
-
-
+        return jsonify({"error": "Route data not found"}), 404
+    return jsonify({"error": "Closest flight data not found"}), 500
