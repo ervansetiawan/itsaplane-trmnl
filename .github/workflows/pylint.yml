@@ -21,4 +21,8 @@ jobs:
         pip install -r requirements.txt
     - name: Analysing the code with pylint
       run: |
-        pylint $(git ls-files '*.py')
+        pylint $(git ls-files '*.py') --ignore-paths="tests/*,venv/*" --fail-under=8
+    - name: Run Pytest
+      run: |
+        # PY_COLORS=1 for better colored output in CI logs
+        PY_COLORS=1 pytest
