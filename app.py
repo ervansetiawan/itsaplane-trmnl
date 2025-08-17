@@ -100,6 +100,9 @@ def fecth_flight_data_json(lat, lon, radius):
                                     timeout=10)
     if flight_data.status_code == 200:
         return flight_data.json()
+
+    print(f"Error fetching flight data: {flight_data.status_code}")
+    print(f"Response: {flight_data.text}")
     return None
 
 def get_closest_flight(flight_data_json, prefer_airliners):
