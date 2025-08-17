@@ -248,6 +248,6 @@ def closest_flight():
                                                                         float(dest_lat),
                                                                         float(dest_lon)))
 
-            return jsonify(flight_data)
-        return jsonify({"error": "Route data not found"}), 404
+        return jsonify(flight_data)
+
     return jsonify({"error": "Closest flight data not found"}), 500
