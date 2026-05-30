@@ -125,6 +125,7 @@ def get_closest_flight(flight_data_json, prefer_airliners):
             if dist < closest_dist:
                 closest_dist = dist
                 index_closest = index
+
         index += 1
 
     print(
@@ -153,6 +154,10 @@ def get_route_info_json(callsign, lat, lon):
 
     if route_response.status_code == 200:
         return route_response.json()
+    
+    # Print statement for non-200 errors
+    print(f"Error: API returned status code {route_response.status_code}. Response: {route_response.text}")
+    
     return None
 
 @app.route('/closest_flight', methods=['GET'])
