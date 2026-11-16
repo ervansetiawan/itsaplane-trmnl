@@ -1,13 +1,32 @@
 """ pytmrnl - A terminal for tracking aircraft """
 
 import os
-import json
+import time
 from math import radians, sin, cos, sqrt, atan2
 
 import requests
 from flask import Flask, jsonify, request
 
 app = Flask(__name__)
+
+_SESSION = requests.Session()
+_SESSION.headers.update({"User-Agent": "itsaplane-trmnl/1.0"})
+
+_CACHE_TTL_SECONDS = 15
+_FLIGHT_CACHE = {}
+
+ADSB_PROVIDERS = [
+    {
+        "name": "adsb.lol",
+        "url": "https://api.adsb.lol/v2/lat/{lat}/lon/{lon}/dist/{radius}",
+        "aircraft_key": "ac",
+    },
+    {
+        "name": "adsb.fi",
+        "url": "https://opendata.adsb.fi/api/v2/lat/{lat}/lon/{lon}/dist/{radius}",
+        "aircraft_key": "aircraft",
+    },
+]
 
 def get_aircraft_logo(aircraft_code):
     """
@@ -93,16 +112,50 @@ def rate_to_arrow(rate):
         pass
     return ''
 
+def fetch_flight_data_with_status(lat, lon, radius):
+    """
+    Fetches flight data from ADS-B APIs with short-lived caching and fallback.
+    Returns (data_dict, None, 200) on success, or (None, error_msg, http_status) on failure.
+    """
+    cache_key = (str(lat), str(lon), str(radius))
+    now = time.monotonic()
+    cached = _FLIGHT_CACHE.get(cache_key)
+    if cached and (now - cached["ts"]) < _CACHE_TTL_SECONDS:
+        return cached["data"], None, 200
+
+    last_error = "Upstream ADS-B request failed"
+    last_status = 502
+
+    for provider in ADSB_PROVIDERS:
+        url = provider["url"].format(lat=lat, lon=lon, radius=radius)
+        try:
+            resp = _SESSION.get(url, timeout=15)
+            if resp.status_code == 200:
+                payload = resp.json()
+                aircraft = payload.get(provider["aircraft_key"], [])
+                normalized = {"ac": aircraft}
+                _FLIGHT_CACHE[cache_key] = {"ts": now, "data": normalized}
+                return normalized, None, 200
+
+            print(
+                f"Error fetching flight data from {provider['name']}: "
+                f"{resp.status_code}. Response: {resp.text[:200]}"
+            )
+            last_error = f"{provider['name']} returned HTTP {resp.status_code}"
+            last_status = 429 if resp.status_code == 429 else 502
+        except (requests.RequestException, ValueError) as exc:
+            print(f"Request to {provider['name']} failed: {exc}")
+            last_error = f"{provider['name']} request failed: {exc}"
+            last_status = 504 if isinstance(exc, requests.Timeout) else 502
+
+    return None, last_error, last_status
+
+
 def fecth_flight_data_json(lat, lon, radius):
     """Fetches flight data from the ADS-B API."""
-    try:
-        flight_data = requests.get(f'https://api.adsb.lol/v2/lat/{lat}/lon/{lon}/dist/{radius}', timeout=10)
-        if flight_data.status_code == 200:
-            return flight_data.json()
-        print(f"Error fetching flight data: {flight_data.status_code}. Response: {flight_data.text}")
-    except requests.RequestException as e:
-        print(f"Request failed: {e}")
-    return None
+    data, _, _ = fetch_flight_data_with_status(lat, lon, radius)
+    return data
+
 
 def get_closest_flight(flight_data_json, prefer_airliners):
     """Finds the closest flight from the flight data JSON."""
@@ -114,13 +167,13 @@ def get_closest_flight(flight_data_json, prefer_airliners):
         return None
 
     index_closest = 0
-    closest_dist = 1000000 
+    closest_dist = float('inf')
 
     for index, ac in enumerate(aircraft_list):
         category = ac.get('category', '')
         if (prefer_airliners == 0) or (category in ('A3', 'A4', 'A5')):
             try:
-                dist = int(ac.get('dst', 0))
+                dist = float(ac.get('dst', 0))
                 if dist < closest_dist:
                     closest_dist = dist
                     index_closest = index
@@ -144,7 +197,7 @@ def get_route_info_json(callsign):
     url = f"https://vrs-standing-data.adsb.lol/routes/{prefix}/{callsign_clean}.json"
     
     try:
-        route_response = requests.get(url, timeout=10)
+        route_response = _SESSION.get(url, timeout=10)
         if route_response.status_code == 200:
             return route_response.json()
         print(f"Route info not found for {callsign_clean} (Status: {route_response.status_code})")
@@ -170,15 +223,15 @@ def closest_flight():
     if lat is None or lon is None or radius is None:
         return jsonify({"error": "Latitude, longitude, and radius are required parameters"}), 400
 
-    flight_data_json = fecth_flight_data_json(lat, lon, radius)
+    flight_data_json, upstream_error, upstream_status = fetch_flight_data_with_status(lat, lon, radius)
     if flight_data_json is None:
-        return jsonify({"error": "No aircraft detected"}), 404
+        return jsonify({"error": upstream_error or "Upstream ADS-B error"}), upstream_status
 
     closest_flight_json = get_closest_flight(flight_data_json, prefer_airliners)
     if closest_flight_json is None:
         return jsonify({"error": "No aircraft detected"}), 404
-        
-    flight = closest_flight_json.get('flight', 'Unknown').strip()
+
+    flight = (closest_flight_json.get('flight') or 'Unknown').strip()
 
     flight_data = {}
     flight_data['flight'] = flight
@@ -195,7 +248,6 @@ def closest_flight():
         ('lon', lambda v: v, '0'),
         ('alt_baro', lambda v: v, '0'),
         ('alt_geo', lambda v: v, '0'),
-        ('registration', str, 'Unknown'),
         ('gs', lambda v: v, 0),
         ('baro_rate', lambda v: v, 0),
         ('geom_rate', lambda v: v, '0'),
@@ -211,6 +263,10 @@ def closest_flight():
     for key, cast, default in fields:
         flight_data[key] = cast(closest_flight_json.get(key, default))
 
+    flight_data['registration'] = str(
+        closest_flight_json.get('r') or closest_flight_json.get('registration') or 'Unknown'
+    )
+
     flight_data['baro_rate_symbol'] = rate_to_arrow(flight_data['baro_rate'])
     flight_data['geom_rate_symbol'] = rate_to_arrow(flight_data['geom_rate'])
 
@@ -220,7 +276,9 @@ def closest_flight():
 
     # Fetch route data safely
     route_response_json = get_route_info_json(flight)
-    
+    flight_data['distance_journey'] = 0
+    flight_data['distance_to_dest'] = 0
+
     if route_response_json:
         # Static file directly returns the object, not an array
         flight_data['route_iata'] = route_response_json.get('_airport_codes_iata', [])
