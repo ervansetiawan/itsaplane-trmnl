@@ -12,19 +12,19 @@ app = Flask(__name__)
 _SESSION = requests.Session()
 _SESSION.headers.update({"User-Agent": "itsaplane-trmnl/1.0"})
 
-_CACHE_TTL_SECONDS = 15
+_CACHE_TTL_SECONDS = 30
 _FLIGHT_CACHE = {}
 
 ADSB_PROVIDERS = [
     {
-        "name": "adsb.lol",
-        "url": "https://api.adsb.lol/v2/lat/{lat}/lon/{lon}/dist/{radius}",
-        "aircraft_key": "ac",
-    },
-    {
         "name": "adsb.fi",
         "url": "https://opendata.adsb.fi/api/v2/lat/{lat}/lon/{lon}/dist/{radius}",
         "aircraft_key": "aircraft",
+    },
+    {
+        "name": "adsb.lol",
+        "url": "https://api.adsb.lol/v2/lat/{lat}/lon/{lon}/dist/{radius}",
+        "aircraft_key": "ac",
     },
 ]
 
@@ -128,25 +128,32 @@ def fetch_flight_data_with_status(lat, lon, radius):
 
     for provider in ADSB_PROVIDERS:
         url = provider["url"].format(lat=lat, lon=lon, radius=radius)
-        try:
-            resp = _SESSION.get(url, timeout=15)
-            if resp.status_code == 200:
-                payload = resp.json()
-                aircraft = payload.get(provider["aircraft_key"], [])
-                normalized = {"ac": aircraft}
-                _FLIGHT_CACHE[cache_key] = {"ts": now, "data": normalized}
-                return normalized, None, 200
+        for attempt in range(2):
+            try:
+                resp = _SESSION.get(url, timeout=15)
+                if resp.status_code == 200:
+                    payload = resp.json()
+                    aircraft = payload.get(provider["aircraft_key"], [])
+                    normalized = {"ac": aircraft}
+                    _FLIGHT_CACHE[cache_key] = {"ts": now, "data": normalized}
+                    return normalized, None, 200
 
-            print(
-                f"Error fetching flight data from {provider['name']}: "
-                f"{resp.status_code}. Response: {resp.text[:200]}"
-            )
-            last_error = f"{provider['name']} returned HTTP {resp.status_code}"
-            last_status = 429 if resp.status_code == 429 else 502
-        except (requests.RequestException, ValueError) as exc:
-            print(f"Request to {provider['name']} failed: {exc}")
-            last_error = f"{provider['name']} request failed: {exc}"
-            last_status = 504 if isinstance(exc, requests.Timeout) else 502
+                print(
+                    f"Error fetching flight data from {provider['name']}: "
+                    f"{resp.status_code}. Response: {resp.text[:200]}"
+                )
+                last_error = f"{provider['name']} returned HTTP {resp.status_code}"
+                last_status = 429 if resp.status_code == 429 else 502
+
+                if resp.status_code == 429 and attempt == 0:
+                    time.sleep(1.1)
+                    continue
+                break
+            except (requests.RequestException, ValueError) as exc:
+                print(f"Request to {provider['name']} failed: {exc}")
+                last_error = f"{provider['name']} request failed: {exc}"
+                last_status = 504 if isinstance(exc, requests.Timeout) else 502
+                break
 
     return None, last_error, last_status
 

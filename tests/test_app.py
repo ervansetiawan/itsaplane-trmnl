@@ -113,33 +113,54 @@ def test_get_aircraft_model_handles_spaces():
         assert result == "Airbus A320"
 
 
-def test_fallback_to_adsb_fi_on_rate_limit():
-    import requests as req
+def test_fallback_to_adsb_lol_on_rate_limit():
     from app import _FLIGHT_CACHE, fetch_flight_data_with_status
 
     _FLIGHT_CACHE.clear()
-    lol_resp = MagicMock(status_code=429, text="rate limit exceeded")
-    fi_resp = MagicMock(status_code=200)
-    fi_resp.json.return_value = {"aircraft": [{"flight": "UAL123 ", "dst": 4.2, "category": "A3", "r": "N123UA"}]}
+    fi_resp_429 = MagicMock(status_code=429, text="rate limit exceeded")
+    lol_resp = MagicMock(status_code=200)
+    lol_resp.json.return_value = {"ac": [{"flight": "UAL123 ", "dst": 4.2, "category": "A3", "r": "N123UA"}]}
 
-    with patch("app._SESSION.get", side_effect=[lol_resp, fi_resp]) as mock_get:
+    with patch("app.time.sleep") as mock_sleep, patch(
+        "app._SESSION.get", side_effect=[fi_resp_429, fi_resp_429, lol_resp]
+    ) as mock_get:
         data, err, status = fetch_flight_data_with_status("37.77", "-122.41", "25")
 
     assert status == 200
     assert err is None
     assert len(data["ac"]) == 1
     assert data["ac"][0]["flight"] == "UAL123 "
+    assert mock_get.call_count == 3
+    mock_sleep.assert_called_once_with(1.1)
+
+
+def test_retry_succeeds_after_429():
+    from app import _FLIGHT_CACHE, fetch_flight_data_with_status
+
+    _FLIGHT_CACHE.clear()
+    fi_resp_429 = MagicMock(status_code=429, text="rate limit exceeded")
+    fi_resp_200 = MagicMock(status_code=200)
+    fi_resp_200.json.return_value = {"aircraft": [{"flight": "SWA100 ", "dst": 2.5, "category": "A3"}]}
+
+    with patch("app.time.sleep") as mock_sleep, patch(
+        "app._SESSION.get", side_effect=[fi_resp_429, fi_resp_200]
+    ) as mock_get:
+        data, err, status = fetch_flight_data_with_status("37.77", "-122.41", "25")
+
+    assert status == 200
+    assert err is None
+    assert len(data["ac"]) == 1
     assert mock_get.call_count == 2
+    mock_sleep.assert_called_once_with(1.1)
 
 
 def test_upstream_all_fail_returns_upstream_status_not_404():
     from app import _FLIGHT_CACHE
 
     _FLIGHT_CACHE.clear()
-    lol_resp = MagicMock(status_code=429, text="rate limit exceeded")
-    fi_resp = MagicMock(status_code=429, text="rate limit exceeded")
+    resp_429 = MagicMock(status_code=429, text="rate limit exceeded")
 
-    with patch("app._SESSION.get", side_effect=[lol_resp, fi_resp]):
+    with patch("app.time.sleep"), patch("app._SESSION.get", return_value=resp_429):
         client = app.test_client()
         resp = client.get("/closest_flight?lat=37.77&lon=-122.41&radius=25")
 
@@ -151,10 +172,10 @@ def test_empty_aircraft_list_returns_404():
     from app import _FLIGHT_CACHE
 
     _FLIGHT_CACHE.clear()
-    lol_resp = MagicMock(status_code=200)
-    lol_resp.json.return_value = {"ac": []}
+    fi_resp = MagicMock(status_code=200)
+    fi_resp.json.return_value = {"aircraft": []}
 
-    with patch("app._SESSION.get", return_value=lol_resp):
+    with patch("app._SESSION.get", return_value=fi_resp):
         client = app.test_client()
         resp = client.get("/closest_flight?lat=37.77&lon=-122.41&radius=25")
 
@@ -166,15 +187,15 @@ def test_closest_flight_fractional_dst_and_registration():
     from app import _FLIGHT_CACHE
 
     _FLIGHT_CACHE.clear()
-    lol_resp = MagicMock(status_code=200)
-    lol_resp.json.return_value = {
-        "ac": [
+    fi_resp = MagicMock(status_code=200)
+    fi_resp.json.return_value = {
+        "aircraft": [
             {"flight": "FAR999  ", "dst": 9.9, "category": "A3", "r": "N999FF", "t": "B738"},
             {"flight": "NEAR111 ", "dst": 9.1, "category": "A3", "r": "N111NN", "t": "A320"},
         ]
     }
 
-    with patch("app._SESSION.get", return_value=lol_resp), patch("app.get_route_info_json", return_value=None):
+    with patch("app._SESSION.get", return_value=fi_resp), patch("app.get_route_info_json", return_value=None):
         client = app.test_client()
         resp = client.get("/closest_flight?lat=37.77&lon=-122.41&radius=25")
         resp_cached = client.get("/closest_flight?lat=37.77&lon=-122.41&radius=25")
