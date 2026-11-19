@@ -1,0 +1,57 @@
+[
+  {
+    "id": 1,
+    "title": "Daily Mini #1",
+    "grid": [
+      [
+        { "black": true },
+        { "number": 1, "letter": "S" },
+        { "number": 2, "letter": "T" },
+        { "number": 3, "letter": "A" },
+        { "number": 4, "letter": "R" }
+      ],
+      [
+        { "number": 5, "letter": "S" },
+        { "letter": "T" },
+        { "letter": "O" },
+        { "letter": "N" },
+        { "letter": "E" }
+      ],
+      [
+        { "number": 6, "letter": "T" },
+        { "letter": "O" },
+        { "letter": "P" },
+        { "letter": "I" },
+        { "letter": "C" }
+      ],
+      [
+        { "number": 7, "letter": "A" },
+        { "letter": "N" },
+        { "letter": "I" },
+        { "letter": "M" },
+        { "letter": "A" }
+      ],
+      [
+        { "number": 8, "letter": "R" },
+        { "letter": "E" },
+        { "letter": "C" },
+        { "letter": "A" },
+        { "letter": "P" }
+      ]
+    ],
+    "across": [
+      { "number": 1, "clue": "Celestial body" },
+      { "number": 5, "clue": "Rock or 14 pounds in the UK" },
+      { "number": 6, "clue": "Subject of discussion" },
+      { "number": 7, "clue": "Jungian inner self" },
+      { "number": 8, "clue": "Quick summary" }
+    ],
+    "down": [
+      { "number": 1, "clue": "Rock or 14 pounds in the UK" },
+      { "number": 2, "clue": "Subject of discussion" },
+      { "number": 3, "clue": "Jungian inner self" },
+      { "number": 4, "clue": "Quick summary" },
+      { "number": 5, "clue": "Celestial body" }
+    ]
+  }
+]
