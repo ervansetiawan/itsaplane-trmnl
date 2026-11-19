@@ -1,0 +1,183 @@
+<style>
+  .cw-body {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+    width: 100%;
+    height: 100%;
+    gap: 24px;
+  }
+
+  .cw-grid-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .cw-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 62px);
+    grid-template-rows: repeat(5, 62px);
+    border: 3px solid #000;
+  }
+
+  .cw-cell {
+    position: relative;
+    border: 1px solid #000;
+    background: #fff;
+    box-sizing: border-box;
+  }
+
+  .cw-cell.black {
+    background: #000;
+  }
+
+  .cw-num {
+    position: absolute;
+    top: 3px;
+    left: 4px;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .cw-clues-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+  }
+
+  .clues-lists {
+    display: flex;
+    gap: 20px;
+    flex: 1;
+  }
+
+  .clue-group {
+    flex: 1;
+  }
+
+  .clue-group h3 {
+    font-size: 14px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0 0 8px 0;
+  }
+
+  .clue-item {
+    font-size: 14px;
+    line-height: 1.35;
+    margin-bottom: 7px;
+  }
+
+  .clue-item strong {
+    margin-right: 4px;
+  }
+
+  .cw-footer {
+    border-top: 1px solid #000;
+    padding-top: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .yesterday-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .yesterday-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 1.2;
+    text-align: right;
+  }
+
+  .mini-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 16px);
+    grid-template-rows: repeat(5, 16px);
+    border: 1.5px solid #000;
+  }
+
+  .mini-cell {
+    border: 0.5px solid #000;
+    font-size: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+
+  .mini-cell.black {
+    background: #000;
+  }
+</style>
+
+<div class="layout layout--col">
+  <div class="cw-body">
+    <div class="cw-grid-col">
+      <div class="cw-grid">
+        {% for row in grid %}
+          {% for cell in row %}
+            <div class="cw-cell {% if cell.black %}black{% endif %}">
+              {% if cell.number %}
+                <span class="cw-num">{{ cell.number }}</span>
+              {% endif %}
+            </div>
+          {% endfor %}
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="cw-clues-col">
+      <div class="clues-lists">
+        <div class="clue-group">
+          <h3>Across</h3>
+          {% for item in across %}
+            <div class="clue-item"><strong>{{ item.number }}.</strong> {{ item.clue }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="clue-group">
+          <h3>Down</h3>
+          {% for item in down %}
+            <div class="clue-item"><strong>{{ item.number }}.</strong> {{ item.clue }}</div>
+          {% endfor %}
+        </div>
+      </div>
+
+      {% if yesterday_grid %}
+        <div class="cw-footer">
+          <span class="label label--small">5×5 Daily Mini</span>
+          <div class="yesterday-box">
+            <span class="yesterday-label">Yesterday's<br/>Solution</span>
+            <div class="mini-grid">
+              {% for row in yesterday_grid %}
+                {% for cell in row %}
+                  <div class="mini-cell {% if cell.black %}black{% endif %}">
+                    {% unless cell.black %}{{ cell.letter }}{% endunless %}
+                  </div>
+                {% endfor %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">{{ date }}</span>
+</div>
