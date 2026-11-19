@@ -322,20 +322,8 @@ def closest_flight():
 
 @app.route('/crossword/daily')
 def crossword_daily():
-    import json
-    from datetime import date
-
-    puzzles_path = os.path.join(os.path.dirname(__file__), 'puzzles.json')
-    with open(puzzles_path, encoding='utf-8') as f:
-        puzzles = json.load(f)
-
-    today = date.today()
-    idx = today.toordinal() % len(puzzles)
-    y_idx = (today.toordinal() - 1) % len(puzzles)
-    puzzle = dict(puzzles[idx])
-    puzzle['date'] = today.strftime('%b %d, %Y').upper()
-    puzzle['yesterday_grid'] = puzzles[y_idx]['grid']
-    return jsonify(puzzle)
+    from crossword_generator import generate_daily_puzzle
+    return jsonify(generate_daily_puzzle())
 
 
 if __name__ == '__main__':
