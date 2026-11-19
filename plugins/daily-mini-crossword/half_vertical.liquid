@@ -1,0 +1,97 @@
+<style>
+  .cw-hv-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    height: 100%;
+  }
+
+  .cw-hv-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 38px);
+    grid-template-rows: repeat(5, 38px);
+    border: 2px solid #000;
+    flex-shrink: 0;
+  }
+
+  .cw-hv-cell {
+    position: relative;
+    border: 1px solid #000;
+    background: #fff;
+    box-sizing: border-box;
+  }
+
+  .cw-hv-cell.black {
+    background: #000;
+  }
+
+  .cw-hv-num {
+    position: absolute;
+    top: 2px;
+    left: 3px;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .cw-hv-clues {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .cw-hv-group {
+    flex: 1;
+  }
+
+  .cw-hv-group h3 {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin: 0 0 4px 0;
+  }
+
+  .cw-hv-item {
+    font-size: 11px;
+    line-height: 1.25;
+    margin-bottom: 4px;
+  }
+</style>
+
+<div class="layout layout--col">
+  <div class="cw-hv-body">
+    <div class="cw-hv-grid">
+      {% for row in grid %}
+        {% for cell in row %}
+          <div class="cw-hv-cell {% if cell.black %}black{% endif %}">
+            {% if cell.number %}<span class="cw-hv-num">{{ cell.number }}</span>{% endif %}
+          </div>
+        {% endfor %}
+      {% endfor %}
+    </div>
+
+    <div class="cw-hv-clues">
+      <div class="cw-hv-group">
+        <h3>Across</h3>
+        {% for item in across %}
+          <div class="cw-hv-item"><strong>{{ item.number }}.</strong> {{ item.clue }}</div>
+        {% endfor %}
+      </div>
+      <div class="cw-hv-group">
+        <h3>Down</h3>
+        {% for item in down %}
+          <div class="cw-hv-item"><strong>{{ item.number }}.</strong> {{ item.clue }}</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">{{ date }}</span>
+</div>
