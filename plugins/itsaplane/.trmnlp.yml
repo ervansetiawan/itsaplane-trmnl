@@ -1,0 +1,60 @@
+watch:
+- src
+- .trmnlp.yml
+custom_fields: {}
+variables:
+  airline_code: UAL
+  airline_name: United Airlines
+  airport_codes: KORD-KCMH
+  airports:
+  - alt_feet: 672.0
+    alt_meters: 204.83
+    countryiso2: US
+    iata: ORD
+    icao: KORD
+    lat: 41.9786
+    location: Chicago
+    lon: -87.9048
+    name: Chicago O'Hare International Airport
+  - alt_feet: 815.0
+    alt_meters: 248.41
+    countryiso2: US
+    iata: CMH
+    icao: KCMH
+    lat: 39.998001
+    location: Columbus
+    lon: -82.891899
+    name: Port Columbus International Airport
+  alt_baro: 4775
+  alt_geo: '0'
+  baro_rate: -320
+  baro_rate_symbol: '&#9660;'
+  category: A3
+  category_label: Large
+  dir: → 78.8°
+  dir_cardinal: ENE
+  distance_journey: 295
+  distance_to_dest: 278
+  dst: 1.303
+  emergency: none
+  ete_minutes: 52
+  flight: UAL1492
+  geom_rate: '0'
+  geom_rate_symbol: ''
+  gs: 281.0
+  lat: 41.884212
+  logo: UAL.png
+  logo_url: http://localhost/logos/UAL.png
+  lon: -87.60134
+  model: Airbus A321neo
+  nav_altitude_mcp: 4992
+  nav_heading: ↑ 0.0°
+  nav_modes: Unknown
+  nav_qnh: 1023.2
+  registration: N24573
+  route_iata: ORD-CMH
+  rsi: '0'
+  squawk: '7337'
+  track: → 90.0°
+  track_cardinal: E
+  type: A21N

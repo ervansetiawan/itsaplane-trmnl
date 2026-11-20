@@ -1,0 +1,195 @@
+<div class="layout layout--col gap--space-between">
+  {% if error != blank %}
+    <div class="bg--gray-70 rounded p--2 text--center">
+      <span class="title title--small">{{ error }}</span>
+    </div>
+  {% endif %}
+
+  {% if emergency != blank and emergency != "none" %}
+    <div class="text--center">
+      <span class="label label--inverted px--2 rounded">EMERGENCY: {{ emergency | upcase }}</span>
+    </div>
+  {% endif %}
+
+  {% if alt_baro == "ground" %}
+    {% assign flight_phase = "On Ground" %}
+  {% elsif baro_rate > 300 %}
+    {% assign flight_phase = "Climbing" %}
+  {% elsif baro_rate < -300 %}
+    {% assign flight_phase = "Descending" %}
+  {% else %}
+    {% assign flight_phase = "Cruising" %}
+  {% endif %}
+
+  <div class="flex flex--row gap--medium portrait:flex--col stretch-y">
+    <div class="bg--gray-70 rounded p--3 flex flex--col flex--center gap--small w--[28cqw] portrait:w--full shrink-0">
+      {% if logo != blank %}
+        <img class="image image-dither w--[56px] h--[56px] object--contain rounded"
+          src="https://raw.githubusercontent.com/sexym0nk3y/airline-logos/refs/heads/main/logos/{{ airline_code }}.png"
+          alt="{{ airline_code }}" />
+      {% endif %}
+      <span class="value value--small lg:value--base value--tnums">{{ flight }}</span>
+      {% if airline_name != blank %}
+        <span class="label label--small text--center clamp--1">{{ airline_name }}</span>
+      {% endif %}
+      <span class="description text--center" data-value-fit="true">{{ model }}</span>
+      <div class="flex flex--row flex--center gap--small">
+        {% if registration != blank and registration != "Unknown" %}
+          <span class="label label--small label--inverted px--2 rounded value--tnums">{{ registration }}</span>
+        {% endif %}
+        {% if type != blank and type != "Unknown" %}
+          <span class="label label--small">{{ type }}{% if category_label != blank %} &middot; {{ category_label }}{% endif %}</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="bg--gray-70 rounded p--3 flex flex--col flex--between stretch-x">
+      {% if airport_codes != "unknown" and airports.size >= 2 %}
+        {% assign origin = airports[0] %}
+        {% assign dest = airports[1] %}
+        {% assign flown = distance_journey | minus: distance_to_dest %}
+        {% if distance_journey > 0 %}
+          {% assign pct = flown | times: 100 | divided_by: distance_journey %}
+        {% else %}
+          {% assign pct = 50 %}
+        {% endif %}
+        {% if pct < 6 %}{% assign pct = 6 %}{% endif %}
+        {% if pct > 94 %}{% assign pct = 94 %}{% endif %}
+        {% assign plane_x = pct | times: 1.8 | plus: 10 %}
+
+        <div class="flex flex--row flex--between flex--center-y gap--small">
+          <div class="text--left">
+            <span class="value value--large lg:value--xlarge">{{ origin.iata }}</span>
+            <div class="description">{{ origin.location }}{% if origin.countryiso2 != dest.countryiso2 %} ({{ origin.countryiso2 }}){% endif %}</div>
+          </div>
+          <div class="flex flex--col flex--center gap--small">
+            <span class="label label--small label--inverted px--2 rounded value--tnums">{{ flight_phase }} &middot; {{ pct }}%</span>
+          </div>
+          <div class="text--right">
+            <span class="value value--large lg:value--xlarge">{{ dest.iata }}</span>
+            <div class="description">{{ dest.location }}{% if origin.countryiso2 != dest.countryiso2 %} ({{ dest.countryiso2 }}){% endif %}</div>
+          </div>
+        </div>
+
+        <svg viewBox="0 0 200 24" class="w--full h--[24px]">
+          <circle cx="10" cy="12" r="3.5" fill="currentColor" />
+          <line x1="13" y1="12" x2="{{ plane_x }}" y2="12" stroke="currentColor" stroke-width="2.5" />
+          <line x1="{{ plane_x }}" y1="12" x2="186" y2="12" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 3" />
+          <circle cx="190" cy="12" r="3.5" fill="none" stroke="currentColor" stroke-width="2" />
+          <g transform="translate({{ plane_x }}, 12)">
+            <path d="M 8,0 L 3,-1.5 L 1,-7 L -2,-7 L -1,-1.5 L -6,-1.5 L -8,-4 L -9,-4 L -7.5,0 L -9,4 L -8,4 L -6,1.5 L -1,1.5 L -2,7 L 1,7 L 3,1.5 Z" fill="currentColor" />
+          </g>
+        </svg>
+
+        <div class="flex flex--row flex--between gap--small">
+          <span class="label label--small value--tnums">{{ flown | number_with_delimiter }} mi flown</span>
+          {% if ete_minutes != blank and ete_minutes > 0 %}
+            {% assign ete_h = ete_minutes | divided_by: 60 %}
+            {% assign ete_m = ete_minutes | modulo: 60 %}
+            <span class="label label--small value--tnums">
+              ~{% if ete_h > 0 %}{{ ete_h }}h {% endif %}{{ ete_m }}m left &middot; {{ distance_to_dest | number_with_delimiter }} mi to go
+            </span>
+          {% else %}
+            <span class="label label--small value--tnums">{{ distance_to_dest | number_with_delimiter }} mi to go</span>
+          {% endif %}
+        </div>
+
+        <div class="flex flex--row flex--between gap--medium">
+          <span class="label label--small text--left clamp--1">{{ origin.name }}</span>
+          <span class="label label--small text--right clamp--1">{{ dest.name }}</span>
+        </div>
+      {% else %}
+        <div class="flex flex--col flex--center h--full gap--small">
+          <span class="label label--small label--inverted px--2 rounded">{{ flight_phase }}</span>
+          <span class="value value--small">Local / Unfiled Route</span>
+          <span class="description">Type {{ type }}{% if category_label != blank %} ({{ category_label }}){% endif %} &middot; {{ dst }} mi {{ dir_cardinal | default: dir }}</span>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="grid grid--cols-3 gap--medium lg:gap--large">
+    <div class="item">
+      <div class="meta"></div>
+      <div class="content">
+        {% if alt_baro != "ground" %}
+          <span class="value value--base lg:value--large value--tnums" data-value-fit="true">{{ alt_baro | number_with_delimiter }} ft</span>
+          <span class="label label--base">
+            Altitude
+            {% if baro_rate != 0 %}
+              &middot; {{ baro_rate_symbol }}{{ baro_rate | number_with_delimiter }} fpm
+            {% endif %}
+          </span>
+        {% else %}
+          <span class="value value--base lg:value--large" data-value-fit="true">Ground</span>
+          <span class="label label--base">Altitude</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="meta"></div>
+      <div class="content">
+        <span class="value value--base lg:value--large value--tnums" data-value-fit="true">{{ gs | round }} kts</span>
+        <span class="label label--base">Ground Speed</span>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="meta"></div>
+      <div class="content">
+        <span class="value value--base lg:value--large value--tnums" data-value-fit="true">{{ track }}{% if track_cardinal != blank %} {{ track_cardinal }}{% endif %}</span>
+        <span class="label label--base">Course</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="grid grid--cols-4 gap--small">
+    <div class="item">
+      <div class="meta"></div>
+      <div class="content">
+        <span class="value value--xsmall value--tnums">{{ squawk }}</span>
+        <span class="label label--small">Squawk</span>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="meta"></div>
+      <div class="content">
+        <span class="value value--xsmall value--tnums">{{ nav_heading }}</span>
+        <span class="label label--small">
+          NAV Heading
+          {% if nav_modes != blank and nav_modes != "Unknown" %}
+            ({{ nav_modes | join: " " }})
+          {% endif %}
+        </span>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="meta"></div>
+      <div class="content">
+        <span class="value value--xsmall value--tnums">{{ nav_altitude_mcp | number_with_delimiter }} ft</span>
+        <span class="label label--small">NAV Alt</span>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="meta"></div>
+      <div class="content">
+        <span class="value value--xsmall value--tnums">{{ nav_qnh }} hPa</span>
+        <span class="label label--small">QNH</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <img class="image" src="https://usetrmnl.com/images/plugins/trmnl--render.svg" />
+  <span class="title">{{ trmnl.plugin_settings.instance_name }}</span>
+  <span class="instance">{{ dst | round: 1 }} mi {{ dir_cardinal | default: dir }} ({{ dir }})</span>
+</div>

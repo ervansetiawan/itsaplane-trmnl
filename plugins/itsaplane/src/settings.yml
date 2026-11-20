@@ -1,0 +1,45 @@
+---
+strategy: static
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: '{}'
+polling_verb: get
+framework_version: 3.4
+serverless_language: ''
+refresh_interval_floor: ''
+polling_url: " https://itsaplane-trmnl.onrender.com/closest_flight?lat={{ lat }}&lon={{ lon }}&radius={{ radius }}&preferAirliners={{ preferAirlines }}"
+polling_headers: ''
+polling_body: ''
+id: 122422
+oauth_enabled: 'false'
+oauth_pkce_enabled: 'no'
+custom_fields:
+- keyname: doesnt_matter
+  name: About This Plugin
+  field_type: author_bio
+  description: Displays the closest aircraft from a certain coordinate.<br><i>I whip up code, culinary delights, and chaos with my two sons</i>.
+  github_url: https://github.com/ervansetiawan/itsaplane-trmnl
+  email_address: ervansetiawan@gmail.com
+- keyname: lat
+  field_type: string
+  name: lat
+  description: Latitude
+  help_text: Latitude coordinate of the location. Use <a href="https://www.latlong.net/">https://www.latlong.net/</a> to find your coordinate.
+- keyname: lon
+  field_type: string
+  name: lon
+  description: Longitude
+  help_text: Longitude coordinate of the location. Use <a href="https://www.latlong.net/">https://www.latlong.net/</a> to find your coordinate.
+- keyname: radius
+  field_type: string
+  name: radius
+  description: Radius of area to detect the aircrafts (in miles)
+  default: '20'
+- keyname: preferAirlines
+  field_type: string
+  name: preferAirlines
+  description: 0 or 1. 0 - include general aviation (small) aircrafts. 1 - prefer airlines.
+  default: '1'
+name: It's a Plane
+description: ''
+refresh_interval: 15

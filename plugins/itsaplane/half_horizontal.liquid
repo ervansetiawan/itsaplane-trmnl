@@ -1,0 +1,122 @@
+<div class="layout layout--col gap--space-between">
+  {% if error != blank %}
+    <div class="title title--small">{{ error }}</div>
+  {% endif %}
+
+  {% if alt_baro == "ground" %}
+    {% assign flight_phase = "On Ground" %}
+  {% elsif baro_rate > 300 %}
+    {% assign flight_phase = "Climbing" %}
+  {% elsif baro_rate < -300 %}
+    {% assign flight_phase = "Descending" %}
+  {% else %}
+    {% assign flight_phase = "Cruising" %}
+  {% endif %}
+
+  <div class="flex flex--row gap--medium stretch-y">
+    <div class="bg--gray-70 rounded p--2 flex flex--col flex--center gap--small w--[26cqw] shrink-0">
+      {% if logo != blank %}
+        <img class="image image-dither w--[40px] h--[40px] object--contain rounded"
+          src="https://raw.githubusercontent.com/sexym0nk3y/airline-logos/refs/heads/main/logos/{{ airline_code }}.png"
+          alt="{{ airline_code }}" />
+      {% endif %}
+      <span class="value value--xsmall value--tnums">{{ flight }}</span>
+      <span class="label label--small clamp--1" data-value-fit="true">{{ airline_name | default: model }}</span>
+    </div>
+
+    <div class="bg--gray-70 rounded p--2 flex flex--col flex--between stretch-x">
+      {% if airport_codes != "unknown" and airports.size >= 2 %}
+        {% assign origin = airports[0] %}
+        {% assign dest = airports[1] %}
+        {% assign flown = distance_journey | minus: distance_to_dest %}
+        {% if distance_journey > 0 %}
+          {% assign pct = flown | times: 100 | divided_by: distance_journey %}
+        {% else %}
+          {% assign pct = 50 %}
+        {% endif %}
+        {% if pct < 6 %}{% assign pct = 6 %}{% endif %}
+        {% if pct > 94 %}{% assign pct = 94 %}{% endif %}
+        {% assign plane_x = pct | times: 1.8 | plus: 10 %}
+
+        <div class="flex flex--row flex--between flex--center-y">
+          <div>
+            <span class="value value--small">{{ origin.iata }}</span>
+            <span class="label label--small">{{ origin.location }}</span>
+          </div>
+          <span class="label label--small label--inverted px--2 rounded value--tnums">{{ flight_phase }} &middot; {{ pct }}%</span>
+          <div class="text--right">
+            <span class="value value--small">{{ dest.iata }}</span>
+            <span class="label label--small">{{ dest.location }}</span>
+          </div>
+        </div>
+
+        <svg viewBox="0 0 200 20" class="w--full h--[20px]">
+          <circle cx="10" cy="10" r="3" fill="currentColor" />
+          <line x1="13" y1="10" x2="{{ plane_x }}" y2="10" stroke="currentColor" stroke-width="2" />
+          <line x1="{{ plane_x }}" y1="10" x2="186" y2="10" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 3" />
+          <circle cx="190" cy="10" r="3" fill="none" stroke="currentColor" stroke-width="2" />
+          <g transform="translate({{ plane_x }}, 10)">
+            <path d="M 8,0 L 3,-1.5 L 1,-7 L -2,-7 L -1,-1.5 L -6,-1.5 L -8,-4 L -9,-4 L -7.5,0 L -9,4 L -8,4 L -6,1.5 L -1,1.5 L -2,7 L 1,7 L 3,1.5 Z" fill="currentColor" />
+          </g>
+        </svg>
+
+        <div class="flex flex--row flex--between">
+          <span class="label label--small value--tnums">{{ flown | number_with_delimiter }} mi flown</span>
+          {% if ete_minutes != blank and ete_minutes > 0 %}
+            {% assign ete_h = ete_minutes | divided_by: 60 %}
+            {% assign ete_m = ete_minutes | modulo: 60 %}
+            <span class="label label--small value--tnums">~{% if ete_h > 0 %}{{ ete_h }}h {% endif %}{{ ete_m }}m left ({{ distance_to_dest }} mi)</span>
+          {% else %}
+            <span class="label label--small value--tnums">{{ distance_to_dest | number_with_delimiter }} mi to go</span>
+          {% endif %}
+        </div>
+      {% else %}
+        <div class="flex flex--col flex--center h--full">
+          <span class="value value--xsmall">Local / Unfiled Route</span>
+          <span class="label label--small">{{ registration }} &middot; {{ type }}{% if category_label != blank %} ({{ category_label }}){% endif %}</span>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="grid grid--cols-3 gap--small">
+    <div class="item">
+      <div class="meta"></div>
+      <div class="content">
+        {% if alt_baro != "ground" %}
+          <span class="value value--small value--tnums" data-value-fit="true">{{ alt_baro | number_with_delimiter }} ft</span>
+          <span class="label label--small">
+            Altitude{% if baro_rate != 0 %} ({{ baro_rate_symbol }}{{ baro_rate }}){% endif %}
+          </span>
+        {% else %}
+          <span class="value value--small">Ground</span>
+          <span class="label label--small">Altitude</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="meta"></div>
+      <div class="content">
+        <span class="value value--small value--tnums" data-value-fit="true">{{ gs | round }} kts</span>
+        <span class="label label--small">Ground Speed</span>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="meta"></div>
+      <div class="content">
+        <span class="value value--small value--tnums" data-value-fit="true">{{ track }}{% if track_cardinal != blank %} {{ track_cardinal }}{% endif %}</span>
+        <span class="label label--small">Course</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <img class="image" src="https://usetrmnl.com/images/plugins/trmnl--render.svg" />
+  <span class="title">{{ trmnl.plugin_settings.instance_name }}</span>
+  <span class="instance">{{ dst | round: 1 }} mi {{ dir_cardinal | default: dir }}</span>
+</div>

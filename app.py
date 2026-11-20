@@ -5,7 +5,7 @@ import time
 from math import radians, sin, cos, sqrt, atan2
 
 import requests
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 
 app = Flask(__name__)
 
@@ -85,8 +85,71 @@ def degrees_to_compass_direction(degrees):
         return "\u2191"
 
     directions = ["\u2191", "\u2197", "\u2192", "\u2198", "\u2193", "\u2199", "\u2190", "\u2196"]
-    index = round((degrees + 22.5) / 45) % 8
+    index = int((degrees + 22.5) // 45) % 8
     return directions[index]
+
+
+def degrees_to_cardinal(degrees):
+    """Converts a bearing in degrees (0-360) to a 16-point cardinal direction."""
+    try:
+        degrees = float(degrees) % 360
+    except (ValueError, TypeError):
+        return ""
+
+    cardinals = [
+        "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
+        "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW",
+    ]
+    index = int((degrees + 11.25) // 22.5) % 16
+    return cardinals[index]
+
+
+CATEGORY_LABELS = {
+    "A1": "Light",
+    "A2": "Small",
+    "A3": "Large",
+    "A4": "High Vortex",
+    "A5": "Heavy",
+    "A6": "High Perf",
+    "A7": "Rotorcraft",
+    "B1": "Glider",
+    "B2": "Lighter-than-air",
+    "B4": "Ultralight",
+    "B6": "UAV",
+}
+
+AIRLINE_NAMES = {
+    "AAL": "American Airlines",
+    "ACA": "Air Canada",
+    "AFR": "Air France",
+    "AMX": "Aeromexico",
+    "ANA": "All Nippon Airways",
+    "ASA": "Alaska Airlines",
+    "ASH": "Mesa Airlines",
+    "BAW": "British Airways",
+    "CPA": "Cathay Pacific",
+    "DAL": "Delta Air Lines",
+    "DLH": "Lufthansa",
+    "EDV": "Endeavor Air",
+    "ENY": "Envoy Air",
+    "FDX": "FedEx Express",
+    "FFT": "Frontier Airlines",
+    "HAL": "Hawaiian Airlines",
+    "JAL": "Japan Airlines",
+    "JBU": "JetBlue",
+    "KLM": "KLM",
+    "NKS": "Spirit Airlines",
+    "QFA": "Qantas",
+    "QTR": "Qatar Airways",
+    "RPA": "Republic Airways",
+    "SIA": "Singapore Airlines",
+    "SKW": "SkyWest Airlines",
+    "SWA": "Southwest Airlines",
+    "UAE": "Emirates",
+    "UAL": "United Airlines",
+    "UPS": "UPS Airlines",
+    "VOI": "Volaris",
+}
 
 def calculate_distance(lat1, lon1, lat2, lon2):
     """Calculates the distance between two geographical coordinates using the Haversine formula."""
@@ -236,6 +299,8 @@ def closest_flight():
 
     closest_flight_json = get_closest_flight(flight_data_json, prefer_airliners)
     if closest_flight_json is None:
+        if request.args.get('allow_empty') == '1':
+            return jsonify({"no_aircraft": True, "flight": "Clear Skies", "message": "No aircraft detected"})
         return jsonify({"error": "No aircraft detected"}), 404
 
     flight = (closest_flight_json.get('flight') or 'Unknown').strip()
@@ -276,6 +341,9 @@ def closest_flight():
 
     flight_data['baro_rate_symbol'] = rate_to_arrow(flight_data['baro_rate'])
     flight_data['geom_rate_symbol'] = rate_to_arrow(flight_data['geom_rate'])
+    flight_data['dir_cardinal'] = degrees_to_cardinal(flight_data['dir'])
+    flight_data['track_cardinal'] = degrees_to_cardinal(flight_data['track'])
+    flight_data['category_label'] = CATEGORY_LABELS.get(flight_data.get('category', ''), '')
 
     # Format Headings cleanly
     for k in ['track', 'dir', 'nav_heading']:
@@ -315,10 +383,32 @@ def closest_flight():
         flight_data['distance_journey'] = 0
         flight_data['distance_to_dest'] = 0
 
+    flight_data['airline_name'] = (
+        (route_response_json.get('airline_name') if isinstance(route_response_json, dict) else None)
+        or AIRLINE_NAMES.get(flight_data['airline_code'], '')
+    )
+    if flight_data['distance_to_dest'] > 0 and float(flight_data.get('gs') or 0) > 0:
+        flight_data['ete_minutes'] = int(
+            round(flight_data['distance_to_dest'] / (float(flight_data['gs']) * 1.15078) * 60)
+        )
+    else:
+        flight_data['ete_minutes'] = None
+
     flight_data['logo'] = get_aircraft_logo(flight_data['airline_code'])
+    flight_data['logo_url'] = (
+        f"{request.url_root.rstrip('/')}/logos/{flight_data['logo']}"
+        if flight_data['logo']
+        else None
+    )
     print(f"Logo for airline code {flight_data['airline_code']}: {flight_data['logo']}")
 
     return jsonify(flight_data)
+
+
+@app.route('/logos/<path:filename>')
+def serve_logo(filename):
+    logos_dir = os.path.join(os.path.dirname(__file__), 'logos')
+    return send_from_directory(logos_dir, filename)
 
 def _parse_optional_date():
     date_str = request.args.get('date')
