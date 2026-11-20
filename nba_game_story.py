@@ -132,9 +132,13 @@ def fetch_nba_game_story(target_date: date | None = None) -> dict:
         h = next((c for c in cs if c.get("homeAway") == "home"), cs[0])
         other_finals.append(f"{a['team']['abbreviation']} {a.get('score')} - {h.get('score')} {h['team']['abbreviation']}")
 
+    diff = abs(home_score - away_score)
+    reason = f"GAME OF THE NIGHT · {diff}-PT MARGIN" if len(events) > 1 else "FEATURED GAME"
+
     result = {
         "title": "NBA Game Story",
         "date": game_date.strftime("%b %d, %Y").upper(),
+        "reason": reason,
         "matchup": f"{away_abbr} @ {home_abbr}",
         "away_abbr": away_abbr,
         "away_score": away_score,

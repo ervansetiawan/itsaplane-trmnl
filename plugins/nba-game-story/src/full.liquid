@@ -6,7 +6,10 @@
         <span class="label label--base">&ndash;</span>
         <span class="title title--base lg:title--large">{{ home_score }} {{ home_abbr }}</span>
       </div>
-      <span class="label label--base label--inverted px--2">FINAL &middot; {{ winner }} WIN</span>
+      <div class="flex flex--row flex--center-y gap--small">
+        {% if reason %}<span class="label label--small">{{ reason }}</span>{% endif %}
+        <span class="label label--base label--inverted px--2">FINAL &middot; {{ winner }} WIN</span>
+      </div>
     </div>
 
     <div class="divider"></div>
