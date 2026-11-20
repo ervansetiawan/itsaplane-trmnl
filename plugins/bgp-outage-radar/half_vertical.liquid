@@ -1,0 +1,40 @@
+<div class="layout layout--col">
+  <div class="flex flex--col flex--between w--full h--full gap--small lg:gap--medium">
+    <div class="grid grid--cols-2 w--full">
+      <div class="item">
+        <div class="meta"></div>
+        <div class="content">
+          <span class="value value--small">{{ critical_count }}</span>
+          <span class="label label--small">Critical</span>
+        </div>
+      </div>
+      <div class="item">
+        <div class="meta"></div>
+        <div class="content">
+          <span class="value value--small">{{ bgp_count }}</span>
+          <span class="label label--small">BGP Signals</span>
+        </div>
+      </div>
+    </div>
+
+    {% if featured %}
+      <div class="w--full text--left">
+        <div class="divider mb--1"></div>
+        <div class="label label--small text--left"><strong>{{ featured.name }}</strong> &middot; -{{ featured.drop_pct }}%</div>
+        <div class="description text--left">{{ featured.datasource }} &middot; {{ featured.time }}</div>
+      </div>
+    {% endif %}
+
+    <div class="w--full stretch-y text--left">
+      <div class="divider mb--1"></div>
+      {% for item in items limit: 4 %}
+        <div class="description text--left mb--1"><strong>{{ item.name }}</strong> (-{{ item.drop_pct }}%)</div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">{{ date }}</span>
+</div>

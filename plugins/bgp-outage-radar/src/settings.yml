@@ -1,0 +1,11 @@
+name: BGP & Outage Radar
+description: Live BGP & internet outage radar
+refresh_interval: 60
+custom_fields:
+  - keyname: author_bio
+    field_type: author_bio
+    name: About This Plugin
+    category: programming
+    description: Live BGP & internet outage radar
+    github_url: https://github.com/ervansetiawan/itsaplane-trmnl
+    email_address: you@example.com

@@ -361,5 +361,14 @@ def rce_daily():
         return jsonify({"error": f"CISA KEV feed unavailable: {exc}"}), 502
 
 
+@app.route('/outages/daily')
+def outages_daily():
+    from outage_radar import fetch_outage_radar
+    try:
+        return jsonify(fetch_outage_radar())
+    except requests.RequestException as exc:
+        return jsonify({"error": f"IODA outage feed unavailable: {exc}"}), 502
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

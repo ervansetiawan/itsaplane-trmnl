@@ -1,0 +1,116 @@
+<div class="layout layout--col">
+  <div class="flex flex--col flex--between w--full h--full gap--small">
+    <div class="grid grid--cols-4 w--full">
+      <div class="item">
+        <div class="meta"></div>
+        <div class="content">
+          <span class="value value--small">{{ total_alerts }}</span>
+          <span class="label label--small">24h Alerts</span>
+        </div>
+      </div>
+      <div class="item">
+        <div class="meta"></div>
+        <div class="content">
+          <span class="value value--small">{{ critical_count }}</span>
+          <span class="label label--small">Critical</span>
+        </div>
+      </div>
+      <div class="item">
+        <div class="meta"></div>
+        <div class="content">
+          <span class="value value--small">{{ bgp_count }}</span>
+          <span class="label label--small">BGP Signals</span>
+        </div>
+      </div>
+      <div class="item">
+        <div class="meta"></div>
+        <div class="content">
+          <span class="value value--small">{{ affected_nets }}</span>
+          <span class="label label--small">Networks</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="flex flex--row portrait:flex--col w--full stretch-y gap--large">
+      <div class="flex flex--col flex--between w--[48cqw] portrait:w--full text--left">
+        <div class="w--full">
+          <div class="flex flex--row flex--between flex--center-y mb--1">
+            <span class="label label--small label--underline">24H OUTAGE TIMELINE</span>
+            <span class="label label--small">SOLID = CRITICAL</span>
+          </div>
+          <svg viewBox="0 0 240 68" preserveAspectRatio="none" class="w--full h--[68px]">
+            <line x1="0" y1="64" x2="240" y2="64" stroke="#000" stroke-width="1" />
+            {% for b in hourly_bars %}
+              <rect x="{{ b.x }}" y="{{ b.y }}" width="7" height="{{ b.h }}" fill="#fff" stroke="#000" stroke-width="1" />
+              {% if b.ch > 0 %}
+                <rect x="{{ b.x }}" y="{{ b.cy }}" width="7" height="{{ b.ch }}" fill="#000" />
+              {% endif %}
+            {% endfor %}
+          </svg>
+          <div class="flex flex--row flex--between w--full">
+            <span class="label label--small">-24H</span>
+            <span class="label label--small">-12H</span>
+            <span class="label label--small">NOW</span>
+          </div>
+        </div>
+
+        <div class="w--full">
+          <div class="label label--small label--underline mb--1 text--left">DETECTION CHANNELS</div>
+          <div class="flex flex--row flex--between flex--center-y mb--1">
+            <span class="label label--small">BGP Routing</span>
+            <span class="label label--small"><strong>{{ bgp_count }}</strong> ({{ bgp_pct }}%)</span>
+          </div>
+          <div class="flex flex--row flex--between flex--center-y mb--1">
+            <span class="label label--small">Active Ping (/24)</span>
+            <span class="label label--small"><strong>{{ ping_count }}</strong> ({{ ping_pct }}%)</span>
+          </div>
+          <div class="flex flex--row flex--between flex--center-y">
+            <span class="label label--small">Darknet Telescope</span>
+            <span class="label label--small"><strong>{{ tele_count }}</strong> ({{ tele_pct }}%)</span>
+          </div>
+        </div>
+
+        {% if featured %}
+          <div class="w--full">
+            <div class="divider mb--1"></div>
+            <div class="flex flex--row flex--between flex--center-y w--full">
+              <span class="label label--small">
+                <span class="label label--small label--inverted px--1">{{ featured.level }}</span>
+                <strong>{{ featured.name }}</strong>
+              </span>
+              <span class="label label--small shrink-0">-{{ featured.drop_pct }}% &middot; {{ featured.time }}</span>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="divider--v portrait:hidden"></div>
+
+      <div class="stretch-x text--left">
+        <div class="label label--small label--underline mb--2 text--left">ACTIVE NETWORK OUTAGES</div>
+        {% for item in items limit: 5 %}
+          <div class="w--full mb--2">
+            <div class="flex flex--row flex--between flex--center-y w--full">
+              <span class="description text--left"><strong>{{ item.name }}</strong></span>
+              <span class="label label--small shrink-0">-{{ item.drop_pct }}% &middot; {{ item.time }}</span>
+            </div>
+            <div class="flex flex--row flex--between flex--center-y gap--small w--full">
+              <span class="label label--small text--left">{{ item.datasource }}{% if item.org != "" %} &middot; {{ item.org }}{% endif %}</span>
+              <svg viewBox="0 0 100 6" preserveAspectRatio="none" class="w--[60px] h--[6px] shrink-0">
+                <rect x="0" y="0" width="100" height="6" fill="#fff" stroke="#000" stroke-width="1.5" />
+                <rect x="0" y="0" width="{{ item.drop_pct }}" height="6" fill="#000" />
+              </svg>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">IODA &middot; {{ date }}</span>
+</div>
