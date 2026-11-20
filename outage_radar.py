@@ -110,6 +110,10 @@ def fetch_outage_radar() -> dict:
         resp = requests.get(
             IODA_ALERTS_URL,
             params={"from": start, "until": until, "limit": 200},
+            headers={
+                "User-Agent": "Mozilla/5.0 (compatible; TRMNL-Outage-Radar/1.0)",
+                "Accept": "application/json",
+            },
             timeout=10,
         )
         resp.raise_for_status()
