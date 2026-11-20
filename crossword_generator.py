@@ -166,6 +166,198 @@ WORDS_5 = {
     "WORLD": "The Earth",
     "WRITE": "Put pen to paper",
     "ZEBRA": "Striped equine",
+    "AROSE": "Got up",
+    "SLATE": "Chalkboard stone",
+    "CRATE": "Wooden shipping box",
+    "TRACE": "Faint mark",
+    "IRATE": "Very angry",
+    "SNARE": "Trap",
+    "STORE": "Shop",
+    "STOLE": "Took without asking",
+    "NOTES": "Short memos",
+    "RATES": "Prices or speeds",
+    "TALES": "Stories",
+    "SALES": "Store discounts",
+    "GATES": "Fence openings",
+    "MATES": "Chess endings or friends",
+    "DATES": "Calendar days",
+    "LAKES": "Inland waters",
+    "CAKES": "Frosted desserts",
+    "MAKES": "Creates",
+    "TAKES": "Grabs",
+    "BAKES": "Cooks in an oven",
+    "LINES": "Straight marks",
+    "MINES": "Ore shafts",
+    "PINES": "Evergreen trees",
+    "VINES": "Climbing plants",
+    "WINES": "Grape drinks",
+    "TONES": "Musical pitches",
+    "BONES": "Skeleton parts",
+    "CONES": "Ice cream holders",
+    "ZONES": "Areas",
+    "HOPES": "Wishes",
+    "ROPES": "Thick cords",
+    "CARES": "Concerns",
+    "DARES": "Challenges",
+    "FARES": "Transit fees",
+    "BEARS": "Forest mammals",
+    "FEARS": "Worries",
+    "GEARS": "Toothed wheels",
+    "HEARS": "Listens to",
+    "NEARS": "Approaches",
+    "PEARS": "Orchard fruits",
+    "TEARS": "Eye drops",
+    "WEARS": "Puts on",
+    "YEARS": "365-day spans",
+    "LEADS": "Guides",
+    "READS": "Peruses",
+    "HEADS": "Tops of coins",
+    "SEEDS": "Plant starters",
+    "TREES": "Oaks and maples",
+    "STEER": "Guide a ship",
+    "CHEER": "Root for",
+    "OTTER": "Playful river mammal",
+    "ENTER": "Go in",
+    "AFTER": "Following",
+    "ALTER": "Modify",
+    "LATER": "Not now",
+    "METER": "100 centimeters",
+    "RESET": "Start over",
+    "ASSET": "Valuable thing",
+    "ONSET": "Beginning",
+    "UPSET": "Disturbed",
+    "INLET": "Small bay",
+    "OUTER": "External",
+    "INNER": "Internal",
+    "DINER": "Roadside eatery",
+    "LINER": "Cruise ship",
+    "MINER": "Ore digger",
+    "RIDER": "Horseback traveler",
+    "ELDER": "Senior",
+    "OLDER": "More aged",
+    "UNDER": "Beneath",
+    "ORDER": "Sequence",
+    "RACER": "Speedy competitor",
+    "MAKER": "Creator",
+    "EAGER": "Enthusiastic",
+    "ANGER": "Fury",
+    "RANGE": "Mountain chain",
+    "STAGE": "Theater platform",
+    "STARE": "Long gaze",
+    "SHARE": "Split",
+    "SPARE": "Extra",
+    "SCARE": "Frighten",
+    "STALE": "Not fresh",
+    "SCALE": "Weighing device",
+    "STEAL": "Pilfer",
+    "STEAM": "Hot vapor",
+    "STERN": "Ship's back",
+    "STEEP": "Sharp incline",
+    "SLEEP": "Slumber",
+    "SHEEP": "Woolly animal",
+    "SHEET": "Bed linen",
+    "SWEET": "Sugary",
+    "FLEET": "Group of ships",
+    "GREET": "Say hello",
+    "TREAT": "Snack or reward",
+    "GREAT": "Terrific",
+    "HEART": "Ticker",
+    "EARTH": "Third planet",
+    "LEARN": "Study",
+    "YEARN": "Long for",
+    "STERN": "Strict",
+    "CRANE": "Lifting machine",
+    "PLANE": "Aircraft",
+    "PLATE": "Dinner dish",
+    "PLACE": "Location",
+    "PEACE": "Calm",
+    "REACH": "Stretch out",
+    "TEACH": "Instruct",
+    "BEACH": "Sandy coast",
+    "PEARL": "Oyster gem",
+    "EARLY": "Ahead of time",
+    "CLEAR": "Transparent",
+    "CLEAN": "Spotless",
+    "OCEAN": "Deep sea",
+    "ORGAN": "Church keyboard",
+    "URBAN": "City-related",
+    "TRAIN": "Rail vehicle",
+    "BRAIN": "Thinking organ",
+    "GRAIN": "Wheat",
+    "DRAIN": "Sink outlet",
+    "CHAIN": "Linked metal",
+    "CHAIR": "Seat",
+    "STAIR": "Step",
+    "THEIR": "Belonging to them",
+    "THERE": "In that place",
+    "WHERE": "At which place",
+    "THESE": "Plural of this",
+    "THOSE": "Plural of that",
+    "OTHER": "Different one",
+    "NORTH": "Compass top",
+    "SOUTH": "Compass bottom",
+    "WORTH": "Value",
+    "MONTH": "Calendar twelfth",
+    "MOUTH": "Speaking opening",
+    "YOUTH": "Younger years",
+    "TRUTH": "Fact",
+    "ROUTE": "Path",
+    "OUTRO": "Closing music",
+    "INTRO": "Opening",
+    "RATIO": "Proportion",
+    "PATIO": "Backyard deck",
+    "PIANO": "88 keys",
+    "RADAR": "Aircraft detector",
+    "ROTOR": "Helicopter blade",
+    "MOTOR": "Engine",
+    "DONOR": "Giver",
+    "HONOR": "Respect",
+    "MANOR": "Grand estate",
+    "MAYOR": "City leader",
+    "MAJOR": "Important",
+    "MINOR": "Small",
+    "ERROR": "Mistake",
+    "ARROW": "Bow projectile",
+    "CARGO": "Freight",
+    "MANGO": "Tropical fruit",
+    "TANGO": "Ballroom dance",
+    "BANJO": "Plucked instrument",
+    "SALON": "Hair studio",
+    "TALON": "Eagle claw",
+    "MELON": "Juicy fruit",
+    "LEMON": "Citrus fruit",
+    "DEMON": "Mischievous spirit",
+    "WAGON": "Four-wheeled cart",
+    "CANON": "Accepted rule",
+    "BACON": "Breakfast strips",
+    "APRON": "Chef's wear",
+    "ACORN": "Oak seed",
+    "ADORN": "Decorate",
+    "THORN": "Rose spike",
+    "SHORN": "Clipped",
+    "SCORN": "Contempt",
+    "SWORN": "Pledged",
+    "STORK": "Long-legged bird",
+    "STORM": "Tempest",
+    "SHORT": "Brief",
+    "SPORT": "Game",
+    "SNORT": "Pig sound",
+    "SHIRT": "Top",
+    "SKIRT": "Pleated garment",
+    "FLIRT": "Playful tease",
+    "DIRTY": "Needs washing",
+    "FIFTY": "Half a century",
+    "SIXTY": "One hour's minutes",
+    "FORTY": "Four decades",
+    "PARTY": "Celebration",
+    "TASTY": "Delicious",
+    "HASTY": "Rushed",
+    "NASTY": "Unpleasant",
+    "PASTY": "Pale",
+    "MISTY": "Foggy",
+    "DUSTY": "Needs sweeping",
+    "RUSTY": "Oxidized",
+    "GUSTY": "Windy",
 }
 
 WORDS_4 = {
@@ -337,59 +529,510 @@ WORDS_4 = {
 }
 
 
+WORDS_3 = {
+    "ACE": "Top playing card",
+    "ACT": "Play a role",
+    "ADD": "Sum up",
+    "AGE": "Number of years",
+    "AGO": "In the past",
+    "AID": "Help",
+    "AIM": "Point toward",
+    "AIR": "What we breathe",
+    "ALE": "Pub brew",
+    "ALL": "Everything",
+    "AND": "Plus",
+    "ANT": "Picnic bug",
+    "ANY": "Whichever",
+    "APE": "Gorilla or chimp",
+    "ARC": "Curved path",
+    "ARE": "Exist",
+    "ARK": "Noah's boat",
+    "ARM": "Body limb",
+    "ART": "Gallery work",
+    "ASH": "Fireplace dust",
+    "ASK": "Inquire",
+    "ATE": "Had a meal",
+    "BAD": "Not good",
+    "BAG": "Tote",
+    "BAN": "Prohibit",
+    "BAR": "Pub counter",
+    "BAT": "Baseball stick",
+    "BAY": "Coastal inlet",
+    "BED": "Place to sleep",
+    "BEE": "Honey maker",
+    "BET": "Wager",
+    "BID": "Auction offer",
+    "BIG": "Large",
+    "BIN": "Storage box",
+    "BIT": "Small piece",
+    "BOW": "Ribbon knot",
+    "BOX": "Cardboard cube",
+    "BOY": "Young lad",
+    "BUD": "Flower starter",
+    "BUG": "Insect",
+    "BUN": "Burger roll",
+    "BUS": "City transit",
+    "BUT": "However",
+    "BUY": "Purchase",
+    "CAB": "Taxi",
+    "CAN": "Tin container",
+    "CAP": "Baseball hat",
+    "CAR": "Automobile",
+    "CAT": "Purring pet",
+    "COB": "Corn core",
+    "COD": "Ocean fish",
+    "COG": "Gear tooth",
+    "COP": "Police officer",
+    "COT": "Folding bed",
+    "COW": "Dairy animal",
+    "COY": "Shyly playful",
+    "CRY": "Shed tears",
+    "CUB": "Bear baby",
+    "CUE": "Stage prompt",
+    "CUP": "Mug",
+    "CUR": "Scruffy dog",
+    "CUT": "Slice",
+    "DAB": "Light pat",
+    "DAD": "Father",
+    "DAM": "River barrier",
+    "DAY": "24 hours",
+    "DEN": "Cozy room",
+    "DEW": "Morning moisture",
+    "DID": "Performed",
+    "DIE": "Cube with dots",
+    "DIG": "Excavate",
+    "DIM": "Faintly lit",
+    "DIN": "Loud noise",
+    "DIP": "Quick swim",
+    "DOC": "Physician",
+    "DOE": "Female deer",
+    "DOG": "Barking pet",
+    "DOT": "Tiny point",
+    "DRY": "Without water",
+    "DUB": "Give a nickname",
+    "DUE": "Owed",
+    "DUG": "Excavated",
+    "DUO": "Pair",
+    "DYE": "Fabric color",
+    "EAR": "Hearing organ",
+    "EAT": "Dine",
+    "EBB": "Recede, like tide",
+    "EEL": "Slithery fish",
+    "EGG": "Omelet base",
+    "EGO": "Sense of self",
+    "ELF": "Santa's helper",
+    "ELK": "Antlered deer",
+    "ELM": "Shade tree",
+    "END": "Finish",
+    "ERA": "Historical period",
+    "EVE": "Night before",
+    "EWE": "Female sheep",
+    "EYE": "Sight organ",
+    "FAB": "Terrific",
+    "FAD": "Short-lived craze",
+    "FAN": "Cooling device",
+    "FAR": "Distant",
+    "FAT": "Plump",
+    "FAX": "Scanned message",
+    "FED": "Gave food to",
+    "FEE": "Service charge",
+    "FEW": "Not many",
+    "FIG": "Orchard fruit",
+    "FIN": "Fish flipper",
+    "FIR": "Evergreen tree",
+    "FIT": "In good shape",
+    "FIX": "Repair",
+    "FLU": "Winter bug",
+    "FLY": "Soar",
+    "FOE": "Enemy",
+    "FOG": "Thick mist",
+    "FOR": "In favor of",
+    "FOX": "Clever canine",
+    "FRY": "Cook in oil",
+    "FUN": "Enjoyment",
+    "FUR": "Animal coat",
+    "GAG": "Joke",
+    "GAL": "Young woman",
+    "GAP": "Opening",
+    "GAS": "Fuel",
+    "GEL": "Hair product",
+    "GEM": "Precious stone",
+    "GET": "Obtain",
+    "GIG": "Band booking",
+    "GIN": "Juniper spirit",
+    "GNU": "Wildebeest",
+    "GOB": "Lump",
+    "GOT": "Received",
+    "GUM": "Chewy treat",
+    "GUY": "Fellow",
+    "GYM": "Workout spot",
+    "HAD": "Owned",
+    "HAM": "Deli meat",
+    "HAS": "Possesses",
+    "HAT": "Headwear",
+    "HAY": "Dried grass",
+    "HEM": "Skirt edge",
+    "HEN": "Female chicken",
+    "HER": "Belonging to she",
+    "HEW": "Chop",
+    "HEX": "Spell",
+    "HEY": "Friendly greeting",
+    "HID": "Concealed",
+    "HIM": "That man",
+    "HIP": "Trendy",
+    "HIS": "Belonging to he",
+    "HIT": "Strike",
+    "HOE": "Garden tool",
+    "HOG": "Pig",
+    "HOP": "Small jump",
+    "HOT": "Spicy or warm",
+    "HOW": "In what way",
+    "HUB": "Center point",
+    "HUE": "Color shade",
+    "HUG": "Embrace",
+    "HUM": "Soft tune",
+    "HUT": "Small shack",
+    "ICE": "Frozen water",
+    "ICY": "Slippery",
+    "ILL": "Unwell",
+    "IMP": "Mischievous sprite",
+    "INK": "Pen fluid",
+    "INN": "Country hotel",
+    "ION": "Charged atom",
+    "IRE": "Anger",
+    "IVY": "Climbing vine",
+    "JAM": "Fruit spread",
+    "JAR": "Glass container",
+    "JAW": "Mouth bone",
+    "JAY": "Blue songbird",
+    "JET": "Fast plane",
+    "JIG": "Lively dance",
+    "JOB": "Occupation",
+    "JOG": "Light run",
+    "JOT": "Quick note",
+    "JOY": "Happiness",
+    "JUG": "Water pitcher",
+    "KEG": "Beer barrel",
+    "KEY": "Lock opener",
+    "KID": "Youngster",
+    "KIN": "Relatives",
+    "KIT": "Tool set",
+    "LAB": "Science room",
+    "LAD": "Young boy",
+    "LAG": "Fall behind",
+    "LAP": "Track circuit",
+    "LAW": "Legal rule",
+    "LAX": "Relaxed",
+    "LAY": "Set down",
+    "LED": "Guided",
+    "LEG": "Walking limb",
+    "LET": "Allow",
+    "LID": "Jar top",
+    "LIE": "Untruth",
+    "LIP": "Mug rim",
+    "LIT": "Illuminated",
+    "LOG": "Cabin timber",
+    "LOT": "Parking area",
+    "LOW": "Not high",
+    "LUG": "Carry heavily",
+    "MAD": "Angry",
+    "MAN": "Gentleman",
+    "MAP": "Atlas page",
+    "MAR": "Blemish",
+    "MAT": "Doorway rug",
+    "MAX": "Upper limit",
+    "MAY": "Spring month",
+    "MEN": "Gentlemen",
+    "MET": "Encountered",
+    "MIX": "Blend",
+    "MOB": "Crowd",
+    "MOM": "Mother",
+    "MOP": "Floor cleaner",
+    "MOW": "Cut grass",
+    "MUD": "Wet dirt",
+    "MUG": "Coffee cup",
+    "NAG": "Pester",
+    "NAP": "Short snooze",
+    "NET": "Mesh",
+    "NEW": "Brand-fresh",
+    "NIB": "Pen tip",
+    "NIL": "Zero",
+    "NIP": "Chilly bite",
+    "NOD": "Agree silently",
+    "NOR": "Neither's partner",
+    "NOT": "Negative word",
+    "NOW": "At this moment",
+    "NUN": "Convent sister",
+    "NUT": "Acorn or almond",
+    "OAK": "Acorn tree",
+    "OAR": "Rowing paddle",
+    "OAT": "Porridge grain",
+    "ODD": "Unusual",
+    "ODE": "Lyric poem",
+    "OFF": "Not on",
+    "OFT": "Frequently, in poetry",
+    "OHM": "Resistance unit",
+    "OIL": "Cooking liquid",
+    "OLD": "Aged",
+    "ONE": "Single",
+    "OPT": "Choose",
+    "ORB": "Sphere",
+    "ORE": "Mined rock",
+    "OUR": "Belonging to us",
+    "OUT": "Not in",
+    "OWE": "Be in debt",
+    "OWL": "Night bird",
+    "OWN": "Possess",
+    "PAD": "Notebook",
+    "PAL": "Friend",
+    "PAN": "Frying dish",
+    "PAR": "Golf standard",
+    "PAT": "Gentle tap",
+    "PAW": "Dog foot",
+    "PAY": "Compensate",
+    "PEA": "Green pod veggie",
+    "PEG": "Wooden pin",
+    "PEN": "Writing tool",
+    "PEP": "Lively energy",
+    "PER": "For each",
+    "PET": "House animal",
+    "PEW": "Church bench",
+    "PIE": "Baked dessert",
+    "PIG": "Farm animal",
+    "PIN": "Bowling target",
+    "PIT": "Peach center",
+    "PLY": "Tissue layer",
+    "POD": "Whale group",
+    "POP": "Soda",
+    "POT": "Soup vessel",
+    "PRO": "Expert",
+    "PRY": "Be nosy",
+    "PUB": "Tavern",
+    "PUG": "Wrinkly dog",
+    "PUN": "Wordplay joke",
+    "PUP": "Young dog",
+    "PUT": "Place",
+    "RAG": "Cleaning cloth",
+    "RAM": "Male sheep",
+    "RAN": "Sprinted",
+    "RAP": "Music genre",
+    "RAT": "Rodent",
+    "RAW": "Uncooked",
+    "RAY": "Sunbeam",
+    "RED": "Ruby color",
+    "REF": "Sports official",
+    "RIB": "Cage bone",
+    "RID": "Free of",
+    "RIG": "Oil platform",
+    "RIM": "Wheel edge",
+    "RIP": "Tear",
+    "ROB": "Steal from",
+    "ROD": "Fishing pole",
+    "ROE": "Fish eggs",
+    "ROT": "Decay",
+    "ROW": "Boat oar action",
+    "RUB": "Massage",
+    "RUG": "Floor mat",
+    "RUN": "Jog fast",
+    "RUT": "Wheel groove",
+    "RYE": "Bread grain",
+    "SAD": "Unhappy",
+    "SAG": "Droop",
+    "SAP": "Tree juice",
+    "SAT": "Took a seat",
+    "SAW": "Cutting tool",
+    "SAY": "Speak",
+    "SEA": "Ocean",
+    "SEC": "Brief moment",
+    "SEE": "Spot",
+    "SET": "Collection",
+    "SEW": "Stitch",
+    "SHE": "That woman",
+    "SHY": "Bashful",
+    "SIP": "Small drink",
+    "SIR": "Polite title",
+    "SIT": "Take a chair",
+    "SIX": "Half a dozen",
+    "SKI": "Snow runner",
+    "SKY": "Above us",
+    "SLY": "Crafty",
+    "SOB": "Weep",
+    "SOD": "Lawn turf",
+    "SON": "Male child",
+    "SOP": "Soak up",
+    "SOW": "Plant seeds",
+    "SOY": "Tofu bean",
+    "SPA": "Relaxing resort",
+    "SPY": "Secret agent",
+    "SUB": "Sandwich",
+    "SUE": "Take to court",
+    "SUM": "Total",
+    "SUN": "Daytime star",
+    "SUP": "Dine",
+    "TAB": "Browser window",
+    "TAG": "Price label",
+    "TAN": "Beach bronze",
+    "TAP": "Faucet",
+    "TAR": "Road surface",
+    "TAX": "Income levy",
+    "TEA": "Steeped drink",
+    "TEE": "Golf peg",
+    "TEN": "Decade years",
+    "THE": "Definite article",
+    "TIC": "Tac-toe starter",
+    "TIE": "Neckwear",
+    "TIN": "Metal can",
+    "TIP": "Waiter's extra",
+    "TOE": "Foot digit",
+    "TON": "2,000 pounds",
+    "TOO": "Also",
+    "TOP": "Spinning toy",
+    "TOW": "Pull a car",
+    "TOY": "Plaything",
+    "TRY": "Attempt",
+    "TUB": "Bathtub",
+    "TUG": "Harbor boat",
+    "TWO": "Pair",
+    "URN": "Coffee dispenser",
+    "USE": "Employ",
+    "VAN": "Moving vehicle",
+    "VAT": "Large tank",
+    "VET": "Animal doctor",
+    "VIA": "By way of",
+    "VIE": "Compete",
+    "VOW": "Solemn promise",
+    "WAG": "Tail motion",
+    "WAR": "Conflict",
+    "WAS": "Used to be",
+    "WAX": "Candle stuff",
+    "WAY": "Path",
+    "WEB": "Spider's net",
+    "WED": "Marry",
+    "WEE": "Tiny",
+    "WET": "Damp",
+    "WHO": "Which person",
+    "WHY": "For what reason",
+    "WIG": "Hairpiece",
+    "WIN": "Triumph",
+    "WIT": "Clever humor",
+    "WOE": "Sorrow",
+    "WOK": "Stir-fry pan",
+    "WON": "Came in first",
+    "WOO": "Court",
+    "WOW": "Amaze",
+    "YAK": "Shaggy ox",
+    "YAM": "Sweet potato",
+    "YAP": "Small bark",
+    "YAW": "Airplane turn",
+    "YES": "Affirmative",
+    "YET": "So far",
+    "YEW": "Evergreen",
+    "YOU": "The reader",
+    "ZAP": "Microwave quickly",
+    "ZEN": "Calm state",
+    "ZIG": "Zag's partner",
+    "ZIP": "Postal code",
+    "ZOO": "Animal park",
+}
+
+def _format_grid_puzzle(rows: list[str], clues: dict[str, str]) -> dict:
+    """Builds grid, numbering, and Across/Down clues from 5x5 string rows ('#' = black)."""
+    grid = [[{"black": True} if ch == "#" else {"letter": ch} for ch in row] for row in rows]
+    across = []
+    down = []
+    num = 1
+
+    for r in range(5):
+        for c in range(5):
+            if rows[r][c] == "#":
+                continue
+            starts_across = (c == 0 or rows[r][c - 1] == "#") and (c + 1 < 5 and rows[r][c + 1] != "#")
+            starts_down = (r == 0 or rows[r - 1][c] == "#") and (r + 1 < 5 and rows[r + 1][c] != "#")
+            if starts_across or starts_down:
+                grid[r][c]["number"] = num
+                if starts_across:
+                    word = ""
+                    cc = c
+                    while cc < 5 and rows[r][cc] != "#":
+                        word += rows[r][cc]
+                        cc += 1
+                    across.append({"number": num, "clue": clues[word]})
+                if starts_down:
+                    word = ""
+                    rr = r
+                    while rr < 5 and rows[rr][c] != "#":
+                        word += rows[rr][c]
+                        rr += 1
+                    down.append({"number": num, "clue": clues[word]})
+                num += 1
+
+    return {"title": "Daily Mini", "grid": grid, "across": across, "down": down}
+
+
 def _build_puzzle_from_seed(seed: int) -> dict:
     rng = random.Random(seed)
-    words_5 = list(WORDS_5.keys())
+    words_3 = list(WORDS_3.keys())
     words_4 = list(WORDS_4.keys())
-    rng.shuffle(words_5)
+    words_5 = list(WORDS_5.keys())
+    rng.shuffle(words_3)
     rng.shuffle(words_4)
+    rng.shuffle(words_5)
 
-    # Layout:
-    # . A1 A2 A3 A4   (row 0: 4-letter word)
-    # B0 B1 B2 B3 B4  (row 1..4: 5-letter words)
-    # C0 C1 C2 C3 C4
-    # D0 D1 D2 D3 D4
-    # E0 E1 E2 E3 E4
-    # Col 0 is 4-letter word (B0 C0 D0 E0); Cols 1..4 are 5-letter words.
-    set_5 = set(words_5)
-    by_prefix_5: dict[str, list[str]] = {}
+    set_3 = set(words_3)
+    set_4 = set(words_4)
+    by_mid_5: dict[str, list[str]] = {}
     for w in words_5:
-        for i in range(1, 5):
-            by_prefix_5.setdefault(w[:i], []).append(w)
+        by_mid_5.setdefault(w[2], []).append(w)
+    by_p2_4: dict[str, list[str]] = {}
+    for w in words_4:
+        by_p2_4.setdefault(w[:2], []).append(w)
+    by_p1_3: dict[str, list[str]] = {}
+    for w in words_3:
+        by_p1_3.setdefault(w[0], []).append(w)
 
-    for w0 in words_4:
-        for c0 in words_4:
-            # Row 1..4 start with c0[0..3]
-            r1_cands = [w for w in by_prefix_5.get(c0[0], []) if w[1] == w0[0]]
-            if not r1_cands:
+    clues = {**WORDS_3, **WORDS_4, **WORDS_5}
+
+    # Stair-step 5x5 layout:
+    # ## A B C
+    # #  D E F G
+    # H  I J K L
+    # M  N O P #
+    # Q  R S ##
+    for r2 in words_5:
+        for c2 in by_mid_5.get(r2[2], []):
+            if c2 == r2:
                 continue
-            for r1 in r1_cands[:15]:
-                r2_cands = [w for w in by_prefix_5.get(c0[1], []) if (w0[1] + r1[1] + w[1]) in by_prefix_5]
-                if not r2_cands:
-                    continue
-                for r2 in r2_cands[:15]:
-                    c1_pre = w0[1] + r1[1] + r2[1]
-                    c2_pre = w0[2] + r1[2] + r2[2]
-                    c3_pre = w0[3] + r1[3] + r2[3]
-                    c4_pre = w0[4 - 1] + r1[4] + r2[4]  # w0 is len 4: indices 0..3 -> cols 1..4
-                    # Fix: cols 1..4 correspond to w0[0..3]
-                    c1_pre = w0[0] + r1[1] + r2[1]
-                    c2_pre = w0[1] + r1[2] + r2[2]
-                    c3_pre = w0[2] + r1[3] + r2[3]
-                    c4_pre = w0[3] + r1[4] + r2[4]
-                    if not (c1_pre in by_prefix_5 and c2_pre in by_prefix_5 and c3_pre in by_prefix_5 and c4_pre in by_prefix_5):
+            for r0 in by_p1_3.get(c2[0], []):
+                for r1 in words_4:
+                    if r1[1] != c2[1]:
                         continue
-                    for c1 in by_prefix_5[c1_pre][:10]:
-                        for c2 in by_prefix_5[c2_pre][:10]:
-                            for c3 in by_prefix_5[c3_pre][:10]:
-                                for c4 in by_prefix_5[c4_pre][:10]:
-                                    r3 = c0[2] + c1[3] + c2[3] + c3[3] + c4[3]
-                                    r4 = c0[3] + c1[4] + c2[4] + c3[4] + c4[4]
-                                    if r3 in set_5 and r4 in set_5:
-                                        return _format_puzzle(w0, r1, r2, r3, r4, c0, c1, c2, c3, c4)
+                    c1p = r1[0] + r2[1]
+                    c3p = r0[1] + r1[2]
+                    if c1p not in by_p2_4 or c3p not in by_p2_4:
+                        continue
+                    c4 = r0[2] + r1[3] + r2[4]
+                    if c4 not in set_3:
+                        continue
+                    for c1 in by_p2_4[c1p]:
+                        for c3 in by_p2_4[c3p]:
+                            if c3[2] != r2[3]:
+                                continue
+                            for c0 in by_p1_3.get(r2[0], []):
+                                r3 = c0[1] + c1[2] + c2[3] + c3[3]
+                                r4 = c0[2] + c1[3] + c2[4]
+                                if r3 in set_4 and r4 in set_3:
+                                    used = {r0, r1, r2, r3, r4, c0, c1, c2, c3, c4}
+                                    if len(used) == 10:
+                                        rows = [
+                                            f"##{r0}",
+                                            f"#{r1}",
+                                            r2,
+                                            f"{r3}#",
+                                            f"{r4}##",
+                                        ]
+                                        return _format_grid_puzzle(rows, clues)
 
-    # Fallback if no match found
-    return _format_puzzle("STAR", "STONE", "TOPIC", "ANIMA", "RECAP", "STAR", "STONE", "TOPIC", "ANIMA", "RECAP")
+    return _format_grid_puzzle(["#STAR", "STONE", "TOPIC", "ANIMA", "RECAP"], clues)
 
 
 def _format_puzzle(w0, r1, r2, r3, r4, c0, c1, c2, c3, c4) -> dict:
