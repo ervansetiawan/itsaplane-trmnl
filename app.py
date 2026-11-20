@@ -320,16 +320,33 @@ def closest_flight():
 
     return jsonify(flight_data)
 
+def _parse_optional_date():
+    date_str = request.args.get('date')
+    if not date_str:
+        return None, None
+    try:
+        from datetime import date
+        return date.fromisoformat(date_str), None
+    except ValueError:
+        return None, (jsonify({"error": "Invalid date format, expected YYYY-MM-DD"}), 400)
+
+
 @app.route('/crossword/daily')
 def crossword_daily():
     from crossword_generator import generate_daily_puzzle
-    return jsonify(generate_daily_puzzle())
+    target_date, err = _parse_optional_date()
+    if err:
+        return err
+    return jsonify(generate_daily_puzzle(target_date))
 
 
 @app.route('/rebus/daily')
 def rebus_daily():
     from rebus_generator import generate_daily_rebus
-    return jsonify(generate_daily_rebus())
+    target_date, err = _parse_optional_date()
+    if err:
+        return err
+    return jsonify(generate_daily_rebus(target_date))
 
 
 if __name__ == '__main__':
