@@ -379,5 +379,17 @@ def solar_daily():
     return jsonify(generate_solar_orrery(target_date))
 
 
+@app.route('/museum/daily')
+def museum_daily():
+    from museum_daily import fetch_daily_masterpiece
+    target_date, err = _parse_optional_date()
+    if err:
+        return err
+    try:
+        return jsonify(fetch_daily_masterpiece(target_date))
+    except (requests.RequestException, ValueError) as exc:
+        return jsonify({"error": f"Museum feed unavailable: {exc}"}), 502
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

@@ -1,0 +1,17 @@
+name: Museum Masterpiece
+description: Daily public-domain museum art
+strategy: polling
+polling_url: https://itsaplane-trmnl.onrender.com/museum/daily
+polling_verb: get
+polling_headers: ""
+refresh_interval: 1440
+dark_mode: "no"
+no_screen_padding: "no"
+custom_fields:
+  - keyname: author_bio
+    field_type: author_bio
+    name: About This Plugin
+    category: art
+    description: Daily public-domain museum art
+    github_url: https://github.com/ervansetiawan/itsaplane-trmnl
+    email_address: you@example.com

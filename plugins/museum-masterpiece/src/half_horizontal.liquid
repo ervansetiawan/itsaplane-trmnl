@@ -1,0 +1,21 @@
+<div class="layout layout--col">
+  <div class="flex flex--row portrait:flex--col w--full h--full gap--medium lg:gap--large">
+    <div class="flex flex--col flex--center w--[46cqw] h--full">
+      <img src="{{ image_url }}" alt="{{ artwork_title }}" class="image image-dither w--full h--[88cqh] object--contain rounded" />
+    </div>
+
+    <div class="flex flex--col flex--between stretch-x h--full text--left">
+      <div>
+        <div class="label label--small label--inverted px--2 mb--1">{{ year | default: "PUBLIC DOMAIN" }}</div>
+        <div class="title title--small text--left mb--1">{{ artwork_title }}</div>
+        <div class="description text--left">{{ artist }}</div>
+      </div>
+      <div class="label label--small text--left">{{ museum }}</div>
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">{{ date }}</span>
+</div>
