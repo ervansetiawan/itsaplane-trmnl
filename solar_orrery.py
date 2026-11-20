@@ -65,8 +65,8 @@ def generate_solar_orrery(target_date: date | None = None) -> dict:
         # SVG coords on 300x300 canvas (center 150, 150; 0° at right, counter-clockwise)
         cx = round(150 + orbit_px * math.cos(lon_rad), 1)
         cy = round(150 - orbit_px * math.sin(lon_rad), 1)
-        lx = round(150 + (orbit_px + 10) * math.cos(lon_rad), 1)
-        ly = round(150 - (orbit_px + 10) * math.sin(lon_rad) + 2.5, 1)
+        lx = cx
+        ly = round(cy - dot_r - (6.5 if abbr == "SAT" else 4.5), 1)
 
         zodiac = ZODIAC[int(lon_deg // 30) % 12]
         planets_out.append({

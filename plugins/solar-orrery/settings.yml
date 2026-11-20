@@ -11,7 +11,7 @@ custom_fields:
   - keyname: author_bio
     field_type: author_bio
     name: About This Plugin
-    category: science
+    category: education
     description: Live heliocentric solar system map
     github_url: https://github.com/ervansetiawan/itsaplane-trmnl
     email_address: you@example.com
