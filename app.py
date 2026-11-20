@@ -427,5 +427,17 @@ def markets_fear_greed():
         return jsonify({"error": f"Market sentiment feed unavailable: {exc}"}), 502
 
 
+@app.route('/nba/story')
+def nba_story():
+    from nba_game_story import fetch_nba_game_story
+    target_date, err = _parse_optional_date()
+    if err:
+        return err
+    try:
+        return jsonify(fetch_nba_game_story(target_date))
+    except (requests.RequestException, ValueError) as exc:
+        return jsonify({"error": f"NBA game story unavailable: {exc}"}), 502
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

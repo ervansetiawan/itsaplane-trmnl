@@ -1,0 +1,87 @@
+<div class="layout layout--col">
+  <div class="flex flex--col flex--between w--full h--full gap--small">
+    <div class="flex flex--row flex--between flex--center-y w--full">
+      <div class="flex flex--row flex--center-y gap--medium">
+        <span class="title title--base lg:title--large">{{ away_abbr }} {{ away_score }}</span>
+        <span class="label label--base">&ndash;</span>
+        <span class="title title--base lg:title--large">{{ home_score }} {{ home_abbr }}</span>
+      </div>
+      <span class="label label--base label--inverted px--2">FINAL &middot; {{ winner }} WIN</span>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="flex flex--row portrait:flex--col w--full stretch-y gap--large">
+      <div class="flex flex--col flex--between w--[54cqw] portrait:w--full text--left">
+        <div class="w--full">
+          <div class="flex flex--row flex--between flex--center-y mb--1">
+            <span class="label label--base label--underline">WIN PROBABILITY</span>
+            <span class="label label--small">{{ lead_changes }} SWINGS &middot; LOW {{ min_winner_wp }}%</span>
+          </div>
+          <svg viewBox="0 0 300 100" preserveAspectRatio="none" class="w--full h--[40cqh]">
+            <rect x="0.5" y="0.5" width="299" height="99" fill="#fff" stroke="#000" stroke-width="1" />
+            <line x1="0" y1="50" x2="300" y2="50" stroke="#999" stroke-width="0.9" stroke-dasharray="3,3" />
+            <line x1="75" y1="0" x2="75" y2="100" stroke="#ddd" stroke-width="0.7" />
+            <line x1="150" y1="0" x2="150" y2="100" stroke="#ddd" stroke-width="0.7" />
+            <line x1="225" y1="0" x2="225" y2="100" stroke="#ddd" stroke-width="0.7" />
+            <text x="5" y="11" font-size="8" font-weight="700" fill="#000" font-family="sans-serif">{{ home_abbr }} 100%</text>
+            <text x="5" y="95" font-size="8" font-weight="700" fill="#000" font-family="sans-serif">{{ away_abbr }} 100%</text>
+            {% if wp_polyline != "" %}
+              <polyline fill="none" stroke="#000" stroke-width="2" points="{{ wp_polyline }}" />
+            {% endif %}
+          </svg>
+          <div class="flex flex--row flex--between w--full">
+            <span class="label label--small">Q1</span>
+            <span class="label label--small">Q2</span>
+            <span class="label label--small">Q3</span>
+            <span class="label label--small">Q4</span>
+          </div>
+        </div>
+
+        {% if other_finals.size > 0 %}
+          <div class="w--full">
+            <div class="divider mb--1"></div>
+            <div class="label label--small text--left">OTHER FINALS: {% for f in other_finals %}{{ f }}{% unless forloop.last %} &middot; {% endunless %}{% endfor %}</div>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="divider--v portrait:hidden"></div>
+
+      <div class="flex flex--col gap--medium stretch-x text--left">
+        <div class="w--full">
+          <div class="label label--base label--underline mb--1 text--left">QUARTER SCORING</div>
+          <div class="flex flex--row flex--between w--full mb--1">
+            <span class="description"><strong>{{ away_abbr }}</strong> ({{ away_record }})</span>
+            <span class="description">{% for q in away_q %}{{ q }} &middot; {% endfor %}<strong>{{ away_score }}</strong></span>
+          </div>
+          <div class="flex flex--row flex--between w--full">
+            <span class="description"><strong>{{ home_abbr }}</strong> ({{ home_record }})</span>
+            <span class="description">{% for q in home_q %}{{ q }} &middot; {% endfor %}<strong>{{ home_score }}</strong></span>
+          </div>
+        </div>
+
+        {% if mvp %}
+          <div class="w--full">
+            <div class="divider mb--2"></div>
+            <div class="label label--base label--underline mb--1 text--left">GAME MVP</div>
+            <div class="title title--small text--left">{{ mvp.name }} ({{ mvp.team }})</div>
+            <div class="description text--left"><strong>{{ mvp.pts }} PTS</strong> &middot; {{ mvp.reb }} REB &middot; {{ mvp.ast }} AST &middot; {{ mvp.fg }} FG</div>
+          </div>
+        {% endif %}
+
+        {% if runner_up %}
+          <div class="w--full">
+            <div class="divider mb--1"></div>
+            <div class="description text--left">Opposing Leader: <strong>{{ runner_up.name }}</strong> ({{ runner_up.pts }}P / {{ runner_up.reb }}R / {{ runner_up.ast }}A)</div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">{{ matchup }} &middot; {{ date }}</span>
+</div>

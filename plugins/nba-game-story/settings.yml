@@ -1,0 +1,17 @@
+name: NBA Game Story
+description: Yesterday's NBA win-prob & MVP
+strategy: polling
+polling_url: https://itsaplane-trmnl.onrender.com/nba/story
+polling_verb: get
+polling_headers: ""
+refresh_interval: 60
+dark_mode: "no"
+no_screen_padding: "no"
+custom_fields:
+  - keyname: author_bio
+    field_type: author_bio
+    name: About This Plugin
+    category: sports
+    description: Yesterday's NBA win-prob & MVP
+    github_url: https://github.com/ervansetiawan/itsaplane-trmnl
+    email_address: you@example.com
