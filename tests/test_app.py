@@ -230,3 +230,12 @@ def test_get_closest_flight_falls_back_to_ground_when_none_airborne():
     assert chosen["flight"] == "GND1"
 
 
+def test_is_route_plausible_accepts_on_corridor_and_rejects_far_off_route():
+    from app import is_route_plausible
+
+    # MSP (44.88, -93.22) -> ORD (41.98, -87.90), plane over Wisconsin (43.5, -90.5)
+    assert is_route_plausible(44.88, -93.22, 41.98, -87.90, 43.5, -90.5) is True
+    # Plane over Los Angeles (33.94, -118.41) cannot plausibly be on MSP -> ORD
+    assert is_route_plausible(44.88, -93.22, 41.98, -87.90, 33.94, -118.41) is False
+
+

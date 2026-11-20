@@ -269,19 +269,62 @@ def get_closest_flight(flight_data_json, prefer_airliners):
     print(f"Closest flight found at index {chosen_index} with distance {chosen_dist} miles")
     return aircraft_list[chosen_index]
 
-def get_route_info_json(callsign):
-    """Fetches route information for a given flight callsign directly from the asset server."""
+def is_route_plausible(origin_lat, origin_lon, dest_lat, dest_lon, ac_lat, ac_lon):
+    """Checks whether the aircraft position is plausibly along the origin-destination corridor."""
+    try:
+        ac_lat = float(ac_lat)
+        ac_lon = float(ac_lon)
+    except (ValueError, TypeError):
+        return True
+
+    if ac_lat == 0 and ac_lon == 0:
+        return True
+
+    journey = calculate_distance(origin_lat, origin_lon, dest_lat, dest_lon)
+    if journey <= 0:
+        return True
+
+    dist_from_origin = calculate_distance(origin_lat, origin_lon, ac_lat, ac_lon)
+    dist_to_dest = calculate_distance(ac_lat, ac_lon, dest_lat, dest_lon)
+
+    if dist_to_dest > journey + 60:
+        return False
+    if dist_from_origin + dist_to_dest > journey * 1.35 + 60:
+        return False
+    return True
+
+
+def get_route_info_json(callsign, lat=None, lon=None):
+    """Fetches route information for a given flight callsign, using live position when available."""
     if not callsign or callsign.lower() == 'unknown':
         return None
-        
+
     callsign_clean = callsign.strip().upper()
     if len(callsign_clean) < 2:
         return None
-        
+
+    if lat is not None and lon is not None:
+        try:
+            lat_f, lon_f = float(lat), float(lon)
+            if lat_f != 0 or lon_f != 0:
+                routeset_resp = _SESSION.post(
+                    "https://api.adsb.lol/api/0/routeset",
+                    json={"planes": [{"callsign": callsign_clean, "lat": lat_f, "lng": lon_f}]},
+                    timeout=6,
+                )
+                if routeset_resp.status_code == 200:
+                    payload = routeset_resp.json()
+                    if isinstance(payload, list) and payload:
+                        first = payload[0]
+                        if isinstance(first, dict) and first.get('_airports'):
+                            return first
+        except (requests.RequestException, ValueError, TypeError) as e:
+            print(f"Routeset lookup exception: {e}")
+
     prefix = callsign_clean[:2]
     # Fetch directly from the static server bypasses the redirect overhead
     url = f"https://vrs-standing-data.adsb.lol/routes/{prefix}/{callsign_clean}.json"
-    
+
     try:
         route_response = _SESSION.get(url, timeout=10)
         if route_response.status_code == 200:
@@ -289,7 +332,7 @@ def get_route_info_json(callsign):
         print(f"Route info not found for {callsign_clean} (Status: {route_response.status_code})")
     except requests.RequestException as e:
         print(f"Route fetching exception: {e}")
-        
+
     return None
 
 @app.route('/closest_flight', methods=['GET'])
@@ -366,7 +409,7 @@ def closest_flight():
         flight_data[k] = f"{degrees_to_compass_direction(flight_data[k])} {flight_data[k]}°"
 
     # Fetch route data safely
-    route_response_json = get_route_info_json(flight)
+    route_response_json = get_route_info_json(flight, flight_data.get('lat'), flight_data.get('lon'))
     flight_data['distance_journey'] = 0
     flight_data['distance_to_dest'] = 0
 
@@ -376,7 +419,7 @@ def closest_flight():
         flight_data['airport_codes'] = route_response_json.get('airport_codes', [])
         flight_data['airline_code'] = route_response_json.get('airline_code', '')
         flight_data['airports'] = route_response_json.get('_airports', [])
-        
+
         # Calculate coordinates if they are present
         if isinstance(flight_data['airports'], list) and len(flight_data['airports']) > 1:
             try:
@@ -385,8 +428,16 @@ def closest_flight():
                 dest_lat = float(flight_data['airports'][1].get('lat', 0))
                 dest_lon = float(flight_data['airports'][1].get('lon', 0))
 
-                flight_data['distance_journey'] = int(calculate_distance(origin_lat, origin_lon, dest_lat, dest_lon))
-                flight_data['distance_to_dest'] = int(calculate_distance(float(flight_data['lat']), float(flight_data['lon']), dest_lat, dest_lon))
+                if is_route_plausible(origin_lat, origin_lon, dest_lat, dest_lon, flight_data['lat'], flight_data['lon']):
+                    flight_data['distance_journey'] = int(calculate_distance(origin_lat, origin_lon, dest_lat, dest_lon))
+                    flight_data['distance_to_dest'] = int(calculate_distance(float(flight_data['lat']), float(flight_data['lon']), dest_lat, dest_lon))
+                else:
+                    print(f"Discarding implausible route {flight_data['route_iata']} for {flight}")
+                    flight_data['route_iata'] = []
+                    flight_data['airport_codes'] = 'unknown'
+                    flight_data['airports'] = 'Unknown'
+                    flight_data['distance_journey'] = 0
+                    flight_data['distance_to_dest'] = 0
             except (ValueError, TypeError):
                 flight_data['distance_journey'] = 0
                 flight_data['distance_to_dest'] = 0
