@@ -13,10 +13,10 @@
     {% assign flight_phase = "Cruising" %}
   {% endif %}
 
-  <div class="flex flex--row flex--between flex--center-y gap--small">
+  <div class="flex flex--row flex--between flex--center-y gap--small w--full">
     <div class="text--left">
       <span class="value value--small value--tnums">{{ flight }}</span>
-      <div class="label label--small clamp--1">{{ airline_name | default: model }}</div>
+      <div class="label label--small">{{ airline_name | default: model }}</div>
     </div>
     {% if airport_codes != "unknown" %}
       <span class="label label--small label--inverted px--2 rounded">{{ route_iata }}</span>
@@ -27,16 +27,20 @@
 
   {% if airport_codes != "unknown" and airports.size >= 2 %}
     {% assign flown = distance_journey | minus: distance_to_dest %}
+    {% if flown < 0 %}{% assign flown = 0 %}{% endif %}
     {% if distance_journey > 0 %}
-      {% assign pct = flown | times: 100 | divided_by: distance_journey %}
+      {% assign display_pct = flown | times: 100 | divided_by: distance_journey %}
     {% else %}
-      {% assign pct = 50 %}
+      {% assign display_pct = 50 %}
     {% endif %}
-    {% if pct < 6 %}{% assign pct = 6 %}{% endif %}
-    {% if pct > 94 %}{% assign pct = 94 %}{% endif %}
-    {% assign plane_x = pct | times: 1.8 | plus: 10 %}
+    {% if display_pct < 0 %}{% assign display_pct = 0 %}{% endif %}
+    {% if display_pct > 100 %}{% assign display_pct = 100 %}{% endif %}
+    {% assign plane_pct = display_pct %}
+    {% if plane_pct < 6 %}{% assign plane_pct = 6 %}{% endif %}
+    {% if plane_pct > 94 %}{% assign plane_pct = 94 %}{% endif %}
+    {% assign plane_x = plane_pct | times: 1.8 | plus: 10 %}
 
-    <div class="bg--gray-70 rounded p--2 flex flex--col gap--small">
+    <div class="flex flex--col gap--small w--full">
       <svg viewBox="0 0 200 20" class="w--full h--[20px]">
         <circle cx="10" cy="10" r="3" fill="currentColor" />
         <line x1="13" y1="10" x2="{{ plane_x }}" y2="10" stroke="currentColor" stroke-width="2" />
@@ -46,8 +50,8 @@
           <path d="M 8,0 L 3,-1.5 L 1,-7 L -2,-7 L -1,-1.5 L -6,-1.5 L -8,-4 L -9,-4 L -7.5,0 L -9,4 L -8,4 L -6,1.5 L -1,1.5 L -2,7 L 1,7 L 3,1.5 Z" fill="currentColor" />
         </g>
       </svg>
-      <div class="flex flex--row flex--between">
-        <span class="label label--small value--tnums">{{ flight_phase }} &middot; {{ pct }}%</span>
+      <div class="flex flex--row flex--between w--full">
+        <span class="label label--small value--tnums">{{ flight_phase }} &middot; {{ display_pct }}%</span>
         {% if ete_minutes != blank and ete_minutes > 0 %}
           {% assign ete_h = ete_minutes | divided_by: 60 %}
           {% assign ete_m = ete_minutes | modulo: 60 %}
@@ -59,7 +63,9 @@
     </div>
   {% endif %}
 
-  <div class="grid grid--cols-2 gap--small">
+  <div class="divider"></div>
+
+  <div class="grid grid--cols-2 gap--small w--full">
     <div class="item">
       <div class="meta"></div>
       <div class="content">

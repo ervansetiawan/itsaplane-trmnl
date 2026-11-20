@@ -1,6 +1,6 @@
 <div class="layout layout--col gap--space-between">
   {% if error != blank %}
-    <div class="bg--gray-70 rounded p--2 text--center">
+    <div class="p--2 text--center">
       <span class="title title--small">{{ error }}</span>
     </div>
   {% endif %}
@@ -21,16 +21,16 @@
     {% assign flight_phase = "Cruising" %}
   {% endif %}
 
-  <div class="flex flex--row gap--medium portrait:flex--col stretch-y">
-    <div class="bg--gray-70 rounded p--3 flex flex--col flex--center gap--small w--[28cqw] portrait:w--full shrink-0">
+  <div class="flex flex--row gap--medium portrait:flex--col stretch-y w--full">
+    <div class="p--2 flex flex--col flex--center gap--small w--[28cqw] portrait:w--full shrink-0">
       {% if logo != blank %}
-        <img class="image image-dither w--[56px] h--[56px] object--contain rounded"
+        <img class="image image-dither w--[64px] h--[48px] object--contain"
           src="https://raw.githubusercontent.com/sexym0nk3y/airline-logos/refs/heads/main/logos/{{ airline_code }}.png"
           alt="{{ airline_code }}" />
       {% endif %}
       <span class="value value--small lg:value--base value--tnums">{{ flight }}</span>
       {% if airline_name != blank %}
-        <span class="label label--small text--center clamp--1">{{ airline_name }}</span>
+        <span class="label label--small text--center">{{ airline_name }}</span>
       {% endif %}
       <span class="description text--center" data-value-fit="true">{{ model }}</span>
       <div class="flex flex--row flex--center gap--small">
@@ -43,28 +43,32 @@
       </div>
     </div>
 
-    <div class="bg--gray-70 rounded p--3 flex flex--col flex--between stretch-x">
+    <div class="divider--v portrait:hidden"></div>
+
+    <div class="p--2 flex flex--col flex--between stretch-x">
       {% if airport_codes != "unknown" and airports.size >= 2 %}
         {% assign origin = airports[0] %}
         {% assign dest = airports[1] %}
         {% assign flown = distance_journey | minus: distance_to_dest %}
+        {% if flown < 0 %}{% assign flown = 0 %}{% endif %}
         {% if distance_journey > 0 %}
-          {% assign pct = flown | times: 100 | divided_by: distance_journey %}
+          {% assign display_pct = flown | times: 100 | divided_by: distance_journey %}
         {% else %}
-          {% assign pct = 50 %}
+          {% assign display_pct = 50 %}
         {% endif %}
-        {% if pct < 6 %}{% assign pct = 6 %}{% endif %}
-        {% if pct > 94 %}{% assign pct = 94 %}{% endif %}
-        {% assign plane_x = pct | times: 1.8 | plus: 10 %}
+        {% if display_pct < 0 %}{% assign display_pct = 0 %}{% endif %}
+        {% if display_pct > 100 %}{% assign display_pct = 100 %}{% endif %}
+        {% assign plane_pct = display_pct %}
+        {% if plane_pct < 6 %}{% assign plane_pct = 6 %}{% endif %}
+        {% if plane_pct > 94 %}{% assign plane_pct = 94 %}{% endif %}
+        {% assign plane_x = plane_pct | times: 1.8 | plus: 10 %}
 
-        <div class="flex flex--row flex--between flex--center-y gap--small">
+        <div class="flex flex--row flex--between flex--center-y gap--small w--full">
           <div class="text--left">
             <span class="value value--large lg:value--xlarge">{{ origin.iata }}</span>
             <div class="description">{{ origin.location }}{% if origin.countryiso2 != dest.countryiso2 %} ({{ origin.countryiso2 }}){% endif %}</div>
           </div>
-          <div class="flex flex--col flex--center gap--small">
-            <span class="label label--small label--inverted px--2 rounded value--tnums">{{ flight_phase }} &middot; {{ pct }}%</span>
-          </div>
+          <span class="label label--small label--inverted px--2 rounded value--tnums">{{ flight_phase }} &middot; {{ display_pct }}%</span>
           <div class="text--right">
             <span class="value value--large lg:value--xlarge">{{ dest.iata }}</span>
             <div class="description">{{ dest.location }}{% if origin.countryiso2 != dest.countryiso2 %} ({{ dest.countryiso2 }}){% endif %}</div>
@@ -81,7 +85,7 @@
           </g>
         </svg>
 
-        <div class="flex flex--row flex--between gap--small">
+        <div class="flex flex--row flex--between gap--small w--full">
           <span class="label label--small value--tnums">{{ flown | number_with_delimiter }} mi flown</span>
           {% if ete_minutes != blank and ete_minutes > 0 %}
             {% assign ete_h = ete_minutes | divided_by: 60 %}
@@ -94,7 +98,7 @@
           {% endif %}
         </div>
 
-        <div class="flex flex--row flex--between gap--medium">
+        <div class="flex flex--row flex--between gap--medium w--full">
           <span class="label label--small text--left clamp--1">{{ origin.name }}</span>
           <span class="label label--small text--right clamp--1">{{ dest.name }}</span>
         </div>
@@ -110,7 +114,7 @@
 
   <div class="divider"></div>
 
-  <div class="grid grid--cols-3 gap--medium lg:gap--large">
+  <div class="grid grid--cols-3 gap--medium lg:gap--large w--full">
     <div class="item">
       <div class="meta"></div>
       <div class="content">
@@ -148,7 +152,7 @@
 
   <div class="divider"></div>
 
-  <div class="grid grid--cols-4 gap--small">
+  <div class="grid grid--cols-4 gap--small w--full">
     <div class="item">
       <div class="meta"></div>
       <div class="content">
@@ -173,7 +177,13 @@
     <div class="item">
       <div class="meta"></div>
       <div class="content">
-        <span class="value value--xsmall value--tnums">{{ nav_altitude_mcp | number_with_delimiter }} ft</span>
+        <span class="value value--xsmall value--tnums">
+          {% if nav_altitude_mcp != blank and nav_altitude_mcp != 0 and nav_altitude_mcp != "0" %}
+            {{ nav_altitude_mcp | number_with_delimiter }} ft
+          {% else %}
+            &mdash;
+          {% endif %}
+        </span>
         <span class="label label--small">NAV Alt</span>
       </div>
     </div>
@@ -181,7 +191,13 @@
     <div class="item">
       <div class="meta"></div>
       <div class="content">
-        <span class="value value--xsmall value--tnums">{{ nav_qnh }} hPa</span>
+        <span class="value value--xsmall value--tnums">
+          {% if nav_qnh != blank and nav_qnh != 0 and nav_qnh != "0" %}
+            {{ nav_qnh }} hPa
+          {% else %}
+            &mdash;
+          {% endif %}
+        </span>
         <span class="label label--small">QNH</span>
       </div>
     </div>
