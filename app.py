@@ -235,7 +235,7 @@ def fecth_flight_data_json(lat, lon, radius):
 
 
 def get_closest_flight(flight_data_json, prefer_airliners):
-    """Finds the closest flight from the flight data JSON."""
+    """Finds the closest flight from the flight data JSON, preferring airborne aircraft."""
     aircraft_list = flight_data_json.get('ac', [])
     number_of_aircraft = len(aircraft_list)
     print(f"Number of aircraft found: {number_of_aircraft}")
@@ -243,22 +243,31 @@ def get_closest_flight(flight_data_json, prefer_airliners):
     if number_of_aircraft == 0:
         return None
 
-    index_closest = 0
-    closest_dist = float('inf')
+    airborne_index = None
+    airborne_dist = float('inf')
+    fallback_index = 0
+    fallback_dist = float('inf')
 
     for index, ac in enumerate(aircraft_list):
         category = ac.get('category', '')
         if (prefer_airliners == 0) or (category in ('A3', 'A4', 'A5')):
             try:
                 dist = float(ac.get('dst', 0))
-                if dist < closest_dist:
-                    closest_dist = dist
-                    index_closest = index
             except (ValueError, TypeError):
                 continue
 
-    print(f"Closest flight found at index {index_closest} with distance {closest_dist} miles")
-    return aircraft_list[index_closest]
+            is_ground = str(ac.get('alt_baro', '')).strip().lower() == 'ground'
+            if not is_ground and dist < airborne_dist:
+                airborne_dist = dist
+                airborne_index = index
+            if dist < fallback_dist:
+                fallback_dist = dist
+                fallback_index = index
+
+    chosen_index = airborne_index if airborne_index is not None else fallback_index
+    chosen_dist = airborne_dist if airborne_index is not None else fallback_dist
+    print(f"Closest flight found at index {chosen_index} with distance {chosen_dist} miles")
+    return aircraft_list[chosen_index]
 
 def get_route_info_json(callsign):
     """Fetches route information for a given flight callsign directly from the asset server."""

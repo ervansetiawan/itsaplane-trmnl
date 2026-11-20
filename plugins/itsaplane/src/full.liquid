@@ -61,7 +61,7 @@
         {% assign plane_pct = display_pct %}
         {% if plane_pct < 6 %}{% assign plane_pct = 6 %}{% endif %}
         {% if plane_pct > 94 %}{% assign plane_pct = 94 %}{% endif %}
-        {% assign plane_x = plane_pct | times: 1.8 | plus: 10 %}
+        {% assign plane_x = plane_pct | times: 3.4 | plus: 10 %}
 
         <div class="flex flex--row flex--between flex--center-y gap--small w--full">
           <div class="text--left">
@@ -75,11 +75,11 @@
           </div>
         </div>
 
-        <svg viewBox="0 0 200 24" class="w--full h--[24px]">
+        <svg viewBox="0 0 360 24" class="w--full">
           <circle cx="10" cy="12" r="3.5" fill="currentColor" />
           <line x1="13" y1="12" x2="{{ plane_x }}" y2="12" stroke="currentColor" stroke-width="2.5" />
-          <line x1="{{ plane_x }}" y1="12" x2="186" y2="12" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 3" />
-          <circle cx="190" cy="12" r="3.5" fill="none" stroke="currentColor" stroke-width="2" />
+          <line x1="{{ plane_x }}" y1="12" x2="346" y2="12" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 3" />
+          <circle cx="350" cy="12" r="3.5" fill="none" stroke="currentColor" stroke-width="2" />
           <g transform="translate({{ plane_x }}, 12)">
             <path d="M 8,0 L 3,-1.5 L 1,-7 L -2,-7 L -1,-1.5 L -6,-1.5 L -8,-4 L -9,-4 L -7.5,0 L -9,4 L -8,4 L -6,1.5 L -1,1.5 L -2,7 L 1,7 L 3,1.5 Z" fill="currentColor" />
           </g>

@@ -204,3 +204,29 @@ def test_closest_flight_fractional_dst_and_registration():
     assert body["registration"] == "N111NN"
 
 
+def test_get_closest_flight_prefers_airborne_over_ground():
+    from app import get_closest_flight
+
+    data = {
+        "ac": [
+            {"flight": "GND1", "dst": 1.5, "category": "A3", "alt_baro": "ground"},
+            {"flight": "AIR2", "dst": 8.0, "category": "A3", "alt_baro": 4500},
+        ]
+    }
+    chosen = get_closest_flight(data, prefer_airliners=1)
+    assert chosen["flight"] == "AIR2"
+
+
+def test_get_closest_flight_falls_back_to_ground_when_none_airborne():
+    from app import get_closest_flight
+
+    data = {
+        "ac": [
+            {"flight": "GND2", "dst": 5.0, "category": "A3", "alt_baro": "ground"},
+            {"flight": "GND1", "dst": 1.5, "category": "A3", "alt_baro": "ground"},
+        ]
+    }
+    chosen = get_closest_flight(data, prefer_airliners=1)
+    assert chosen["flight"] == "GND1"
+
+
