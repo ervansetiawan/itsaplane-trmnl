@@ -1,0 +1,11 @@
+name: Daily RCE Dashboard
+description: Exploited RCE CVEs + EPSS risk
+refresh_interval: 1440
+custom_fields:
+  - keyname: author_bio
+    field_type: author_bio
+    name: About This Plugin
+    category: programming
+    description: Exploited RCE CVEs + EPSS risk
+    github_url: https://github.com/ervansetiawan/itsaplane-trmnl
+    email_address: you@example.com

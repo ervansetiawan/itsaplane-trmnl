@@ -1,6 +1,12 @@
 name: BGP & Outage Radar
 description: Live BGP & internet outage radar
+strategy: polling
+polling_url: https://itsaplane-trmnl.onrender.com/outages/daily
+polling_verb: get
+polling_headers: ""
 refresh_interval: 60
+dark_mode: "no"
+no_screen_padding: "no"
 custom_fields:
   - keyname: author_bio
     field_type: author_bio
