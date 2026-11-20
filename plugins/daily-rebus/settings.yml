@@ -1,6 +1,12 @@
 name: Daily Rebus
 description: Daily visual wordplay rebus puzzle
+strategy: polling
+polling_url: https://itsaplane-trmnl.onrender.com/rebus/daily
+polling_verb: get
+polling_headers: ""
 refresh_interval: 1440
+dark_mode: "no"
+no_screen_padding: "no"
 custom_fields:
   - keyname: author_bio
     field_type: author_bio
