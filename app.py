@@ -349,5 +349,17 @@ def rebus_daily():
     return jsonify(generate_daily_rebus(target_date))
 
 
+@app.route('/rce/daily')
+def rce_daily():
+    from rce_dashboard import fetch_rce_dashboard
+    target_date, err = _parse_optional_date()
+    if err:
+        return err
+    try:
+        return jsonify(fetch_rce_dashboard(target_date))
+    except requests.RequestException as exc:
+        return jsonify({"error": f"CISA KEV feed unavailable: {exc}"}), 502
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

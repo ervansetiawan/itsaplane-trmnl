@@ -1,0 +1,32 @@
+<div class="layout layout--col">
+  <div class="flex flex--row portrait:flex--col w--full h--full gap--medium lg:gap--large">
+    <div class="flex flex--col flex--between w--[32cqw] shrink-0">
+      <div class="text--left">
+        <div class="value value--small lg:value--base">{{ total_rce }}</div>
+        <div class="label label--small text--left">RCE KEVs ({{ recent_30d }} / 30d)</div>
+      </div>
+      {% if featured %}
+        <div class="text--left">
+          <div class="divider mb--1"></div>
+          <div class="label label--small text--left"><strong>{{ featured.cve_id }}</strong>{% if featured.cvss %} &middot; {{ featured.cvss }}{% endif %}{% if featured.epss %} ({{ featured.epss }}){% endif %}</div>
+          <div class="description text--left">{{ featured.vendor }} {{ featured.product }}</div>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="text--left stretch-x">
+      <div class="label label--small label--underline mb--1 text--left">EXPLOITED RCEs (CVSS &middot; EPSS)</div>
+      {% for item in items limit: 4 %}
+        <div class="flex flex--row flex--between flex--center-y mb--1">
+          <span class="description text--left"><strong>{{ item.cve_id }}</strong> {{ item.vendor }}</span>
+          <span class="label label--small shrink-0">{% if item.cvss %}{{ item.cvss }}{% endif %}{% if item.epss %} &middot; {{ item.epss }}{% endif %}</span>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">{{ date }}</span>
+</div>

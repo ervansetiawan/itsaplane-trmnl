@@ -1,0 +1,40 @@
+<div class="layout layout--col">
+  <div class="flex flex--col flex--between w--full h--full gap--small lg:gap--medium">
+    <div class="grid grid--cols-2 w--full">
+      <div class="item">
+        <div class="meta"></div>
+        <div class="content">
+          <span class="value value--small">{{ total_rce }}</span>
+          <span class="label label--small">RCE KEVs</span>
+        </div>
+      </div>
+      <div class="item">
+        <div class="meta"></div>
+        <div class="content">
+          <span class="value value--small">{{ recent_30d }}</span>
+          <span class="label label--small">Last 30d</span>
+        </div>
+      </div>
+    </div>
+
+    {% if featured %}
+      <div class="w--full text--left">
+        <div class="divider mb--1"></div>
+        <div class="label label--small text--left"><strong>{{ featured.cve_id }}</strong>{% if featured.cvss %} &middot; CVSS {{ featured.cvss }}{% endif %} &middot; {{ featured.date_added }}</div>
+        <div class="description text--left">{{ featured.vendor }} {{ featured.product }}</div>
+      </div>
+    {% endif %}
+
+    <div class="w--full stretch-y text--left">
+      <div class="divider mb--1"></div>
+      {% for item in items limit: 4 %}
+        <div class="description text--left mb--1"><strong>{{ item.cve_id }}</strong>{% if item.cvss %} ({{ item.cvss }}){% endif %} &mdash; {{ item.vendor }}</div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">{{ date }}</span>
+</div>

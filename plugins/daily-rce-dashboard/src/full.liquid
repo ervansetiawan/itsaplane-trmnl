@@ -1,0 +1,103 @@
+<div class="layout layout--col">
+  <div class="flex flex--col flex--between w--full h--full gap--medium">
+    <div class="grid grid--cols-4 w--full">
+      <div class="item">
+        <div class="meta"></div>
+        <div class="content">
+          <span class="value value--small lg:value--base">{{ total_rce }}</span>
+          <span class="label label--small">RCE KEVs</span>
+        </div>
+      </div>
+      <div class="item">
+        <div class="meta"></div>
+        <div class="content">
+          <span class="value value--small lg:value--base">{{ recent_30d }}</span>
+          <span class="label label--small">Last 30d</span>
+        </div>
+      </div>
+      <div class="item">
+        <div class="meta"></div>
+        <div class="content">
+          <span class="value value--small lg:value--base">{{ ransomware_count }}</span>
+          <span class="label label--small">Ransomware</span>
+        </div>
+      </div>
+      <div class="item">
+        <div class="meta"></div>
+        <div class="content">
+          <span class="value value--small lg:value--base">{{ total_kev }}</span>
+          <span class="label label--small">Total KEV</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="flex flex--row portrait:flex--col w--full stretch-y gap--large">
+      {% if featured %}
+        <div class="flex flex--col flex--between w--[42cqw] portrait:w--full text--left">
+          <div class="text--left">
+            <div class="flex flex--row flex--between flex--center-y mb--1">
+              <span class="label label--small label--inverted px--2">{{ featured.severity | default: "EXPLOITED" }}</span>
+              <span class="label label--small">DUE {{ featured.due_date }}</span>
+            </div>
+            <div class="title title--small text--left mb--1">{{ featured.cve_id }}</div>
+            <div class="label label--base text--left mb--2"><strong>{{ featured.vendor }}</strong> &middot; {{ featured.product }}</div>
+            <div class="description text--left">{{ featured.description }}</div>
+          </div>
+
+          <div class="w--full mt--2">
+            {% if featured.cvss %}
+              <div class="flex flex--row flex--between flex--center-y mb--1">
+                <span class="label label--small">CVSS</span>
+                <span class="label label--small"><strong>{{ featured.cvss }} / 10</strong></span>
+              </div>
+              <svg viewBox="0 0 100 8" preserveAspectRatio="none" class="w--full h--[8px] mb--2">
+                <rect x="0" y="0" width="100" height="8" fill="#fff" stroke="#000" stroke-width="1.5" />
+                <rect x="0" y="0" width="{{ featured.cvss_pct }}" height="8" fill="#000" />
+              </svg>
+            {% endif %}
+            {% if featured.epss %}
+              <div class="flex flex--row flex--between flex--center-y mb--1">
+                <span class="label label--small">EPSS PROBABILITY</span>
+                <span class="label label--small"><strong>{{ featured.epss }}</strong></span>
+              </div>
+              <svg viewBox="0 0 100 8" preserveAspectRatio="none" class="w--full h--[8px]">
+                <rect x="0" y="0" width="100" height="8" fill="#fff" stroke="#000" stroke-width="1.5" />
+                <rect x="0" y="0" width="{{ featured.epss_pct }}" height="8" fill="#000" />
+              </svg>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+
+      <div class="divider--v portrait:hidden"></div>
+
+      <div class="stretch-x text--left">
+        <div class="label label--small label--underline mb--2 text--left">RECENT EXPLOITED RCEs</div>
+        {% for item in items limit: 3 %}
+          <div class="w--full mb--2">
+            <div class="flex flex--row flex--between flex--center-y w--full">
+              <span class="description text--left"><strong>{{ item.cve_id }}</strong> &middot; {{ item.vendor }} {{ item.product }}</span>
+              <span class="label label--small shrink-0">{% if item.cvss %}{{ item.cvss }}{% endif %}{% if item.epss %} &middot; {{ item.epss }}{% endif %}</span>
+            </div>
+            <div class="flex flex--row flex--between flex--center-y gap--small w--full">
+              <span class="label label--small text--left">{{ item.description }}</span>
+              {% if item.epss %}
+                <svg viewBox="0 0 100 6" preserveAspectRatio="none" class="w--[60px] h--[6px] shrink-0">
+                  <rect x="0" y="0" width="100" height="6" fill="#fff" stroke="#000" stroke-width="1.5" />
+                  <rect x="0" y="0" width="{{ item.epss_pct }}" height="6" fill="#000" />
+                </svg>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">CISA KEV &middot; {{ date }}</span>
+</div>
