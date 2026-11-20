@@ -1,0 +1,21 @@
+<div class="layout layout--col">
+  <div class="flex flex--row flex--center-y w--full h--full gap--small">
+    <svg viewBox="0 0 360 360" class="w--[48cqw] h--[86cqh] shrink-0">
+      <rect x="2" y="2" width="356" height="356" fill="#fff" stroke="#000" stroke-width="2" />
+      {% for d in paths %}
+        <path d="{{ d }}" fill="none" stroke="#000" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+      {% endfor %}
+    </svg>
+
+    <div class="flex flex--col flex--between stretch-x h--full text--left">
+      <span class="label label--small label--inverted px--1">{{ algorithm | upcase }}</span>
+      <div class="title title--small text--left">{{ piece_title }}</div>
+      <div class="label label--small text--left">{{ params }}</div>
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">{{ date }}</span>
+</div>

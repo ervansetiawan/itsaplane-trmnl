@@ -400,5 +400,14 @@ def kanji_daily():
     return jsonify(generate_daily_kanji(target_date))
 
 
+@app.route('/plotter/daily')
+def plotter_daily():
+    from plotter_art import generate_daily_plotter
+    target_date, err = _parse_optional_date()
+    if err:
+        return err
+    return jsonify(generate_daily_plotter(target_date))
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
