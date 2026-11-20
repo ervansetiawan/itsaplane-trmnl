@@ -1,0 +1,11 @@
+name: Daily Rebus
+description: Daily visual wordplay rebus puzzle
+refresh_interval: 1440
+custom_fields:
+  - keyname: author_bio
+    field_type: author_bio
+    name: About This Plugin
+    category: games
+    description: Daily visual wordplay rebus puzzle
+    github_url: https://github.com/ervansetiawan/itsaplane-trmnl
+    email_address: you@example.com

@@ -326,5 +326,11 @@ def crossword_daily():
     return jsonify(generate_daily_puzzle())
 
 
+@app.route('/rebus/daily')
+def rebus_daily():
+    from rebus_generator import generate_daily_rebus
+    return jsonify(generate_daily_rebus())
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

@@ -1,0 +1,34 @@
+<div class="layout layout--col">
+  <div class="flex flex--col flex--between w--full h--full gap--small">
+    <div class="flex flex--row flex--between w--full">
+      <span class="label label--small">{{ category | upcase }}</span>
+      <span class="label label--small">{{ hint | upcase }}</span>
+    </div>
+
+    <div class="flex flex--col flex--center w--full stretch-y">
+      <svg viewBox="0 0 400 200" class="w--[95cqw] h--[60cqh]">
+        {% for r in rects %}
+          <rect x="{{ r.x }}" y="{{ r.y }}" width="{{ r.w }}" height="{{ r.h }}" fill="{{ r.fill }}" stroke="{{ r.stroke }}" stroke-width="{{ r.width }}" />
+        {% endfor %}
+        {% for l in lines %}
+          <line x1="{{ l.x1 }}" y1="{{ l.y1 }}" x2="{{ l.x2 }}" y2="{{ l.y2 }}" stroke="#000" stroke-width="{{ l.width }}" />
+        {% endfor %}
+        {% for t in texts %}
+          <text x="{{ t.x }}" y="{{ t.y }}" font-size="{{ t.size }}" text-anchor="{{ t.anchor }}" font-weight="{{ t.weight }}" fill="{{ t.fill }}" font-family="sans-serif"{% if t.rotate != 0 %} transform="rotate({{ t.rotate }} {{ t.x }} {{ t.y }})"{% endif %}>{{ t.text }}</text>
+        {% endfor %}
+      </svg>
+    </div>
+
+    {% if yesterday_answer %}
+      <div class="w--full">
+        <div class="divider mb--1"></div>
+        <div class="label label--small text--left">YESTERDAY: {{ yesterday_answer }}</div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }} #{{ puzzle_number }}</span>
+  <span class="instance">{{ date }}</span>
+</div>
