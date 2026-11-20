@@ -370,5 +370,14 @@ def outages_daily():
         return jsonify({"error": f"IODA outage feed unavailable: {exc}"}), 502
 
 
+@app.route('/solar/daily')
+def solar_daily():
+    from solar_orrery import generate_solar_orrery
+    target_date, err = _parse_optional_date()
+    if err:
+        return err
+    return jsonify(generate_solar_orrery(target_date))
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

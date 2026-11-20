@@ -1,0 +1,79 @@
+<div class="layout layout--col">
+  <div class="flex flex--row portrait:flex--col w--full h--full gap--large">
+    <div class="flex flex--col flex--center shrink-0">
+      <svg viewBox="0 0 300 300" class="w--[46cqw] h--[84cqh] portrait:w--[78cqw]">
+        <!-- Ecliptic crosshairs & outer bezel -->
+        <circle cx="150" cy="150" r="144" fill="none" stroke="#000" stroke-width="1.2" />
+        <line x1="6" y1="150" x2="294" y2="150" stroke="#ccc" stroke-width="0.7" stroke-dasharray="2,3" />
+        <line x1="150" y1="6" x2="150" y2="294" stroke="#ccc" stroke-width="0.7" stroke-dasharray="2,3" />
+        <text x="291" y="146" font-size="8.5" font-weight="700" text-anchor="end" fill="#000" font-family="sans-serif">0°</text>
+        <text x="154" y="15" font-size="8.5" font-weight="700" text-anchor="start" fill="#000" font-family="sans-serif">90°</text>
+        <text x="9" y="146" font-size="8.5" font-weight="700" text-anchor="start" fill="#000" font-family="sans-serif">180°</text>
+        <text x="154" y="290" font-size="8.5" font-weight="700" text-anchor="start" fill="#000" font-family="sans-serif">270°</text>
+
+        <!-- Concentric orbits -->
+        {% for p in planets %}
+          <circle cx="150" cy="150" r="{{ p.orbit_r }}" fill="none" stroke="#000" stroke-width="0.7" stroke-dasharray="2,2" />
+        {% endfor %}
+
+        <!-- Sun -->
+        <circle cx="150" cy="150" r="7" fill="#000" />
+        <circle cx="150" cy="150" r="10.5" fill="none" stroke="#000" stroke-width="0.8" />
+
+        <!-- Planets -->
+        {% for p in planets %}
+          {% if p.is_saturn %}
+            <ellipse cx="{{ p.cx }}" cy="{{ p.cy }}" rx="9" ry="3.2" fill="none" stroke="#000" stroke-width="1.2" transform="rotate(-22 {{ p.cx }} {{ p.cy }})" />
+          {% endif %}
+          {% if p.is_earth %}
+            <circle cx="{{ p.cx }}" cy="{{ p.cy }}" r="6.5" fill="none" stroke="#000" stroke-width="0.9" />
+          {% endif %}
+          <circle cx="{{ p.cx }}" cy="{{ p.cy }}" r="{{ p.dot_r }}" fill="#000" stroke="#fff" stroke-width="1" />
+          <text x="{{ p.lx }}" y="{{ p.ly }}" font-size="9.5" font-weight="700" text-anchor="middle" fill="#000" font-family="sans-serif">{{ p.abbr }}</text>
+        {% endfor %}
+      </svg>
+    </div>
+
+    <div class="flex flex--col flex--between stretch-x h--full text--left">
+      <div class="w--full">
+        <div class="flex flex--row flex--between flex--center-y mb--2">
+          <span class="label label--base label--inverted px--2">J2000 EPHEMERIS</span>
+          <span class="label label--base">DAY {{ day_of_year }} &middot; {{ moon_phase | upcase }}</span>
+        </div>
+
+        <div class="grid grid--cols-2 w--full mb--2">
+          <div class="item">
+            <div class="meta"></div>
+            <div class="content">
+              <span class="value value--base lg:value--large">{{ earth_mars_au }}</span>
+              <span class="label label--base">Earth–Mars ({{ earth_mars_mkm }})</span>
+            </div>
+          </div>
+          <div class="item">
+            <div class="meta"></div>
+            <div class="content">
+              <span class="value value--base lg:value--large">{{ earth_venus_au }}</span>
+              <span class="label label--base">Earth–Venus ({{ earth_venus_mkm }})</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="w--full stretch-y">
+        <div class="divider mb--2"></div>
+        <div class="label label--base label--underline mb--2 text--left">HELIOCENTRIC POSITIONS</div>
+        {% for p in planets %}
+          <div class="flex flex--row flex--between flex--center-y w--full mb--1">
+            <span class="title title--small text--left">{{ p.name }} ({{ p.abbr }})</span>
+            <span class="description shrink-0">{{ p.lon }} &middot; {{ p.zodiac }} &middot; {{ p.au }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">{{ date }}</span>
+</div>

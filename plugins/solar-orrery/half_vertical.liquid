@@ -1,0 +1,37 @@
+<div class="layout layout--col">
+  <div class="flex flex--col flex--between w--full h--full gap--small">
+    <div class="flex flex--col flex--center w--full stretch-y">
+      <svg viewBox="0 0 300 300" class="w--[78cqw] h--[56cqh]">
+        <circle cx="150" cy="150" r="144" fill="none" stroke="#000" stroke-width="1.2" />
+        {% for p in planets %}
+          <circle cx="150" cy="150" r="{{ p.orbit_r }}" fill="none" stroke="#000" stroke-width="0.7" stroke-dasharray="2,2" />
+        {% endfor %}
+        <circle cx="150" cy="150" r="7" fill="#000" />
+        {% for p in planets %}
+          {% if p.is_saturn %}
+            <ellipse cx="{{ p.cx }}" cy="{{ p.cy }}" rx="9" ry="3.2" fill="none" stroke="#000" stroke-width="1.2" transform="rotate(-22 {{ p.cx }} {{ p.cy }})" />
+          {% endif %}
+          <circle cx="{{ p.cx }}" cy="{{ p.cy }}" r="{{ p.dot_r }}" fill="#000" stroke="#fff" stroke-width="1" />
+          <text x="{{ p.lx }}" y="{{ p.ly }}" font-size="7" font-weight="700" text-anchor="middle" fill="#000" font-family="sans-serif">{{ p.abbr }}</text>
+        {% endfor %}
+      </svg>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="w--full text--left">
+      <div class="flex flex--row flex--between mb--1">
+        <span class="label label--small"><strong>MARS:</strong> {{ earth_mars_au }}</span>
+        <span class="label label--small">{{ moon_phase }}</span>
+      </div>
+      <div class="label label--small">
+        {% for p in planets %}{{ p.abbr }} {{ p.lon }}{% unless forloop.last %} &middot; {% endunless %}{% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">{{ date }}</span>
+</div>
