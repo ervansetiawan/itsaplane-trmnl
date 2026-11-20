@@ -7,7 +7,6 @@
 
     <div class="flex flex--col flex--center w--full stretch-y">
       <svg viewBox="0 0 400 200" class="w--[92cqw] h--[62cqh]">
-        <rect x="2" y="2" width="396" height="196" rx="6" fill="#fff" stroke="#000" stroke-width="2" />
         {% for r in rects %}
           <rect x="{{ r.x }}" y="{{ r.y }}" width="{{ r.w }}" height="{{ r.h }}" fill="{{ r.fill }}" stroke="{{ r.stroke }}" stroke-width="{{ r.width }}" />
         {% endfor %}
