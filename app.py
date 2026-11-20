@@ -391,5 +391,14 @@ def museum_daily():
         return jsonify({"error": f"Museum feed unavailable: {exc}"}), 502
 
 
+@app.route('/kanji/daily')
+def kanji_daily():
+    from kanji_daily import generate_daily_kanji
+    target_date, err = _parse_optional_date()
+    if err:
+        return err
+    return jsonify(generate_daily_kanji(target_date))
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

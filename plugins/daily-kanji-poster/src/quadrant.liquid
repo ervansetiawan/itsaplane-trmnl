@@ -1,0 +1,19 @@
+<div class="layout layout--col">
+  <div class="flex flex--row flex--center-y w--full h--full gap--small">
+    <svg viewBox="0 0 180 180" class="w--[44cqw] h--[82cqh] shrink-0">
+      <rect x="2" y="2" width="176" height="176" fill="#fff" stroke="#000" stroke-width="2.5" />
+      <text x="90" y="132" font-size="122" font-weight="700" text-anchor="middle" fill="#000" font-family="serif">{{ kanji }}</text>
+    </svg>
+
+    <div class="flex flex--col flex--between stretch-x h--full text--left">
+      <span class="label label--small label--inverted px--1">{{ jlpt }} &middot; {{ strokes }}S</span>
+      <div class="title title--small text--left">{{ meaning }}</div>
+      <div class="label label--small text--left">{{ kunyomi }}</div>
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">{{ date }}</span>
+</div>

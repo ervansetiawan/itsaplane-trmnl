@@ -1,0 +1,28 @@
+<div class="layout layout--col">
+  <div class="flex flex--col flex--between w--full h--full gap--small">
+    <div class="flex flex--row flex--between flex--center-y w--full">
+      <span class="label label--small label--inverted px--2">JLPT {{ jlpt }}</span>
+      <span class="label label--small">{{ strokes }} STROKES</span>
+    </div>
+
+    <div class="flex flex--col flex--center w--full stretch-y">
+      <svg viewBox="0 0 180 180" class="w--[58cqw] h--[50cqh]">
+        <rect x="2" y="2" width="176" height="176" fill="#fff" stroke="#000" stroke-width="2.5" />
+        <line x1="90" y1="2" x2="90" y2="178" stroke="#ccc" stroke-width="1" stroke-dasharray="3,3" />
+        <line x1="2" y1="90" x2="178" y2="90" stroke="#ccc" stroke-width="1" stroke-dasharray="3,3" />
+        <text x="90" y="132" font-size="122" font-weight="700" text-anchor="middle" fill="#000" font-family="serif">{{ kanji }}</text>
+      </svg>
+    </div>
+
+    <div class="w--full text--left">
+      <div class="title title--base text--left mb--1">{{ meaning }}</div>
+      <div class="description text--left">{{ onyomi }} &middot; {{ kunyomi }}</div>
+      <div class="label label--small text--left">{{ example }}</div>
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">{{ date }}</span>
+</div>

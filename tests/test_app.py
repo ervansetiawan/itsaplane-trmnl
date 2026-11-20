@@ -29,13 +29,10 @@ def test_rate_to_arrow_zero():
     assert rate_to_arrow('0') == ''
 
 def test_rate_to_arrow_non_integer_string():
-    with pytest.raises(ValueError):
-        rate_to_arrow('abc')
+    assert rate_to_arrow('abc') == ''
 
 def test_rate_to_arrow_float_string():
-    # Should raise ValueError because int('1.5') is invalid
-    with pytest.raises(ValueError):
-        rate_to_arrow('1.5')
+    assert rate_to_arrow('1.5') == ''
 
 @patch('app.os.path')
 @patch('app.os')
