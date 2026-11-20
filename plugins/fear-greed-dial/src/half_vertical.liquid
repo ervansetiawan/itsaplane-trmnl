@@ -1,0 +1,29 @@
+<div class="layout layout--col">
+  <div class="flex flex--col flex--between w--full h--full gap--small">
+    <div class="flex flex--col flex--center w--full">
+      <svg viewBox="0 0 220 128" class="w--[78cqw] h--[38cqh]">
+        <path d="M 24 108 A 86 86 0 0 1 196 108" fill="none" stroke="#000" stroke-width="10" />
+        <path d="M 24 108 A 86 86 0 0 1 196 108" fill="none" stroke="#fff" stroke-width="6" />
+        <line x1="110" y1="108" x2="{{ nx }}" y2="{{ ny }}" stroke="#000" stroke-width="3.5" stroke-linecap="round" />
+        <circle cx="110" cy="108" r="7" fill="#000" />
+      </svg>
+      <div class="value value--base">{{ score }}</div>
+      <span class="label label--small label--inverted px--2">{{ rating }}</span>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="w--full text--left">
+      <div class="flex flex--row flex--between mb--1">
+        <span class="description"><strong>VIX:</strong> {{ vix }}</span>
+        <span class="label label--small">{{ vix_delta }}</span>
+      </div>
+      <div class="label label--small">Prev: {{ prev_close }} &middot; 1W: {{ one_week }} &middot; 1M: {{ one_month }}</div>
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">{{ date }}</span>
+</div>

@@ -1,0 +1,98 @@
+<div class="layout layout--col">
+  <div class="flex flex--col flex--between w--full h--full gap--small">
+    <div class="grid grid--cols-4 w--full">
+      <div class="item">
+        <div class="meta"></div>
+        <div class="content">
+          <span class="value value--base lg:value--large">{{ total_quakes }}</span>
+          <span class="label label--base">M4.5+ (24h)</span>
+        </div>
+      </div>
+      <div class="item">
+        <div class="meta"></div>
+        <div class="content">
+          <span class="value value--base lg:value--large">{{ m5_plus }}</span>
+          <span class="label label--base">M5.0+</span>
+        </div>
+      </div>
+      <div class="item">
+        <div class="meta"></div>
+        <div class="content">
+          <span class="value value--base lg:value--large">{{ m6_plus }}</span>
+          <span class="label label--base">M6.0+</span>
+        </div>
+      </div>
+      <div class="item">
+        <div class="meta"></div>
+        <div class="content">
+          <span class="value value--base lg:value--large">{% if featured %}M{{ featured.mag }}{% else %}--{% endif %}</span>
+          <span class="label label--base">Peak Mag</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="flex flex--row portrait:flex--col w--full stretch-y gap--medium">
+      <div class="flex flex--col flex--between w--[56cqw] portrait:w--full text--left">
+        <svg viewBox="0 0 360 144" shape-rendering="crispEdges" class="w--full h--[44cqh]">
+          <rect x="0.5" y="0.5" width="359" height="143" fill="#fff" stroke="#000" stroke-width="1" />
+          <line x1="0" y1="80" x2="360" y2="80" stroke="#ddd" stroke-width="0.6" stroke-dasharray="2,2" />
+          <line x1="180" y1="0" x2="180" y2="144" stroke="#ddd" stroke-width="0.6" stroke-dasharray="2,2" />
+          <path d="M69,1h2v2h-2zM97,1h2v2h-2zM101,1h2v2h-2zM109,1h2v2h-2zM113,1h2v2h-2zM117,1h2v2h-2zM121,1h2v2h-2zM125,1h2v2h-2zM129,1h2v2h-2zM133,1h2v2h-2zM137,1h2v2h-2zM141,1h2v2h-2zM145,1h2v2h-2zM149,1h2v2h-2zM153,1h2v2h-2zM157,1h2v2h-2zM193,1h2v2h-2zM197,1h2v2h-2zM201,1h2v2h-2zM57,5h2v2h-2zM61,5h2v2h-2zM85,5h2v2h-2zM125,5h2v2h-2zM129,5h2v2h-2zM133,5h2v2h-2zM137,5h2v2h-2zM141,5h2v2h-2zM145,5h2v2h-2zM149,5h2v2h-2zM153,5h2v2h-2zM157,5h2v2h-2zM237,5h2v2h-2zM269,5h2v2h-2zM273,5h2v2h-2zM277,5h2v2h-2zM281,5h2v2h-2zM285,5h2v2h-2zM289,5h2v2h-2zM17,9h2v2h-2zM21,9h2v2h-2zM25,9h2v2h-2zM29,9h2v2h-2zM33,9h2v2h-2zM49,9h2v2h-2zM65,9h2v2h-2zM69,9h2v2h-2zM73,9h2v2h-2zM77,9h2v2h-2zM81,9h2v2h-2zM85,9h2v2h-2zM97,9h2v2h-2zM101,9h2v2h-2zM105,9h2v2h-2zM109,9h2v2h-2zM125,9h2v2h-2zM129,9h2v2h-2zM133,9h2v2h-2zM137,9h2v2h-2zM141,9h2v2h-2zM145,9h2v2h-2zM149,9h2v2h-2zM153,9h2v2h-2zM201,9h2v2h-2zM205,9h2v2h-2zM209,9h2v2h-2zM249,9h2v2h-2zM253,9h2v2h-2zM257,9h2v2h-2zM261,9h2v2h-2zM265,9h2v2h-2zM269,9h2v2h-2zM273,9h2v2h-2zM277,9h2v2h-2zM281,9h2v2h-2zM285,9h2v2h-2zM289,9h2v2h-2zM293,9h2v2h-2zM297,9h2v2h-2zM301,9h2v2h-2zM305,9h2v2h-2zM309,9h2v2h-2zM313,9h2v2h-2zM317,9h2v2h-2zM321,9h2v2h-2zM325,9h2v2h-2zM329,9h2v2h-2zM333,9h2v2h-2zM337,9h2v2h-2zM1,13h2v2h-2zM5,13h2v2h-2zM9,13h2v2h-2zM13,13h2v2h-2zM17,13h2v2h-2zM21,13h2v2h-2zM25,13h2v2h-2zM29,13h2v2h-2zM33,13h2v2h-2zM37,13h2v2h-2zM41,13h2v2h-2zM45,13h2v2h-2zM49,13h2v2h-2zM53,13h2v2h-2zM57,13h2v2h-2zM61,13h2v2h-2zM65,13h2v2h-2zM69,13h2v2h-2zM73,13h2v2h-2zM77,13h2v2h-2zM81,13h2v2h-2zM85,13h2v2h-2zM89,13h2v2h-2zM105,13h2v2h-2zM109,13h2v2h-2zM113,13h2v2h-2zM129,13h2v2h-2zM133,13h2v2h-2zM137,13h2v2h-2zM141,13h2v2h-2zM157,13h2v2h-2zM161,13h2v2h-2zM193,13h2v2h-2zM197,13h2v2h-2zM201,13h2v2h-2zM205,13h2v2h-2zM209,13h2v2h-2zM213,13h2v2h-2zM221,13h2v2h-2zM225,13h2v2h-2zM229,13h2v2h-2zM233,13h2v2h-2zM237,13h2v2h-2zM241,13h2v2h-2zM245,13h2v2h-2zM249,13h2v2h-2zM253,13h2v2h-2zM257,13h2v2h-2zM261,13h2v2h-2zM265,13h2v2h-2zM269,13h2v2h-2zM273,13h2v2h-2zM277,13h2v2h-2zM281,13h2v2h-2zM285,13h2v2h-2zM289,13h2v2h-2zM293,13h2v2h-2zM297,13h2v2h-2zM301,13h2v2h-2zM305,13h2v2h-2zM309,13h2v2h-2zM313,13h2v2h-2zM317,13h2v2h-2zM321,13h2v2h-2zM325,13h2v2h-2zM329,13h2v2h-2zM333,13h2v2h-2zM337,13h2v2h-2zM341,13h2v2h-2zM345,13h2v2h-2zM349,13h2v2h-2zM353,13h2v2h-2zM357,13h2v2h-2zM17,17h2v2h-2zM21,17h2v2h-2zM25,17h2v2h-2zM29,17h2v2h-2zM33,17h2v2h-2zM37,17h2v2h-2zM41,17h2v2h-2zM45,17h2v2h-2zM49,17h2v2h-2zM53,17h2v2h-2zM57,17h2v2h-2zM61,17h2v2h-2zM65,17h2v2h-2zM69,17h2v2h-2zM73,17h2v2h-2zM77,17h2v2h-2zM81,17h2v2h-2zM85,17h2v2h-2zM101,17h2v2h-2zM105,17h2v2h-2zM133,17h2v2h-2zM185,17h2v2h-2zM189,17h2v2h-2zM193,17h2v2h-2zM201,17h2v2h-2zM205,17h2v2h-2zM209,17h2v2h-2zM213,17h2v2h-2zM217,17h2v2h-2zM221,17h2v2h-2zM225,17h2v2h-2zM229,17h2v2h-2zM233,17h2v2h-2zM237,17h2v2h-2zM241,17h2v2h-2zM245,17h2v2h-2zM249,17h2v2h-2zM253,17h2v2h-2zM257,17h2v2h-2zM261,17h2v2h-2zM265,17h2v2h-2zM269,17h2v2h-2zM273,17h2v2h-2zM277,17h2v2h-2zM281,17h2v2h-2zM285,17h2v2h-2zM289,17h2v2h-2zM293,17h2v2h-2zM297,17h2v2h-2zM301,17h2v2h-2zM305,17h2v2h-2zM309,17h2v2h-2zM313,17h2v2h-2zM317,17h2v2h-2zM321,17h2v2h-2zM325,17h2v2h-2zM329,17h2v2h-2zM333,17h2v2h-2zM337,17h2v2h-2zM341,17h2v2h-2zM345,17h2v2h-2zM349,17h2v2h-2zM353,17h2v2h-2zM45,21h2v2h-2zM49,21h2v2h-2zM53,21h2v2h-2zM57,21h2v2h-2zM61,21h2v2h-2zM65,21h2v2h-2zM69,21h2v2h-2zM73,21h2v2h-2zM77,21h2v2h-2zM81,21h2v2h-2zM85,21h2v2h-2zM105,21h2v2h-2zM109,21h2v2h-2zM113,21h2v2h-2zM193,21h2v2h-2zM205,21h2v2h-2zM209,21h2v2h-2zM213,21h2v2h-2zM217,21h2v2h-2zM221,21h2v2h-2zM225,21h2v2h-2zM229,21h2v2h-2zM233,21h2v2h-2zM237,21h2v2h-2zM241,21h2v2h-2zM245,21h2v2h-2zM249,21h2v2h-2zM253,21h2v2h-2zM257,21h2v2h-2zM261,21h2v2h-2zM265,21h2v2h-2zM269,21h2v2h-2zM273,21h2v2h-2zM277,21h2v2h-2zM281,21h2v2h-2zM285,21h2v2h-2zM289,21h2v2h-2zM293,21h2v2h-2zM297,21h2v2h-2zM301,21h2v2h-2zM305,21h2v2h-2zM309,21h2v2h-2zM313,21h2v2h-2zM317,21h2v2h-2zM337,21h2v2h-2zM341,21h2v2h-2zM49,25h2v2h-2zM53,25h2v2h-2zM57,25h2v2h-2zM61,25h2v2h-2zM65,25h2v2h-2zM69,25h2v2h-2zM73,25h2v2h-2zM77,25h2v2h-2zM81,25h2v2h-2zM85,25h2v2h-2zM89,25h2v2h-2zM93,25h2v2h-2zM101,25h2v2h-2zM105,25h2v2h-2zM109,25h2v2h-2zM113,25h2v2h-2zM117,25h2v2h-2zM121,25h2v2h-2zM177,25h2v2h-2zM189,25h2v2h-2zM197,25h2v2h-2zM201,25h2v2h-2zM205,25h2v2h-2zM209,25h2v2h-2zM213,25h2v2h-2zM217,25h2v2h-2zM221,25h2v2h-2zM225,25h2v2h-2zM229,25h2v2h-2zM233,25h2v2h-2zM237,25h2v2h-2zM241,25h2v2h-2zM245,25h2v2h-2zM249,25h2v2h-2zM253,25h2v2h-2zM257,25h2v2h-2zM261,25h2v2h-2zM265,25h2v2h-2zM269,25h2v2h-2zM273,25h2v2h-2zM277,25h2v2h-2zM281,25h2v2h-2zM285,25h2v2h-2zM289,25h2v2h-2zM293,25h2v2h-2zM297,25h2v2h-2zM301,25h2v2h-2zM305,25h2v2h-2zM309,25h2v2h-2zM313,25h2v2h-2zM337,25h2v2h-2zM53,29h2v2h-2zM57,29h2v2h-2zM61,29h2v2h-2zM65,29h2v2h-2zM69,29h2v2h-2zM73,29h2v2h-2zM77,29h2v2h-2zM81,29h2v2h-2zM85,29h2v2h-2zM89,29h2v2h-2zM93,29h2v2h-2zM97,29h2v2h-2zM101,29h2v2h-2zM105,29h2v2h-2zM109,29h2v2h-2zM181,29h2v2h-2zM185,29h2v2h-2zM189,29h2v2h-2zM193,29h2v2h-2zM197,29h2v2h-2zM201,29h2v2h-2zM205,29h2v2h-2zM209,29h2v2h-2zM213,29h2v2h-2zM217,29h2v2h-2zM221,29h2v2h-2zM225,29h2v2h-2zM229,29h2v2h-2zM233,29h2v2h-2zM237,29h2v2h-2zM241,29h2v2h-2zM245,29h2v2h-2zM249,29h2v2h-2zM253,29h2v2h-2zM257,29h2v2h-2zM261,29h2v2h-2zM265,29h2v2h-2zM269,29h2v2h-2zM273,29h2v2h-2zM277,29h2v2h-2zM281,29h2v2h-2zM285,29h2v2h-2zM289,29h2v2h-2zM293,29h2v2h-2zM297,29h2v2h-2zM301,29h2v2h-2zM305,29h2v2h-2zM309,29h2v2h-2zM313,29h2v2h-2zM317,29h2v2h-2zM57,33h2v2h-2zM61,33h2v2h-2zM65,33h2v2h-2zM69,33h2v2h-2zM73,33h2v2h-2zM77,33h2v2h-2zM81,33h2v2h-2zM85,33h2v2h-2zM89,33h2v2h-2zM93,33h2v2h-2zM97,33h2v2h-2zM101,33h2v2h-2zM105,33h2v2h-2zM109,33h2v2h-2zM113,33h2v2h-2zM181,33h2v2h-2zM185,33h2v2h-2zM189,33h2v2h-2zM193,33h2v2h-2zM197,33h2v2h-2zM201,33h2v2h-2zM205,33h2v2h-2zM209,33h2v2h-2zM213,33h2v2h-2zM217,33h2v2h-2zM221,33h2v2h-2zM225,33h2v2h-2zM229,33h2v2h-2zM233,33h2v2h-2zM237,33h2v2h-2zM241,33h2v2h-2zM245,33h2v2h-2zM249,33h2v2h-2zM253,33h2v2h-2zM257,33h2v2h-2zM261,33h2v2h-2zM265,33h2v2h-2zM269,33h2v2h-2zM273,33h2v2h-2zM277,33h2v2h-2zM281,33h2v2h-2zM285,33h2v2h-2zM289,33h2v2h-2zM293,33h2v2h-2zM297,33h2v2h-2zM301,33h2v2h-2zM305,33h2v2h-2zM309,33h2v2h-2zM313,33h2v2h-2zM57,37h2v2h-2zM61,37h2v2h-2zM65,37h2v2h-2zM69,37h2v2h-2zM73,37h2v2h-2zM77,37h2v2h-2zM81,37h2v2h-2zM85,37h2v2h-2zM89,37h2v2h-2zM93,37h2v2h-2zM97,37h2v2h-2zM101,37h2v2h-2zM105,37h2v2h-2zM109,37h2v2h-2zM173,37h2v2h-2zM177,37h2v2h-2zM181,37h2v2h-2zM193,37h2v2h-2zM201,37h2v2h-2zM205,37h2v2h-2zM213,37h2v2h-2zM221,37h2v2h-2zM225,37h2v2h-2zM229,37h2v2h-2zM233,37h2v2h-2zM237,37h2v2h-2zM241,37h2v2h-2zM245,37h2v2h-2zM249,37h2v2h-2zM253,37h2v2h-2zM257,37h2v2h-2zM261,37h2v2h-2zM265,37h2v2h-2zM269,37h2v2h-2zM273,37h2v2h-2zM277,37h2v2h-2zM281,37h2v2h-2zM285,37h2v2h-2zM289,37h2v2h-2zM293,37h2v2h-2zM297,37h2v2h-2zM301,37h2v2h-2zM305,37h2v2h-2zM309,37h2v2h-2zM57,41h2v2h-2zM61,41h2v2h-2zM65,41h2v2h-2zM69,41h2v2h-2zM73,41h2v2h-2zM77,41h2v2h-2zM81,41h2v2h-2zM85,41h2v2h-2zM89,41h2v2h-2zM93,41h2v2h-2zM97,41h2v2h-2zM101,41h2v2h-2zM173,41h2v2h-2zM177,41h2v2h-2zM193,41h2v2h-2zM201,41h2v2h-2zM209,41h2v2h-2zM213,41h2v2h-2zM217,41h2v2h-2zM221,41h2v2h-2zM225,41h2v2h-2zM229,41h2v2h-2zM233,41h2v2h-2zM237,41h2v2h-2zM241,41h2v2h-2zM245,41h2v2h-2zM249,41h2v2h-2zM253,41h2v2h-2zM257,41h2v2h-2zM261,41h2v2h-2zM265,41h2v2h-2zM269,41h2v2h-2zM273,41h2v2h-2zM277,41h2v2h-2zM281,41h2v2h-2zM285,41h2v2h-2zM289,41h2v2h-2zM293,41h2v2h-2zM297,41h2v2h-2zM305,41h2v2h-2zM61,45h2v2h-2zM65,45h2v2h-2zM69,45h2v2h-2zM73,45h2v2h-2zM77,45h2v2h-2zM81,45h2v2h-2zM85,45h2v2h-2zM89,45h2v2h-2zM93,45h2v2h-2zM97,45h2v2h-2zM101,45h2v2h-2zM173,45h2v2h-2zM177,45h2v2h-2zM181,45h2v2h-2zM185,45h2v2h-2zM189,45h2v2h-2zM217,45h2v2h-2zM221,45h2v2h-2zM225,45h2v2h-2zM229,45h2v2h-2zM233,45h2v2h-2zM237,45h2v2h-2zM241,45h2v2h-2zM245,45h2v2h-2zM249,45h2v2h-2zM253,45h2v2h-2zM257,45h2v2h-2zM261,45h2v2h-2zM265,45h2v2h-2zM269,45h2v2h-2zM273,45h2v2h-2zM277,45h2v2h-2zM281,45h2v2h-2zM285,45h2v2h-2zM289,45h2v2h-2zM293,45h2v2h-2zM297,45h2v2h-2zM313,45h2v2h-2zM69,49h2v2h-2zM73,49h2v2h-2zM77,49h2v2h-2zM81,49h2v2h-2zM85,49h2v2h-2zM89,49h2v2h-2zM97,49h2v2h-2zM173,49h2v2h-2zM177,49h2v2h-2zM181,49h2v2h-2zM185,49h2v2h-2zM189,49h2v2h-2zM193,49h2v2h-2zM197,49h2v2h-2zM201,49h2v2h-2zM205,49h2v2h-2zM209,49h2v2h-2zM213,49h2v2h-2zM217,49h2v2h-2zM221,49h2v2h-2zM225,49h2v2h-2zM233,49h2v2h-2zM237,49h2v2h-2zM241,49h2v2h-2zM245,49h2v2h-2zM249,49h2v2h-2zM253,49h2v2h-2zM257,49h2v2h-2zM261,49h2v2h-2zM265,49h2v2h-2zM269,49h2v2h-2zM273,49h2v2h-2zM277,49h2v2h-2zM281,49h2v2h-2zM285,49h2v2h-2zM289,49h2v2h-2zM293,49h2v2h-2zM297,49h2v2h-2zM73,53h2v2h-2zM77,53h2v2h-2zM81,53h2v2h-2zM165,53h2v2h-2zM169,53h2v2h-2zM173,53h2v2h-2zM177,53h2v2h-2zM181,53h2v2h-2zM185,53h2v2h-2zM189,53h2v2h-2zM193,53h2v2h-2zM197,53h2v2h-2zM201,53h2v2h-2zM205,53h2v2h-2zM209,53h2v2h-2zM213,53h2v2h-2zM217,53h2v2h-2zM221,53h2v2h-2zM225,53h2v2h-2zM229,53h2v2h-2zM237,53h2v2h-2zM241,53h2v2h-2zM245,53h2v2h-2zM249,53h2v2h-2zM253,53h2v2h-2zM257,53h2v2h-2zM261,53h2v2h-2zM265,53h2v2h-2zM269,53h2v2h-2zM273,53h2v2h-2zM277,53h2v2h-2zM281,53h2v2h-2zM285,53h2v2h-2zM289,53h2v2h-2zM293,53h2v2h-2zM297,53h2v2h-2zM77,57h2v2h-2zM81,57h2v2h-2zM101,57h2v2h-2zM165,57h2v2h-2zM169,57h2v2h-2zM173,57h2v2h-2zM177,57h2v2h-2zM181,57h2v2h-2zM185,57h2v2h-2zM189,57h2v2h-2zM193,57h2v2h-2zM197,57h2v2h-2zM201,57h2v2h-2zM205,57h2v2h-2zM209,57h2v2h-2zM213,57h2v2h-2zM221,57h2v2h-2zM225,57h2v2h-2zM229,57h2v2h-2zM233,57h2v2h-2zM237,57h2v2h-2zM249,57h2v2h-2zM253,57h2v2h-2zM257,57h2v2h-2zM261,57h2v2h-2zM265,57h2v2h-2zM269,57h2v2h-2zM273,57h2v2h-2zM277,57h2v2h-2zM281,57h2v2h-2zM285,57h2v2h-2zM289,57h2v2h-2zM77,61h2v2h-2zM81,61h2v2h-2zM85,61h2v2h-2zM89,61h2v2h-2zM113,61h2v2h-2zM165,61h2v2h-2zM169,61h2v2h-2zM173,61h2v2h-2zM177,61h2v2h-2zM181,61h2v2h-2zM185,61h2v2h-2zM189,61h2v2h-2zM193,61h2v2h-2zM197,61h2v2h-2zM201,61h2v2h-2zM205,61h2v2h-2zM209,61h2v2h-2zM213,61h2v2h-2zM217,61h2v2h-2zM221,61h2v2h-2zM225,61h2v2h-2zM229,61h2v2h-2zM233,61h2v2h-2zM253,61h2v2h-2zM257,61h2v2h-2zM261,61h2v2h-2zM277,61h2v2h-2zM281,61h2v2h-2zM285,61h2v2h-2zM301,61h2v2h-2zM89,65h2v2h-2zM93,65h2v2h-2zM165,65h2v2h-2zM169,65h2v2h-2zM173,65h2v2h-2zM177,65h2v2h-2zM181,65h2v2h-2zM185,65h2v2h-2zM189,65h2v2h-2zM193,65h2v2h-2zM197,65h2v2h-2zM201,65h2v2h-2zM205,65h2v2h-2zM209,65h2v2h-2zM213,65h2v2h-2zM217,65h2v2h-2zM225,65h2v2h-2zM257,65h2v2h-2zM281,65h2v2h-2zM285,65h2v2h-2zM301,65h2v2h-2zM105,69h2v2h-2zM109,69h2v2h-2zM113,69h2v2h-2zM165,69h2v2h-2zM169,69h2v2h-2zM173,69h2v2h-2zM177,69h2v2h-2zM181,69h2v2h-2zM185,69h2v2h-2zM189,69h2v2h-2zM193,69h2v2h-2zM197,69h2v2h-2zM201,69h2v2h-2zM205,69h2v2h-2zM209,69h2v2h-2zM213,69h2v2h-2zM217,69h2v2h-2zM221,69h2v2h-2zM225,69h2v2h-2zM229,69h2v2h-2zM257,69h2v2h-2zM285,69h2v2h-2zM105,73h2v2h-2zM109,73h2v2h-2zM113,73h2v2h-2zM117,73h2v2h-2zM121,73h2v2h-2zM169,73h2v2h-2zM173,73h2v2h-2zM177,73h2v2h-2zM185,73h2v2h-2zM189,73h2v2h-2zM193,73h2v2h-2zM197,73h2v2h-2zM201,73h2v2h-2zM205,73h2v2h-2zM209,73h2v2h-2zM213,73h2v2h-2zM217,73h2v2h-2zM221,73h2v2h-2zM225,73h2v2h-2zM281,73h2v2h-2zM101,77h2v2h-2zM105,77h2v2h-2zM109,77h2v2h-2zM113,77h2v2h-2zM117,77h2v2h-2zM121,77h2v2h-2zM125,77h2v2h-2zM189,77h2v2h-2zM193,77h2v2h-2zM197,77h2v2h-2zM201,77h2v2h-2zM205,77h2v2h-2zM209,77h2v2h-2zM213,77h2v2h-2zM217,77h2v2h-2zM221,77h2v2h-2zM293,77h2v2h-2zM101,81h2v2h-2zM105,81h2v2h-2zM109,81h2v2h-2zM113,81h2v2h-2zM117,81h2v2h-2zM121,81h2v2h-2zM125,81h2v2h-2zM129,81h2v2h-2zM133,81h2v2h-2zM189,81h2v2h-2zM193,81h2v2h-2zM197,81h2v2h-2zM201,81h2v2h-2zM205,81h2v2h-2zM209,81h2v2h-2zM213,81h2v2h-2zM217,81h2v2h-2zM281,81h2v2h-2zM293,81h2v2h-2zM313,81h2v2h-2zM317,81h2v2h-2zM101,85h2v2h-2zM105,85h2v2h-2zM109,85h2v2h-2zM113,85h2v2h-2zM117,85h2v2h-2zM121,85h2v2h-2zM125,85h2v2h-2zM129,85h2v2h-2zM133,85h2v2h-2zM137,85h2v2h-2zM141,85h2v2h-2zM193,85h2v2h-2zM197,85h2v2h-2zM201,85h2v2h-2zM205,85h2v2h-2zM209,85h2v2h-2zM213,85h2v2h-2zM217,85h2v2h-2zM285,85h2v2h-2zM321,85h2v2h-2zM325,85h2v2h-2zM329,85h2v2h-2zM101,89h2v2h-2zM105,89h2v2h-2zM109,89h2v2h-2zM113,89h2v2h-2zM117,89h2v2h-2zM121,89h2v2h-2zM125,89h2v2h-2zM129,89h2v2h-2zM133,89h2v2h-2zM137,89h2v2h-2zM141,89h2v2h-2zM193,89h2v2h-2zM197,89h2v2h-2zM201,89h2v2h-2zM205,89h2v2h-2zM209,89h2v2h-2zM213,89h2v2h-2zM217,89h2v2h-2zM329,89h2v2h-2zM105,93h2v2h-2zM109,93h2v2h-2zM113,93h2v2h-2zM117,93h2v2h-2zM121,93h2v2h-2zM125,93h2v2h-2zM129,93h2v2h-2zM133,93h2v2h-2zM137,93h2v2h-2zM193,93h2v2h-2zM197,93h2v2h-2zM201,93h2v2h-2zM205,93h2v2h-2zM209,93h2v2h-2zM213,93h2v2h-2zM217,93h2v2h-2zM229,93h2v2h-2zM309,93h2v2h-2zM313,93h2v2h-2zM321,93h2v2h-2zM109,97h2v2h-2zM113,97h2v2h-2zM117,97h2v2h-2zM121,97h2v2h-2zM125,97h2v2h-2zM129,97h2v2h-2zM133,97h2v2h-2zM137,97h2v2h-2zM193,97h2v2h-2zM197,97h2v2h-2zM201,97h2v2h-2zM205,97h2v2h-2zM209,97h2v2h-2zM213,97h2v2h-2zM225,97h2v2h-2zM305,97h2v2h-2zM309,97h2v2h-2zM313,97h2v2h-2zM317,97h2v2h-2zM321,97h2v2h-2zM325,97h2v2h-2zM357,97h2v2h-2zM109,101h2v2h-2zM113,101h2v2h-2zM117,101h2v2h-2zM121,101h2v2h-2zM125,101h2v2h-2zM129,101h2v2h-2zM133,101h2v2h-2zM137,101h2v2h-2zM197,101h2v2h-2zM201,101h2v2h-2zM205,101h2v2h-2zM209,101h2v2h-2zM213,101h2v2h-2zM225,101h2v2h-2zM297,101h2v2h-2zM301,101h2v2h-2zM305,101h2v2h-2zM309,101h2v2h-2zM313,101h2v2h-2zM317,101h2v2h-2zM321,101h2v2h-2zM325,101h2v2h-2zM345,101h2v2h-2zM109,105h2v2h-2zM113,105h2v2h-2zM117,105h2v2h-2zM121,105h2v2h-2zM125,105h2v2h-2zM129,105h2v2h-2zM197,105h2v2h-2zM201,105h2v2h-2zM205,105h2v2h-2zM209,105h2v2h-2zM293,105h2v2h-2zM297,105h2v2h-2zM301,105h2v2h-2zM305,105h2v2h-2zM309,105h2v2h-2zM313,105h2v2h-2zM317,105h2v2h-2zM321,105h2v2h-2zM325,105h2v2h-2zM329,105h2v2h-2zM109,109h2v2h-2zM113,109h2v2h-2zM117,109h2v2h-2zM121,109h2v2h-2zM125,109h2v2h-2zM197,109h2v2h-2zM201,109h2v2h-2zM205,109h2v2h-2zM209,109h2v2h-2zM297,109h2v2h-2zM301,109h2v2h-2zM305,109h2v2h-2zM309,109h2v2h-2zM313,109h2v2h-2zM317,109h2v2h-2zM321,109h2v2h-2zM325,109h2v2h-2zM329,109h2v2h-2zM109,113h2v2h-2zM113,113h2v2h-2zM117,113h2v2h-2zM121,113h2v2h-2zM125,113h2v2h-2zM201,113h2v2h-2zM297,113h2v2h-2zM317,113h2v2h-2zM321,113h2v2h-2zM325,113h2v2h-2zM329,113h2v2h-2zM109,117h2v2h-2zM113,117h2v2h-2zM117,117h2v2h-2zM121,117h2v2h-2zM321,117h2v2h-2zM325,117h2v2h-2zM357,117h2v2h-2zM105,121h2v2h-2zM109,121h2v2h-2zM113,121h2v2h-2zM325,121h2v2h-2zM353,121h2v2h-2zM105,125h2v2h-2zM109,125h2v2h-2zM349,125h2v2h-2zM105,129h2v2h-2zM109,129h2v2h-2zM109,133h2v2h-2z" fill="#999" />
+          {% for q in map_pins %}
+            <circle cx="{{ q.map_x }}" cy="{{ q.map_y }}" r="{% if q.mag_num >= 5.0 %}3.8{% else %}2.6{% endif %}" fill="#000" stroke="#fff" stroke-width="0.8" />
+          {% endfor %}
+          {% if featured %}
+            <circle cx="{{ featured.map_x }}" cy="{{ featured.map_y }}" r="8" fill="none" stroke="#000" stroke-width="1.2" />
+            <circle cx="{{ featured.map_x }}" cy="{{ featured.map_y }}" r="14" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="2,2" />
+            <circle cx="{{ featured.map_x }}" cy="{{ featured.map_y }}" r="20" fill="none" stroke="#000" stroke-width="0.8" stroke-dasharray="2,3" />
+            <text x="{{ featured.map_x }}" y="{{ featured.map_y | minus: 10 }}" font-size="8" font-weight="700" text-anchor="middle" fill="#000" font-family="sans-serif">M{{ featured.mag }}</text>
+          {% endif %}
+        </svg>
+
+        {% if featured %}
+          <div class="flex flex--row flex--between flex--center-y w--full mt--1">
+            <span class="description">
+              <span class="label label--small label--inverted px--1">M{{ featured.mag }}</span>
+              <strong>{{ featured.place }}</strong>
+            </span>
+            <span class="label label--base shrink-0">{{ featured.depth_km }}km &middot; {{ featured.time }}</span>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="divider--v portrait:hidden"></div>
+
+      <div class="flex flex--col flex--between stretch-x text--left">
+        <div class="w--full">
+          <div class="label label--base label--underline mb--1 text--left">RECENT M4.5+ QUAKES</div>
+          {% for item in items limit: 4 %}
+            <div class="flex flex--row flex--between flex--center-y w--full mb--1">
+              <span class="description text--left"><strong>M{{ item.mag }}</strong> {{ item.place }}</span>
+              <span class="label label--small shrink-0">{{ item.time }}</span>
+            </div>
+          {% endfor %}
+        </div>
+
+        <div class="w--full">
+          <div class="flex flex--row flex--between flex--center-y mb--1">
+            <span class="label label--small label--underline">24H PULSE</span>
+            <span class="label label--small">SOLID = M5.0+</span>
+          </div>
+          <svg viewBox="0 0 240 68" preserveAspectRatio="none" class="w--full h--[46px]">
+            <line x1="0" y1="64" x2="240" y2="64" stroke="#000" stroke-width="1" />
+            {% for b in hourly_bars %}
+              <rect x="{{ b.x }}" y="{{ b.y }}" width="7" height="{{ b.h }}" fill="{% if b.solid %}#000{% else %}#fff{% endif %}" stroke="#000" stroke-width="1" />
+            {% endfor %}
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">USGS &middot; {{ date }}</span>
+</div>

@@ -1,0 +1,17 @@
+name: Global Seismic Pulse
+description: Live USGS M4.5+ earthquake radar
+strategy: static
+polling_url: https://itsaplane-trmnl.onrender.com/seismic/daily
+polling_verb: get
+polling_headers: ""
+refresh_interval: 60
+dark_mode: "no"
+no_screen_padding: "no"
+custom_fields:
+  - keyname: author_bio
+    field_type: author_bio
+    name: About This Plugin
+    category: nature
+    description: Live USGS M4.5+ earthquake radar
+    github_url: https://github.com/ervansetiawan/itsaplane-trmnl
+    email_address: you@example.com

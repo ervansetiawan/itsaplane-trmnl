@@ -1,0 +1,26 @@
+<div class="layout layout--col">
+  <div class="flex flex--row flex--center-y w--full h--full gap--small">
+    {% if featured %}
+      <svg viewBox="0 0 140 140" class="w--[42cqw] h--[80cqh] shrink-0">
+        {% for r in ring_radii %}
+          <circle cx="70" cy="70" r="{{ r }}" fill="none" stroke="#000" stroke-width="1.5" />
+        {% endfor %}
+        <circle cx="70" cy="70" r="12" fill="#000" />
+        <text x="70" y="74" font-size="10" font-weight="700" text-anchor="middle" fill="#fff" font-family="sans-serif">{{ featured.mag }}</text>
+      </svg>
+    {% endif %}
+
+    <div class="flex flex--col flex--between stretch-x h--full text--left">
+      <span class="label label--small label--inverted px--1">{{ total_quakes }} M4.5+</span>
+      {% if featured %}
+        <div class="description text--left"><strong>{{ featured.place }}</strong></div>
+        <div class="label label--small text--left">{{ featured.depth_km }}km &middot; {{ featured.time }}</div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">USGS</span>
+</div>

@@ -409,5 +409,23 @@ def plotter_daily():
     return jsonify(generate_daily_plotter(target_date))
 
 
+@app.route('/seismic/daily')
+def seismic_daily():
+    from seismic_pulse import fetch_seismic_pulse
+    try:
+        return jsonify(fetch_seismic_pulse())
+    except requests.RequestException as exc:
+        return jsonify({"error": f"USGS seismic feed unavailable: {exc}"}), 502
+
+
+@app.route('/markets/fear-greed')
+def markets_fear_greed():
+    from fear_greed import fetch_fear_greed
+    try:
+        return jsonify(fetch_fear_greed())
+    except requests.RequestException as exc:
+        return jsonify({"error": f"Market sentiment feed unavailable: {exc}"}), 502
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

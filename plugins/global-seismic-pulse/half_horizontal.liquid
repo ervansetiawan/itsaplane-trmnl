@@ -1,0 +1,33 @@
+<div class="layout layout--col">
+  <div class="flex flex--row portrait:flex--col w--full h--full gap--medium lg:gap--large">
+    <div class="flex flex--col flex--center shrink-0">
+      {% if featured %}
+        <svg viewBox="0 0 140 140" class="w--[24cqw] h--[84cqh]">
+          {% for r in ring_radii %}
+            <circle cx="70" cy="70" r="{{ r }}" fill="none" stroke="#000" stroke-width="1.5" />
+          {% endfor %}
+          <circle cx="70" cy="70" r="12" fill="#000" />
+          <text x="70" y="74" font-size="10" font-weight="700" text-anchor="middle" fill="#fff" font-family="sans-serif">{{ featured.mag }}</text>
+        </svg>
+      {% endif %}
+    </div>
+
+    <div class="flex flex--col flex--between stretch-x h--full text--left">
+      <div class="flex flex--row flex--between flex--center-y">
+        <span class="label label--small label--inverted px--2">{{ total_quakes }} M4.5+ (24H)</span>
+        <span class="label label--small">{{ m5_plus }} M5.0+</span>
+      </div>
+      {% if featured %}
+        <div class="title title--small text--left">M{{ featured.mag }} &middot; {{ featured.place }}</div>
+      {% endif %}
+      {% for item in items limit: 2 %}
+        <div class="description text--left"><strong>M{{ item.mag }}</strong> {{ item.place }} ({{ item.time }})</div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">USGS &middot; {{ date }}</span>
+</div>
