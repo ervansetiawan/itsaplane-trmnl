@@ -382,3 +382,41 @@ def test_nfl_story_picks_randomly_from_completed_games():
     assert len(body["quarter_bars"]) == 4
 
 
+def test_museum_daily_uses_cleveland_open_access():
+    import museum_daily
+
+    museum_daily._CACHE["items"] = []
+    museum_daily._CACHE["ts"] = 0.0
+
+    cma_resp = MagicMock(status_code=200)
+    cma_resp.raise_for_status.return_value = None
+    cma_resp.json.return_value = {
+        "data": [
+            {
+                "id": 94979,
+                "title": "Nathaniel Hurd",
+                "creation_date": "c. 1765",
+                "creation_date_latest": 1770,
+                "technique": "oil on canvas",
+                "measurements": "Unframed: 76.2 x 64.8 cm (30 x 25 1/2 in.)",
+                "department": "American Painting and Sculpture",
+                "current_location": "204",
+                "creditline": "Gift of the John Huntington Art and Polytechnic Trust",
+                "creators": [{"description": "John Singleton Copley (American, 1738–1815)"}],
+                "images": {"web": {"url": "https://openaccess-cdn.clevelandart.org/1915.534/1915.534_web.jpg"}},
+            }
+        ]
+    }
+
+    with patch("museum_daily.requests.get", return_value=cma_resp):
+        client = app.test_client()
+        resp = client.get("/museum/daily?date=2026-11-20")
+
+    assert resp.status_code == 200
+    body = resp.get_json()
+    assert body["artwork_title"] == "Nathaniel Hurd"
+    assert body["artist"] == "John Singleton Copley"
+    assert body["artist_bio"] == "American, 1738–1815"
+    assert body["image_url"].startswith("https://openaccess-cdn.clevelandart.org/")
+
+
