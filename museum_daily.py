@@ -32,16 +32,21 @@ def _load_catalog() -> list[dict]:
     if _CACHE["items"] and (now - _CACHE["ts"]) < _CACHE_TTL_SECONDS:
         return _CACHE["items"]
 
-    resp = requests.get(
-        CMA_API_URL,
-        params={"has_image": 1, "cc0": 1, "type": "Painting", "limit": 50},
-        timeout=10,
-    )
-    resp.raise_for_status()
-    items = [
-        a for a in resp.json().get("data", [])
-        if (a.get("images") or {}).get("web", {}).get("url")
-    ]
+    try:
+        resp = requests.get(
+            CMA_API_URL,
+            params={"has_image": 1, "cc0": 1, "type": "Painting", "limit": 50},
+            timeout=10,
+        )
+        resp.raise_for_status()
+        items = [
+            a for a in resp.json().get("data", [])
+            if (a.get("images") or {}).get("web", {}).get("url")
+        ]
+    except requests.RequestException:
+        if _CACHE["items"]:
+            return _CACHE["items"]
+        raise
     if not items:
         raise ValueError("No artworks with images returned from Cleveland Museum of Art")
     _CACHE["ts"] = now

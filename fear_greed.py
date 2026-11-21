@@ -13,7 +13,7 @@ HEADERS = {
 }
 
 _CACHE: dict = {"ts": 0.0, "data": None}
-_CACHE_TTL_SECONDS = 900
+_CACHE_TTL_SECONDS = 1800
 
 
 def _fetch_vix() -> tuple[str, str]:
@@ -41,9 +41,14 @@ def fetch_fear_greed() -> dict:
     if _CACHE["data"] is not None and (now - _CACHE["ts"]) < _CACHE_TTL_SECONDS:
         return _CACHE["data"]
 
-    resp = requests.get(CNN_FG_URL, headers=HEADERS, timeout=8)
-    resp.raise_for_status()
-    raw = resp.json()
+    try:
+        resp = requests.get(CNN_FG_URL, headers=HEADERS, timeout=8)
+        resp.raise_for_status()
+        raw = resp.json()
+    except requests.RequestException:
+        if _CACHE["data"] is not None:
+            return _CACHE["data"]
+        raise
 
     fg = raw.get("fear_and_greed", {})
     score = round(float(fg.get("score") or 50))

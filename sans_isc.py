@@ -33,7 +33,7 @@ PORT_SERVICES = {
 }
 
 _CACHE: dict = {"ts": 0.0, "data": None}
-_CACHE_TTL_SECONDS = 900
+_CACHE_TTL_SECONDS = 1800
 
 
 def _fmt_compact(value: int) -> str:
@@ -56,11 +56,13 @@ def fetch_sans_isc() -> dict:
     if _CACHE["data"] is not None and (now - _CACHE["ts"]) < _CACHE_TTL_SECONDS:
         return _CACHE["data"]
 
-    with ThreadPoolExecutor(max_workers=2) as pool:
-        infocon_fut = pool.submit(_fetch_json, ISC_INFOCON_URL)
-        ports_fut = pool.submit(_fetch_json, ISC_TOPPORTS_URL)
-        infocon_raw = infocon_fut.result()
-        ports_raw = ports_fut.result()
+    try:
+        infocon_raw = _fetch_json(ISC_INFOCON_URL)
+        ports_raw = _fetch_json(ISC_TOPPORTS_URL)
+    except requests.RequestException:
+        if _CACHE["data"] is not None:
+            return _CACHE["data"]
+        raise
 
     infocon = str((infocon_raw or {}).get("status", "green")).upper()
 

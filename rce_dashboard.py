@@ -60,7 +60,7 @@ MAJOR_VENDORS = (
 
 _CACHE: dict = {"ts": 0.0, "data": None}
 _CVSS_CACHE: dict[str, tuple[float | None, str]] = {}
-_CACHE_TTL_SECONDS = 900
+_CACHE_TTL_SECONDS = 1800
 
 
 def _fetch_cvss(cve_id: str) -> tuple[float | None, str]:
@@ -151,11 +151,17 @@ def fetch_rce_dashboard(today: date | None = None) -> dict:
     if _CACHE["data"] is not None and (now - _CACHE["ts"]) < _CACHE_TTL_SECONDS:
         raw = _CACHE["data"]
     else:
-        resp = requests.get(CISA_KEV_URL, timeout=10)
-        resp.raise_for_status()
-        raw = resp.json()
-        _CACHE["ts"] = now
-        _CACHE["data"] = raw
+        try:
+            resp = requests.get(CISA_KEV_URL, timeout=10)
+            resp.raise_for_status()
+            raw = resp.json()
+            _CACHE["ts"] = now
+            _CACHE["data"] = raw
+        except requests.RequestException:
+            if _CACHE["data"] is not None:
+                raw = _CACHE["data"]
+            else:
+                raise
 
     d = today or date.today()
     cutoff_30d = (d - timedelta(days=30)).isoformat()

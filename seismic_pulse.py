@@ -6,7 +6,7 @@ import requests
 
 USGS_M45_DAY_URL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson"
 _CACHE: dict = {"ts": 0.0, "data": None}
-_CACHE_TTL_SECONDS = 600
+_CACHE_TTL_SECONDS = 1800
 
 
 def _format_quake(feat: dict) -> dict:
@@ -53,11 +53,17 @@ def fetch_seismic_pulse() -> dict:
     if _CACHE["data"] is not None and (now - _CACHE["ts"]) < _CACHE_TTL_SECONDS:
         features = _CACHE["data"]
     else:
-        resp = requests.get(USGS_M45_DAY_URL, timeout=10)
-        resp.raise_for_status()
-        features = resp.json().get("features", [])
-        _CACHE["ts"] = now
-        _CACHE["data"] = features
+        try:
+            resp = requests.get(USGS_M45_DAY_URL, timeout=10)
+            resp.raise_for_status()
+            features = resp.json().get("features", [])
+            _CACHE["ts"] = now
+            _CACHE["data"] = features
+        except requests.RequestException:
+            if _CACHE["data"] is not None:
+                features = _CACHE["data"]
+            else:
+                raise
 
     quakes = [_format_quake(f) for f in features]
     by_mag = sorted(quakes, key=lambda q: (q["mag_num"], q["ts"]), reverse=True)

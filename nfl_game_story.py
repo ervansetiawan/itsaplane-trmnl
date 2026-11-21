@@ -10,7 +10,7 @@ NFL_SUMMARY_URL = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/su
 
 _SCOREBOARD_CACHE: dict[str, tuple[float, date, list[dict]]] = {}
 _STORY_CACHE: dict[tuple[str, str], tuple[float, dict]] = {}
-_CACHE_TTL_SECONDS = 900
+_CACHE_TTL_SECONDS = 1800
 
 
 def _team_stats_map(summary: dict, team_abbr: str) -> dict[str, str]:

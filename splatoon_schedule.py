@@ -7,7 +7,7 @@ import requests
 SPLAT_SCHEDULES_URL = "https://splatoon3.ink/data/schedules.json"
 _HEADERS = {"User-Agent": "itsaplane-trmnl/1.0 (https://github.com/ervansetiawan/itsaplane-trmnl)"}
 _CACHE: dict = {"ts": 0.0, "data": None}
-_CACHE_TTL_SECONDS = 600
+_CACHE_TTL_SECONDS = 1800
 
 
 def _fmt_window(start_iso: str | None, end_iso: str | None) -> str:
@@ -47,11 +47,17 @@ def fetch_splatoon_schedule() -> dict:
     if _CACHE["data"] is not None and (now - _CACHE["ts"]) < _CACHE_TTL_SECONDS:
         raw = _CACHE["data"]
     else:
-        resp = requests.get(SPLAT_SCHEDULES_URL, headers=_HEADERS, timeout=8)
-        resp.raise_for_status()
-        raw = resp.json().get("data", {})
-        _CACHE["ts"] = now
-        _CACHE["data"] = raw
+        try:
+            resp = requests.get(SPLAT_SCHEDULES_URL, headers=_HEADERS, timeout=8)
+            resp.raise_for_status()
+            raw = resp.json().get("data", {})
+            _CACHE["ts"] = now
+            _CACHE["data"] = raw
+        except requests.RequestException:
+            if _CACHE["data"] is not None:
+                raw = _CACHE["data"]
+            else:
+                raise
 
     reg_nodes = (raw.get("regularSchedules") or {}).get("nodes") or []
     bankara_nodes = (raw.get("bankaraSchedules") or {}).get("nodes") or []
