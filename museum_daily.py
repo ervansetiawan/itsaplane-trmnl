@@ -1,6 +1,7 @@
 """Museum Masterpiece of the Day backed by The Metropolitan Museum of Art Open Access API."""
 
 from datetime import date
+import re
 import requests
 
 MET_OBJECT_URL = "https://collectionapi.metmuseum.org/public/collection/v1/objects/{object_id}"
@@ -39,12 +40,33 @@ def fetch_daily_masterpiece(target_date: date | None = None) -> dict:
     if not image_url:
         raise ValueError(f"No image URL for Met object {object_id}")
 
+    raw_year = art.get("objectEndDate") or art.get("objectBeginDate")
+    if not isinstance(raw_year, (int, float)):
+        m = re.search(r"(\d{4})", str(art.get("objectDate") or ""))
+        raw_year = int(m.group(1)) if m else None
+
+    timeline_x = None
+    if isinstance(raw_year, (int, float)) and raw_year > 0:
+        clamped = max(1400, min(2000, int(raw_year)))
+        timeline_x = round(10 + ((clamped - 1400) / 600) * 180)
+
+    dims = _clean(art.get("dimensions"), 55)
+    if "(" in dims and len(dims) > 36:
+        dims = dims.split("(", 1)[0].strip()
+
     return {
         "title": "Museum Masterpiece",
         "artwork_title": _clean(art.get("title"), 70),
         "artist": _clean(art.get("artistDisplayName") or art.get("culture") or "Unknown Artist", 70),
+        "artist_bio": _clean(art.get("artistDisplayBio"), 75),
         "year": _clean(art.get("objectDate") or "Public Domain", 35),
+        "timeline_x": timeline_x,
         "medium": _clean(art.get("medium"), 65),
+        "dimensions": dims,
+        "department": _clean(art.get("department"), 45),
+        "gallery": _clean(str(art.get("GalleryNumber") or ""), 15),
+        "credit_line": _clean(art.get("creditLine"), 90),
+        "object_id": object_id,
         "image_url": image_url,
         "museum": "The Metropolitan Museum of Art",
         "date": d.strftime("%b %d, %Y").upper(),
