@@ -7,6 +7,7 @@ import requests
 
 IODA_ALERTS_URL = "https://api.ioda.inetintel.cc.gatech.edu/v2/outages/alerts"
 _CACHE: dict = {"ts": 0.0, "data": None}
+_RESPONSE_CACHE: dict = {"data": None}
 _CACHE_TTL_SECONDS = 600
 
 # ISO-2 country centroids (lat, lon) for equirectangular map projection
@@ -102,17 +103,27 @@ def _format_alert(alert: dict) -> dict:
 
 
 def _fetch_alert_window(start: int, until: int) -> list[dict]:
-    resp = requests.get(
-        IODA_ALERTS_URL,
-        params={"from": start, "until": until, "limit": 400},
-        headers={
-            "User-Agent": "Mozilla/5.0 (compatible; TRMNL-Outage-Radar/1.0)",
-            "Accept": "application/json",
-        },
-        timeout=10,
-    )
-    resp.raise_for_status()
-    return resp.json().get("data", [])
+    for attempt in range(2):
+        try:
+            resp = requests.get(
+                IODA_ALERTS_URL,
+                params={"from": start, "until": until, "limit": 400},
+                headers={
+                    "User-Agent": "Mozilla/5.0 (compatible; TRMNL-Outage-Radar/1.0)",
+                    "Accept": "application/json",
+                },
+                timeout=10,
+            )
+            if resp.status_code == 429 and attempt == 0:
+                time.sleep(0.8)
+                continue
+            resp.raise_for_status()
+            return resp.json().get("data", [])
+        except requests.RequestException:
+            if attempt == 0:
+                continue
+            return []
+    return []
 
 
 def fetch_outage_radar() -> dict:
@@ -127,8 +138,13 @@ def fetch_outage_radar() -> dict:
         with ThreadPoolExecutor(max_workers=4) as pool:
             for chunk in pool.map(lambda w: _fetch_alert_window(w[0], w[1]), windows):
                 alerts.extend(chunk)
-        _CACHE["ts"] = now
-        _CACHE["data"] = alerts
+        if alerts:
+            _CACHE["ts"] = now
+            _CACHE["data"] = alerts
+        elif _RESPONSE_CACHE["data"] is not None:
+            return _RESPONSE_CACHE["data"]
+        elif _CACHE["data"] is not None:
+            alerts = _CACHE["data"]
 
     formatted = [_format_alert(a) for a in alerts]
     critical_list = [a for a in formatted if a["level"] == "CRITICAL"]
@@ -180,7 +196,7 @@ def fetch_outage_radar() -> dict:
     tele_count = sum(1 for a in formatted if "MERIT" in a["datasource"])
     tot_safe = max(1, len(formatted))
 
-    return {
+    result = {
         "title": "BGP & Outage Radar",
         "date": datetime.now(timezone.utc).strftime("%b %d, %Y · %H:%M UTC").upper(),
         "total_alerts": len(formatted),
@@ -196,3 +212,6 @@ def fetch_outage_radar() -> dict:
         "items": ranked[1:6],
         "hourly_bars": hourly_bars,
     }
+    if formatted:
+        _RESPONSE_CACHE["data"] = result
+    return result

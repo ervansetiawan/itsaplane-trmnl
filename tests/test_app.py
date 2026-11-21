@@ -508,3 +508,18 @@ def test_iq_daily_endpoint():
         assert body["yesterday"]["explanation"]
 
 
+def test_outages_daily_handles_partial_and_total_upstream_failure():
+    import outage_radar
+
+    outage_radar._CACHE["data"] = None
+    outage_radar._CACHE["ts"] = 0.0
+    outage_radar._RESPONSE_CACHE["data"] = {"title": "BGP & Outage Radar", "total_alerts": 5}
+
+    with patch("outage_radar.requests.get", side_effect=outage_radar.requests.Timeout("ioda timeout")):
+        client = app.test_client()
+        resp = client.get("/outages/daily")
+
+    assert resp.status_code == 200
+    assert resp.get_json()["total_alerts"] == 5
+
+
