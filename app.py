@@ -650,5 +650,16 @@ def stoic_daily():
     return jsonify(generate_stoic_sundial(target_date, lat=lat, lon=lon))
 
 
+@app.route('/retro/random')
+def retro_random():
+    from retro_games import fetch_random_retro_game
+    seed_arg = request.args.get('seed')
+    try:
+        seed = int(seed_arg) if seed_arg is not None else None
+    except ValueError:
+        seed = None
+    return jsonify(fetch_random_retro_game(seed=seed))
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

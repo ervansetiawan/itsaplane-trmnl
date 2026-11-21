@@ -1,0 +1,18 @@
+name: Retro Game Showcase
+description: Random retro game snaps & trivia
+strategy: polling
+polling_url: https://itsaplane-trmnl.onrender.com/retro/random
+polling_verb: get
+polling_headers: ""
+framework_version: 3.4
+refresh_interval: 60
+dark_mode: "no"
+no_screen_padding: "no"
+custom_fields:
+  - keyname: author_bio
+    field_type: author_bio
+    name: About This Plugin
+    category: games
+    description: Random retro game snaps & trivia
+    github_url: https://github.com/ervansetiawan/itsaplane-trmnl
+    email_address: ervansetiawan@gmail.com

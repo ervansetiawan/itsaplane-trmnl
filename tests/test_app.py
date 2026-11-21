@@ -443,3 +443,14 @@ def test_build_route_map_projects_coastlines_and_arc():
     assert rm["plane_angle"] == 155.0
 
 
+def test_retro_random_endpoint():
+    client = app.test_client()
+    resp = client.get("/retro/random?seed=42")
+    assert resp.status_code == 200
+    body = resp.get_json()
+    assert body["title"] == "Retro Game Showcase"
+    assert body["image_url"].startswith("https://raw.githubusercontent.com/libretro-thumbnails/")
+    assert body["platform"]
+    assert body["trivia"]
+
+

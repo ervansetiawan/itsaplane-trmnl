@@ -1,0 +1,11 @@
+name: Retro Game Showcase
+description: Random retro game snaps & trivia
+refresh_interval: 60
+custom_fields:
+  - keyname: author_bio
+    field_type: author_bio
+    name: About This Plugin
+    category: games
+    description: Random retro game snaps & trivia
+    github_url: https://github.com/ervansetiawan/itsaplane-trmnl
+    email_address: ervansetiawan@gmail.com

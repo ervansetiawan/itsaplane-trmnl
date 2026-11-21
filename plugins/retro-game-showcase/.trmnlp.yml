@@ -1,0 +1,21 @@
+{
+  "watch": [
+    "src",
+    ".trmnlp.yml"
+  ],
+  "custom_fields": {},
+  "variables": {
+    "title": "Retro Game Showcase",
+    "date": "NOV 21, 2026",
+    "total_games": 21,
+    "timeline_x": 111,
+    "game_title": "EarthBound",
+    "platform": "SNES",
+    "year": 1994,
+    "developer": "Ape / HAL Laboratory",
+    "genre": "RPG",
+    "description": "Ness and friends battle an alien invasion across quirky Americana suburbs using baseball bats and PSI.",
+    "trivia": "Featured a rolling HP meter that let players heal before fatal damage finished ticking.",
+    "image_url": "https://raw.githubusercontent.com/libretro-thumbnails/Nintendo_-_Super_Nintendo_Entertainment_System/master/Named_Snaps/EarthBound%20%28USA%29.png"
+  }
+}
