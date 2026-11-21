@@ -1,5 +1,12 @@
 <div class="layout layout--col">
   <div class="flex flex--col flex--between w--full h--full gap--small">
+    {% if error != blank %}
+      <div class="title title--small text--center">{{ error }}</div>
+    {% elsif turf == blank and series == blank and open == blank %}
+      <div class="flex flex--col flex--center h--full w--full">
+        <div class="title title--small">Waiting for Splatoon 3 rotation data...</div>
+      </div>
+    {% else %}
     <div class="flex flex--row gap--medium w--full stretch-y">
       {% if turf %}
         <div class="flex flex--col flex--between stretch-x text--left">
@@ -16,9 +23,8 @@
         </div>
       {% endif %}
 
-      <div class="divider--v"></div>
-
       {% if series %}
+        {% if turf %}<div class="divider--v"></div>{% endif %}
         <div class="flex flex--col flex--between stretch-x text--left">
           <div class="flex flex--row flex--between flex--center-y w--full mb--1">
             <span class="label label--small label--inverted px--2 rounded">SERIES</span>
@@ -33,9 +39,8 @@
         </div>
       {% endif %}
 
-      <div class="divider--v"></div>
-
       {% if open %}
+        {% if turf or series %}<div class="divider--v"></div>{% endif %}
         <div class="flex flex--col flex--between stretch-x text--left">
           <div class="flex flex--row flex--between flex--center-y w--full mb--1">
             <span class="label label--small label--inverted px--2 rounded">OPEN</span>
@@ -50,6 +55,7 @@
         </div>
       {% endif %}
     </div>
+    {% endif %}
 
     {% if salmon %}
       <div class="divider"></div>
