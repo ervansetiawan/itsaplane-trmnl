@@ -1,0 +1,94 @@
+{
+  "watch": [
+    "src",
+    ".trmnlp.yml"
+  ],
+  "custom_fields": {},
+  "variables": {
+    "title": "SANS ISC Threat Monitor",
+    "date": "NOV 20, 22:11 UTC",
+    "infocon": "GREEN",
+    "top_port": {
+      "port": 22,
+      "service": "SSH",
+      "records": 607403,
+      "records_fmt": "607.4K",
+      "targets": 296,
+      "targets_fmt": "296",
+      "sources": 9450,
+      "sources_fmt": "9.4K",
+      "bar_pct": 100
+    },
+    "total_records_fmt": "1.7M",
+    "total_targets_fmt": "1.5K",
+    "port_count": 6,
+    "top_ports": [
+      {
+        "port": 22,
+        "service": "SSH",
+        "records": 607403,
+        "records_fmt": "607.4K",
+        "targets": 296,
+        "targets_fmt": "296",
+        "sources": 9450,
+        "sources_fmt": "9.4K",
+        "bar_pct": 100
+      },
+      {
+        "port": 23,
+        "service": "Telnet",
+        "records": 301021,
+        "records_fmt": "301.0K",
+        "targets": 294,
+        "targets_fmt": "294",
+        "sources": 10225,
+        "sources_fmt": "10.2K",
+        "bar_pct": 50
+      },
+      {
+        "port": 443,
+        "service": "HTTPS",
+        "records": 225619,
+        "records_fmt": "225.6K",
+        "targets": 337,
+        "targets_fmt": "337",
+        "sources": 12445,
+        "sources_fmt": "12.4K",
+        "bar_pct": 37
+      },
+      {
+        "port": 2222,
+        "service": "TCP/2222",
+        "records": 216282,
+        "records_fmt": "216.3K",
+        "targets": 286,
+        "targets_fmt": "286",
+        "sources": 5080,
+        "sources_fmt": "5.1K",
+        "bar_pct": 36
+      },
+      {
+        "port": 80,
+        "service": "HTTP",
+        "records": 188628,
+        "records_fmt": "188.6K",
+        "targets": 294,
+        "targets_fmt": "294",
+        "sources": 9971,
+        "sources_fmt": "10.0K",
+        "bar_pct": 31
+      },
+      {
+        "port": 16767,
+        "service": "TCP/16767",
+        "records": 160582,
+        "records_fmt": "160.6K",
+        "targets": 17,
+        "targets_fmt": "17",
+        "sources": 4725,
+        "sources_fmt": "4.7K",
+        "bar_pct": 26
+      }
+    ]
+  }
+}

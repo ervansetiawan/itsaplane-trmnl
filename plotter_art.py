@@ -113,21 +113,98 @@ def _truchet_maze(rng: random.Random) -> tuple[str, str, str, list[str]]:
 
 ALGORITHMS = [_hypotrochoid, _lissajous, _molnar_grid, _truchet_maze]
 
+ALGORITHM_META = {
+    "Hypotrochoid": {
+        "short": "Epicycle",
+        "formula": "x = (R-r)cos(t) + d*cos((R-r)t/r)",
+        "note": "Traced by a point attached to a circle rolling inside a fixed outer ring.",
+    },
+    "Lissajous Knot": {
+        "short": "Harmonic",
+        "formula": "x = A*sin(fx*t + d),  y = A*sin(fy*t)",
+        "note": "Harmonic oscilloscope curves studied by Jules Antoine Lissajous (1857).",
+    },
+    "Vera Molnár Grid": {
+        "short": "Des Ordres",
+        "formula": "9x9 nested squares · radial jitter",
+        "note": "Homage to Vera Molnar's Des Ordres (1974), balancing grid order and noise.",
+    },
+    "Truchet Quarter-Arcs": {
+        "short": "Labyrinth",
+        "formula": "12x12 tiles · quarter-arcs (p = 0.5)",
+        "note": "Sebastien Truchet's 1704 tiling; two arc orientations form a continuous maze.",
+    },
+}
+
+CYCLE_LABELS = ["Epicycle", "Harmonic", "Des Ordres", "Labyrinth"]
+
+
+def _compute_plotter_stats(paths: list[str]) -> tuple[int, int]:
+    """Computes total vertex count and approximate pen travel distance across SVG paths."""
+    vertices = 0
+    travel = 0.0
+    for d in paths:
+        tokens = d.replace("M ", "").replace(" Z", "").split()
+        prev = None
+        i = 0
+        while i < len(tokens):
+            tok = tokens[i]
+            if tok == "L":
+                i += 1
+                continue
+            if tok == "A" and i + 6 < len(tokens):
+                try:
+                    rx = float(tokens[i + 1].split(",")[0])
+                    travel += 0.5 * math.pi * rx
+                    end_parts = tokens[i + 6].split(",")
+                    prev = (float(end_parts[0]), float(end_parts[1]))
+                    vertices += 1
+                except (ValueError, IndexError):
+                    pass
+                i += 7
+                continue
+            if "," in tok:
+                try:
+                    x_s, y_s = tok.split(",", 1)
+                    pt = (float(x_s), float(y_s))
+                    if prev is not None:
+                        travel += math.hypot(pt[0] - prev[0], pt[1] - prev[1])
+                    prev = pt
+                    vertices += 1
+                except ValueError:
+                    pass
+            i += 1
+    return vertices, int(round(travel))
+
 
 def generate_daily_plotter(target_date: date | None = None) -> dict:
     d = target_date or date.today()
     seed = d.toordinal()
     rng = random.Random(seed)
-    algo_fn = ALGORITHMS[seed % len(ALGORITHMS)]
+    idx = seed % len(ALGORITHMS)
+    algo_fn = ALGORITHMS[idx]
     algo_name, params, prefix, paths = algo_fn(rng)
+    meta = ALGORITHM_META.get(algo_name, {})
+    vertices, pen_travel = _compute_plotter_stats(paths)
+    next_label = CYCLE_LABELS[(idx + 1) % len(CYCLE_LABELS)]
+    cycle = [
+        {"label": lbl, "active": i == idx}
+        for i, lbl in enumerate(CYCLE_LABELS)
+    ]
 
     return {
         "title": "Daily Pen-Plotter",
         "piece_title": f"{prefix} #{d.timetuple().tm_yday}",
         "algorithm": algo_name,
+        "formula": meta.get("formula", ""),
+        "note": meta.get("note", ""),
+        "cycle": cycle,
+        "next_algorithm": next_label,
         "params": params,
         "seed": seed,
         "stroke_count": len(paths),
+        "vertex_count": vertices,
+        "pen_travel": pen_travel,
         "paths": paths,
         "date": d.strftime("%b %d, %Y").upper(),
     }

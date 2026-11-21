@@ -1,0 +1,53 @@
+<div class="layout layout--col">
+  <div class="flex flex--col flex--between w--full h--full gap--medium">
+    <div class="w--full">
+      <div class="flex flex--row flex--between flex--center-y w--full mb--1">
+        <div class="flex flex--row flex--center-y gap--small">
+          <span class="label label--base label--inverted px--2 rounded value--tnums">{{ technique_id }}</span>
+          <span class="label label--base">{{ tactic | upcase }} ({{ tactic_index }}/14)</span>
+        </div>
+        <span class="label label--small">{{ platforms | join: " · " }}</span>
+      </div>
+
+      <div class="title title--base lg:title--large text--left mb--1">{{ name }}</div>
+      <div class="description text--left clamp--2">{{ description }}</div>
+    </div>
+
+    <div class="w--full">
+      <svg viewBox="0 0 280 22" class="w--full">
+        {% for t in tactics %}
+          {% assign x = forloop.index0 | times: 20 %}
+          {% if t.active %}
+            <rect x="{{ x | plus: 1 }}" y="1" width="18" height="20" rx="3" fill="#000" />
+            <text x="{{ x | plus: 10 }}" y="14" text-anchor="middle" font-size="6.5" font-weight="700" fill="#fff">{{ t.short }}</text>
+          {% else %}
+            <rect x="{{ x | plus: 1 }}" y="1" width="18" height="20" rx="3" fill="#fff" stroke="#000" stroke-width="1" />
+            <text x="{{ x | plus: 10 }}" y="14" text-anchor="middle" font-size="6.5" font-weight="600" fill="#000">{{ t.short }}</text>
+          {% endif %}
+        {% endfor %}
+      </svg>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="flex flex--row portrait:flex--col w--full stretch-y gap--large">
+      <div class="stretch-x text--left">
+        <div class="label label--base label--underline mb--1 text--left">DETECTION</div>
+        <div class="description text--left mb--2">{{ detection }}</div>
+        <div class="label label--small text--left">DATA SOURCES: {{ data_sources | join: " · " }}</div>
+      </div>
+
+      <div class="divider--v portrait:hidden"></div>
+
+      <div class="w--[38cqw] portrait:w--full text--left shrink-0">
+        <div class="label label--base label--underline mb--1 text--left">MITIGATION</div>
+        <div class="description text--left">{{ mitigation }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">Enterprise &middot; {{ date }}</span>
+</div>

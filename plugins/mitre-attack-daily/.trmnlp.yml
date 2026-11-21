@@ -1,0 +1,117 @@
+{
+  "watch": [
+    "src",
+    ".trmnlp.yml"
+  ],
+  "custom_fields": {},
+  "variables": {
+    "title": "MITRE ATT&CK Daily",
+    "date": "NOV 20, 2026",
+    "total_techniques": 22,
+    "tactics": [
+      {
+        "index": 1,
+        "short": "REC",
+        "name": "Reconnaissance",
+        "active": false
+      },
+      {
+        "index": 2,
+        "short": "RES",
+        "name": "Resource Dev",
+        "active": false
+      },
+      {
+        "index": 3,
+        "short": "INI",
+        "name": "Initial Access",
+        "active": false
+      },
+      {
+        "index": 4,
+        "short": "EXE",
+        "name": "Execution",
+        "active": false
+      },
+      {
+        "index": 5,
+        "short": "PER",
+        "name": "Persistence",
+        "active": false
+      },
+      {
+        "index": 6,
+        "short": "PRI",
+        "name": "Priv Esc",
+        "active": false
+      },
+      {
+        "index": 7,
+        "short": "DEF",
+        "name": "Defense Evasion",
+        "active": false
+      },
+      {
+        "index": 8,
+        "short": "CRE",
+        "name": "Credential Access",
+        "active": false
+      },
+      {
+        "index": 9,
+        "short": "DIS",
+        "name": "Discovery",
+        "active": true
+      },
+      {
+        "index": 10,
+        "short": "LAT",
+        "name": "Lateral Movement",
+        "active": false
+      },
+      {
+        "index": 11,
+        "short": "COL",
+        "name": "Collection",
+        "active": false
+      },
+      {
+        "index": 12,
+        "short": "C2",
+        "name": "Command & Control",
+        "active": false
+      },
+      {
+        "index": 13,
+        "short": "EXF",
+        "name": "Exfiltration",
+        "active": false
+      },
+      {
+        "index": 14,
+        "short": "IMP",
+        "name": "Impact",
+        "active": false
+      }
+    ],
+    "technique_id": "T1087",
+    "name": "Account Discovery",
+    "tactic": "Discovery",
+    "tactic_index": 9,
+    "platforms": [
+      "Windows",
+      "Linux",
+      "macOS",
+      "Cloud"
+    ],
+    "data_sources": [
+      "Process Creation",
+      "LDAP Queries",
+      "Cloud API"
+    ],
+    "description": "Adversaries enumerate local users, Domain Admins, and cloud IAM roles to map high-value targets.",
+    "detection": "Monitor bursts of net user, net group, BloodHound LDAP queries, or aws iam list-* API calls.",
+    "mitigation": "Limit directory enumeration permissions and monitor anomalous LDAP/IAM reconnaissance.",
+    "url": "https://attack.mitre.org/techniques/T1087/"
+  }
+}

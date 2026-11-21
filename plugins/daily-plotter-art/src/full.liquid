@@ -2,24 +2,69 @@
   <div class="flex flex--row portrait:flex--col w--full h--full gap--large">
     <div class="flex flex--col flex--center shrink-0">
       <svg viewBox="0 0 360 360" class="w--[48cqw] h--[84cqh] portrait:w--[80cqw]">
-        <rect x="2" y="2" width="356" height="356" fill="#fff" stroke="#000" stroke-width="2" />
+        <rect x="2" y="2" width="356" height="356" rx="3" fill="#fff" stroke="#000" stroke-width="2" />
+        <rect x="8" y="8" width="344" height="344" fill="none" stroke="#000" stroke-width="0.75" />
         {% for d in paths %}
           <path d="{{ d }}" fill="none" stroke="#000" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
         {% endfor %}
       </svg>
     </div>
 
+    <div class="divider--v portrait:hidden"></div>
+
     <div class="flex flex--col flex--between stretch-x h--full text--left">
       <div class="w--full">
-        <div class="label label--base label--inverted px--2 mb--2">{{ algorithm | upcase }}</div>
-        <div class="title title--base lg:title--large text--left mb--2">{{ piece_title }}</div>
+        <div class="flex flex--row flex--between flex--center-y w--full mb--2">
+          <span class="label label--base label--inverted px--2 rounded">{{ algorithm | upcase }}</span>
+          {% if next_algorithm != blank %}
+            <span class="label label--small">NEXT: {{ next_algorithm | upcase }}</span>
+          {% endif %}
+        </div>
+        <div class="title title--base lg:title--large text--left mb--1">{{ piece_title }}</div>
         <div class="description text--left">{{ params }}</div>
       </div>
 
       <div class="w--full">
         <div class="divider mb--2"></div>
-        <div class="label label--base text--left mb--1">SEED: #{{ seed }}</div>
-        <div class="label label--small text--left">{{ stroke_count }} VECTOR PATHS &middot; 1-BIT PLOTTER</div>
+        {% if formula != blank %}
+          <div class="label label--small label--underline mb--1 text--left">GENERATIVE RULE</div>
+          <div class="description text--left value--tnums mb--1"><strong>{{ formula }}</strong></div>
+        {% endif %}
+        {% if note != blank %}
+          <div class="description text--left mb--2">{{ note }}</div>
+        {% endif %}
+
+        {% if cycle %}
+          <div class="flex flex--row flex--between flex--center-y w--full">
+            {% for step in cycle %}
+              {% if step.active %}
+                <span class="label label--small label--inverted px--2 rounded">{{ step.label }}</span>
+              {% else %}
+                <span class="label label--small">{{ step.label }}</span>
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="w--full">
+        <div class="divider mb--2"></div>
+        <div class="grid grid--cols-2 gap--small w--full">
+          <div class="item">
+            <div class="meta"></div>
+            <div class="content">
+              <span class="value value--small value--tnums">{{ pen_travel | number_with_delimiter }} px</span>
+              <span class="label label--small">Pen Travel</span>
+            </div>
+          </div>
+          <div class="item">
+            <div class="meta"></div>
+            <div class="content">
+              <span class="value value--small value--tnums">{{ vertex_count | number_with_delimiter }}</span>
+              <span class="label label--small">Vertices ({{ stroke_count }} {% if stroke_count == 1 %}path{% else %}paths{% endif %})</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -27,5 +72,5 @@
 
 <div class="title_bar">
   <span class="title">{{ title }}</span>
-  <span class="instance">{{ date }}</span>
+  <span class="instance">Seed #{{ seed }} &middot; {{ date }}</span>
 </div>

@@ -518,6 +518,24 @@ def rce_daily():
         return jsonify({"error": f"CISA KEV feed unavailable: {exc}"}), 502
 
 
+@app.route('/mitre/daily')
+def mitre_daily():
+    from mitre_attack import generate_daily_mitre
+    target_date, err = _parse_optional_date()
+    if err:
+        return err
+    return jsonify(generate_daily_mitre(target_date))
+
+
+@app.route('/isc/daily')
+def isc_daily():
+    from sans_isc import fetch_sans_isc
+    try:
+        return jsonify(fetch_sans_isc())
+    except requests.RequestException as exc:
+        return jsonify({"error": f"SANS ISC feed unavailable: {exc}"}), 502
+
+
 @app.route('/outages/daily')
 def outages_daily():
     from outage_radar import fetch_outage_radar

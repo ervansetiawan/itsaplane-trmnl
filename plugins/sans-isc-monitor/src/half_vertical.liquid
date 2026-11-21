@@ -1,0 +1,41 @@
+<div class="layout layout--col">
+  <div class="flex flex--col flex--between w--full h--full gap--small lg:gap--medium">
+    <div class="grid grid--cols-2 w--full">
+      <div class="item">
+        <div class="meta"></div>
+        <div class="content">
+          <span class="value value--base">{{ infocon }}</span>
+          <span class="label label--base">InfoCon</span>
+        </div>
+      </div>
+      <div class="item">
+        <div class="meta"></div>
+        <div class="content">
+          <span class="value value--base value--tnums">{{ total_records_fmt }}</span>
+          <span class="label label--base">Reports</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="flex flex--col flex--between stretch-y w--full text--left">
+      <div class="label label--base label--underline mb--1 w--full">TOP ATTACKED PORTS</div>
+      {% for p in top_ports limit: 5 %}
+        <div class="flex flex--row flex--between flex--center-y gap--small w--full">
+          <span class="description shrink-0 value--tnums"><strong>{{ p.port }}</strong> {{ p.service }}</span>
+          <svg viewBox="0 0 100 8" preserveAspectRatio="none" class="stretch-x h--[8px]">
+            <rect x="0" y="0" width="100" height="8" fill="#fff" stroke="#000" stroke-width="1" />
+            <rect x="0" y="0" width="{{ p.bar_pct }}" height="8" fill="#000" />
+          </svg>
+          <span class="label label--base shrink-0 value--tnums">{{ p.records_fmt }}</span>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">{{ date }}</span>
+</div>

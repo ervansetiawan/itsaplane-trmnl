@@ -1,0 +1,18 @@
+name: MITRE ATT&CK Daily
+description: Daily MITRE ATT&CK TTP & detection
+strategy: polling
+polling_url: https://itsaplane-trmnl.onrender.com/mitre/daily
+polling_verb: get
+polling_headers: ""
+framework_version: 3.4
+refresh_interval: 1440
+dark_mode: "no"
+no_screen_padding: "no"
+custom_fields:
+  - keyname: author_bio
+    field_type: author_bio
+    name: About This Plugin
+    category: programming
+    description: Daily MITRE ATT&CK TTP & detection
+    github_url: https://github.com/ervansetiawan/itsaplane-trmnl
+    email_address: ervansetiawan@gmail.com

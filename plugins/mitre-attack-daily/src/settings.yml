@@ -1,0 +1,11 @@
+name: MITRE ATT&CK Daily
+description: Daily MITRE ATT&CK TTP & detection
+refresh_interval: 1440
+custom_fields:
+  - keyname: author_bio
+    field_type: author_bio
+    name: About This Plugin
+    category: programming
+    description: Daily MITRE ATT&CK TTP & detection
+    github_url: https://github.com/ervansetiawan/itsaplane-trmnl
+    email_address: ervansetiawan@gmail.com

@@ -1,0 +1,30 @@
+<div class="layout layout--col">
+  <div class="flex flex--row portrait:flex--col w--full h--full gap--medium lg:gap--large">
+    <div class="flex flex--col flex--between w--[38cqw] portrait:w--full shrink-0 text--left">
+      <div class="w--full text--left">
+        <div class="flex flex--row flex--between flex--center-y w--full mb--1">
+          <span class="label label--base label--inverted px--2 rounded value--tnums">{{ technique_id }}</span>
+          <span class="label label--small">{{ tactic_index }}/14</span>
+        </div>
+        <div class="title title--small text--left mb--1">{{ name }}</div>
+        <div class="label label--small text--left">{{ tactic | upcase }}</div>
+      </div>
+      <div class="label label--small text--left">{{ platforms | join: " · " }}</div>
+    </div>
+
+    <div class="divider--v portrait:hidden"></div>
+
+    <div class="flex flex--col flex--between stretch-x text--left">
+      <div>
+        <div class="label label--base label--underline mb--1 text--left">DETECTION</div>
+        <div class="description text--left clamp--3">{{ detection }}</div>
+      </div>
+      <div class="description text--left clamp--2"><strong>Mitigation:</strong> {{ mitigation }}</div>
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">{{ date }}</span>
+</div>

@@ -2,7 +2,8 @@
   <div class="flex flex--col flex--between w--full h--full gap--small">
     <div class="flex flex--col flex--center w--full stretch-y">
       <svg viewBox="0 0 360 360" class="w--[78cqw] h--[58cqh]">
-        <rect x="2" y="2" width="356" height="356" fill="#fff" stroke="#000" stroke-width="2" />
+        <rect x="2" y="2" width="356" height="356" rx="3" fill="#fff" stroke="#000" stroke-width="2" />
+        <rect x="8" y="8" width="344" height="344" fill="none" stroke="#000" stroke-width="0.75" />
         {% for d in paths %}
           <path d="{{ d }}" fill="none" stroke="#000" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
         {% endfor %}

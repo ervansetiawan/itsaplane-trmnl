@@ -239,3 +239,48 @@ def test_is_route_plausible_accepts_on_corridor_and_rejects_far_off_route():
     assert is_route_plausible(44.88, -93.22, 41.98, -87.90, 33.94, -118.41) is False
 
 
+def test_mitre_daily_endpoint():
+    client = app.test_client()
+    resp = client.get("/mitre/daily?date=2026-11-20")
+    assert resp.status_code == 200
+    body = resp.get_json()
+    assert body["title"] == "MITRE ATT&CK Daily"
+    assert len(body["tactics"]) == 14
+    assert sum(1 for t in body["tactics"] if t["active"]) == 1
+    assert body["technique_id"].startswith("T")
+    assert body["detection"]
+    assert body["mitigation"]
+
+
+def test_isc_daily_endpoint():
+    import sans_isc
+
+    sans_isc._CACHE["data"] = None
+    sans_isc._CACHE["ts"] = 0.0
+
+    def fake_get(url, headers=None, timeout=6):
+        resp = MagicMock(status_code=200)
+        resp.raise_for_status.return_value = None
+        if "infocon" in url:
+            resp.json.return_value = {"status": "green"}
+        else:
+            resp.json.return_value = [
+                {"targetport": "445", "records": "1200000", "targets": "85000", "sources": "14000"},
+                {"targetport": "22", "records": "600000", "targets": "45000", "sources": "9000"},
+            ]
+        return resp
+
+    with patch("sans_isc.requests.get", side_effect=fake_get):
+        client = app.test_client()
+        resp = client.get("/isc/daily")
+
+    assert resp.status_code == 200
+    body = resp.get_json()
+    assert body["infocon"] == "GREEN"
+    assert body["top_port"]["port"] == 445
+    assert body["top_port"]["service"] == "SMB"
+    assert body["top_ports"][0]["bar_pct"] == 100
+    assert body["top_ports"][1]["service"] == "SSH"
+    assert body["top_ports"][1]["bar_pct"] == 50
+
+

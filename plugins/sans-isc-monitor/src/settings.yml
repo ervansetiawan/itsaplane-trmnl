@@ -1,0 +1,11 @@
+name: SANS ISC Threat Monitor
+description: Live SANS ISC InfoCon & top ports
+refresh_interval: 60
+custom_fields:
+  - keyname: author_bio
+    field_type: author_bio
+    name: About This Plugin
+    category: programming
+    description: Live SANS ISC InfoCon & top ports
+    github_url: https://github.com/ervansetiawan/itsaplane-trmnl
+    email_address: ervansetiawan@gmail.com

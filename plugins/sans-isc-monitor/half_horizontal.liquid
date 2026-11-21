@@ -1,0 +1,37 @@
+<div class="layout layout--col">
+  <div class="flex flex--row portrait:flex--col w--full h--full gap--medium lg:gap--large">
+    <div class="flex flex--col flex--between w--[34cqw] portrait:w--full shrink-0 text--left">
+      <div class="w--full text--left">
+        <span class="label label--base label--inverted px--2 rounded">INFOCON: {{ infocon }}</span>
+        <div class="title title--small mt--1 value--tnums">{% if top_port %}Port {{ top_port.port }} ({{ top_port.service }}){% endif %}</div>
+      </div>
+      <div class="w--full text--left">
+        <div class="divider mb--1"></div>
+        <div class="description value--tnums"><strong>{{ total_records_fmt }}</strong> reports &middot; <strong>{{ total_targets_fmt }}</strong> targets</div>
+      </div>
+    </div>
+
+    <div class="divider--v portrait:hidden"></div>
+
+    <div class="flex flex--col flex--between stretch-x text--left">
+      <div class="label label--base label--underline mb--1 text--left w--full">TOP ATTACKED PORTS</div>
+      <div class="flex flex--col flex--between stretch-y w--full">
+        {% for p in top_ports limit: 4 %}
+          <div class="flex flex--row flex--center-y gap--small w--full">
+            <span class="description w--[20cqw] shrink-0 value--tnums"><strong>{{ p.port }}</strong> {{ p.service }}</span>
+            <svg viewBox="0 0 100 8" preserveAspectRatio="none" class="stretch-x h--[8px]">
+              <rect x="0" y="0" width="100" height="8" fill="#fff" stroke="#000" stroke-width="1" />
+              <rect x="0" y="0" width="{{ p.bar_pct }}" height="8" fill="#000" />
+            </svg>
+            <span class="label label--small w--[12cqw] text--right shrink-0 value--tnums">{{ p.records_fmt }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">{{ date }}</span>
+</div>
