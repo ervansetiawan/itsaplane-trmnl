@@ -4,14 +4,14 @@
       <div class="item">
         <div class="meta"></div>
         <div class="content">
-          <span class="value value--small">{{ critical_count }}</span>
+          <span class="value value--base value--tnums">{{ critical_count }}</span>
           <span class="label label--small">Critical</span>
         </div>
       </div>
       <div class="item">
         <div class="meta"></div>
         <div class="content">
-          <span class="value value--small">{{ bgp_count }}</span>
+          <span class="value value--base value--tnums">{{ bgp_count }}</span>
           <span class="label label--small">BGP Signals</span>
         </div>
       </div>
@@ -20,15 +20,15 @@
     {% if featured %}
       <div class="w--full text--left">
         <div class="divider mb--1"></div>
-        <div class="label label--small text--left"><strong>{{ featured.name }}</strong> &middot; -{{ featured.drop_pct }}%</div>
-        <div class="description text--left">{{ featured.datasource }} &middot; {{ featured.time }}</div>
+        <div class="description text--left clamp--1 value--tnums"><strong>{{ featured.name }}</strong> &middot; -{{ featured.drop_pct }}%</div>
+        <div class="label label--small text--left">{{ featured.datasource }} &middot; {{ featured.time }}</div>
       </div>
     {% endif %}
 
-    <div class="w--full stretch-y text--left">
+    <div class="w--full stretch-y text--left flex flex--col flex--between">
       <div class="divider mb--1"></div>
       {% for item in items limit: 4 %}
-        <div class="description text--left mb--1"><strong>{{ item.name }}</strong> (-{{ item.drop_pct }}%)</div>
+        <div class="description text--left clamp--1 w--full value--tnums"><strong>{{ item.name }}</strong> (-{{ item.drop_pct }}%)</div>
       {% endfor %}
     </div>
   </div>

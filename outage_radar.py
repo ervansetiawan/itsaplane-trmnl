@@ -1,5 +1,6 @@
 """Live BGP & Internet Outage Radar backed by Georgia Tech IODA v2."""
 
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 import time
 import requests
@@ -100,24 +101,32 @@ def _format_alert(alert: dict) -> dict:
     }
 
 
+def _fetch_alert_window(start: int, until: int) -> list[dict]:
+    resp = requests.get(
+        IODA_ALERTS_URL,
+        params={"from": start, "until": until, "limit": 400},
+        headers={
+            "User-Agent": "Mozilla/5.0 (compatible; TRMNL-Outage-Radar/1.0)",
+            "Accept": "application/json",
+        },
+        timeout=10,
+    )
+    resp.raise_for_status()
+    return resp.json().get("data", [])
+
+
 def fetch_outage_radar() -> dict:
     now = time.time()
     if _CACHE["data"] is not None and (now - _CACHE["ts"]) < _CACHE_TTL_SECONDS:
         alerts = _CACHE["data"]
     else:
         until = int(now)
-        start = until - 86400
-        resp = requests.get(
-            IODA_ALERTS_URL,
-            params={"from": start, "until": until, "limit": 200},
-            headers={
-                "User-Agent": "Mozilla/5.0 (compatible; TRMNL-Outage-Radar/1.0)",
-                "Accept": "application/json",
-            },
-            timeout=10,
-        )
-        resp.raise_for_status()
-        alerts = resp.json().get("data", [])
+        # IODA returns alerts oldest-first; fetch 4 x 6h windows so the full 24h timeline + recent outages are covered
+        windows = [(until - (4 - i) * 21600, until - (3 - i) * 21600) for i in range(4)]
+        alerts = []
+        with ThreadPoolExecutor(max_workers=4) as pool:
+            for chunk in pool.map(lambda w: _fetch_alert_window(w[0], w[1]), windows):
+                alerts.extend(chunk)
         _CACHE["ts"] = now
         _CACHE["data"] = alerts
 
