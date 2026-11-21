@@ -284,3 +284,101 @@ def test_isc_daily_endpoint():
     assert body["top_ports"][1]["bar_pct"] == 50
 
 
+def test_nba_story_picks_randomly_from_completed_games():
+    import nba_game_story
+
+    nba_game_story._SCOREBOARD_CACHE.clear()
+    nba_game_story._STORY_CACHE.clear()
+
+    sb_payload = {
+        "events": [
+            {
+                "id": "101",
+                "status": {"type": {"state": "post"}},
+                "competitions": [
+                    {
+                        "competitors": [
+                            {"homeAway": "home", "score": "110", "team": {"abbreviation": "BOS"}, "records": [{"summary": "10-2"}], "linescores": []},
+                            {"homeAway": "away", "score": "108", "team": {"abbreviation": "NYK"}, "records": [{"summary": "8-4"}], "linescores": []},
+                        ]
+                    }
+                ],
+            },
+            {
+                "id": "102",
+                "status": {"type": {"state": "post"}},
+                "competitions": [
+                    {
+                        "competitors": [
+                            {"homeAway": "home", "score": "120", "team": {"abbreviation": "LAL"}, "records": [{"summary": "9-3"}], "linescores": []},
+                            {"homeAway": "away", "score": "100", "team": {"abbreviation": "PHX"}, "records": [{"summary": "7-5"}], "linescores": []},
+                        ]
+                    }
+                ],
+            },
+        ]
+    }
+
+    def fake_get(url, params=None, timeout=8):
+        resp = MagicMock(status_code=200)
+        if "scoreboard" in url:
+            resp.json.return_value = sb_payload
+        else:
+            resp.json.return_value = {"winprobability": [], "boxscore": {"players": []}}
+        return resp
+
+    with patch("nba_game_story.requests.get", side_effect=fake_get), patch(
+        "nba_game_story.random.choice", side_effect=lambda seq: seq[1]
+    ):
+        client = app.test_client()
+        resp = client.get("/nba/story?date=2026-11-20")
+
+    assert resp.status_code == 200
+    body = resp.get_json()
+    assert body["matchup"] == "PHX @ LAL"
+    assert body["winner"] == "LAL"
+
+
+def test_nfl_story_picks_randomly_from_completed_games():
+    import nfl_game_story
+
+    nfl_game_story._SCOREBOARD_CACHE.clear()
+    nfl_game_story._STORY_CACHE.clear()
+
+    sb_payload = {
+        "events": [
+            {
+                "id": "201",
+                "status": {"type": {"state": "post"}},
+                "competitions": [
+                    {
+                        "competitors": [
+                            {"homeAway": "home", "score": "27", "team": {"abbreviation": "KC"}, "records": [{"summary": "9-1"}], "linescores": [{"value": 7}, {"value": 10}, {"value": 3}, {"value": 7}]},
+                            {"homeAway": "away", "score": "24", "team": {"abbreviation": "BUF"}, "records": [{"summary": "8-2"}], "linescores": [{"value": 7}, {"value": 7}, {"value": 7}, {"value": 3}]},
+                        ]
+                    }
+                ],
+            },
+        ]
+    }
+
+    def fake_get(url, params=None, timeout=8):
+        resp = MagicMock(status_code=200)
+        if "scoreboard" in url:
+            resp.json.return_value = sb_payload
+        else:
+            resp.json.return_value = {"winprobability": [], "boxscore": {"teams": [], "players": []}}
+        return resp
+
+    with patch("nfl_game_story.requests.get", side_effect=fake_get):
+        client = app.test_client()
+        resp = client.get("/nfl/story?date=2026-11-20")
+
+    assert resp.status_code == 200
+    body = resp.get_json()
+    assert body["title"] == "NFL Final Whistle"
+    assert body["matchup"] == "BUF @ KC"
+    assert body["winner"] == "KC"
+    assert len(body["quarter_bars"]) == 4
+
+

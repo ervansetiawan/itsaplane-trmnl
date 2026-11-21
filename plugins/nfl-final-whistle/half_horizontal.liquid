@@ -1,0 +1,35 @@
+<div class="layout layout--col">
+  <div class="flex flex--row portrait:flex--col w--full h--full gap--medium lg:gap--large">
+    <div class="flex flex--col flex--between w--[48cqw] shrink-0">
+      <svg viewBox="0 0 300 100" preserveAspectRatio="none" class="w--full h--[68cqh]">
+        <rect x="0.5" y="0.5" width="299" height="99" fill="#fff" stroke="#000" stroke-width="1" />
+        <line x1="0" y1="50" x2="300" y2="50" stroke="#999" stroke-width="0.9" stroke-dasharray="3,3" />
+        {% if wp_polyline != "" %}
+          <polyline fill="none" stroke="#000" stroke-width="2" points="{{ wp_polyline }}" />
+        {% endif %}
+      </svg>
+      <div class="label label--small text--left value--tnums">{{ lead_changes }} SWINGS &middot; LOW {{ min_winner_wp }}%</div>
+    </div>
+
+    <div class="flex flex--col flex--between stretch-x h--full text--left">
+      <div class="flex flex--row flex--center-y gap--small">
+        {% if away_logo != blank %}
+          <img class="image image-dither w--[28px] h--[28px] object--contain shrink-0" src="{{ away_logo }}" alt="{{ away_abbr }}" />
+        {% endif %}
+        <div class="title title--base value--tnums">{{ away_abbr }} {{ away_score }} &ndash; {{ home_score }} {{ home_abbr }}</div>
+        {% if home_logo != blank %}
+          <img class="image image-dither w--[28px] h--[28px] object--contain shrink-0" src="{{ home_logo }}" alt="{{ home_abbr }}" />
+        {% endif %}
+      </div>
+      {% if mvp %}
+        <div class="description text--left"><strong>MVP: {{ mvp.name }}</strong><br/>{{ mvp.line }}</div>
+      {% endif %}
+      <div class="label label--small text--left">{{ winner }} WIN</div>
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">{{ date }}</span>
+</div>

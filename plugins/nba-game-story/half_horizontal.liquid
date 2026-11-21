@@ -12,7 +12,15 @@
     </div>
 
     <div class="flex flex--col flex--between stretch-x h--full text--left">
-      <div class="title title--base">{{ away_abbr }} {{ away_score }} &ndash; {{ home_score }} {{ home_abbr }}</div>
+      <div class="flex flex--row flex--center-y gap--small">
+        {% if away_logo != blank %}
+          <img class="image image-dither w--[28px] h--[28px] object--contain shrink-0" src="{{ away_logo }}" alt="{{ away_abbr }}" />
+        {% endif %}
+        <div class="title title--base value--tnums">{{ away_abbr }} {{ away_score }} &ndash; {{ home_score }} {{ home_abbr }}</div>
+        {% if home_logo != blank %}
+          <img class="image image-dither w--[28px] h--[28px] object--contain shrink-0" src="{{ home_logo }}" alt="{{ home_abbr }}" />
+        {% endif %}
+      </div>
       {% if mvp %}
         <div class="description text--left"><strong>MVP: {{ mvp.name }}</strong><br/>{{ mvp.pts }} PTS &middot; {{ mvp.reb }} REB &middot; {{ mvp.ast }} AST</div>
       {% endif %}

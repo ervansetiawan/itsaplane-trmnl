@@ -1,5 +1,5 @@
-name: NBA Game Story
-description: Yesterday's NBA win-prob & MVP
+name: NBA Final Whistle
+description: Post-game NBA recap & win prob
 strategy: static
 polling_url: https://itsaplane-trmnl.onrender.com/nba/story
 polling_verb: get

@@ -614,5 +614,17 @@ def nba_story():
         return jsonify({"error": f"NBA game story unavailable: {exc}"}), 502
 
 
+@app.route('/nfl/story')
+def nfl_story():
+    from nfl_game_story import fetch_nfl_game_story
+    target_date, err = _parse_optional_date()
+    if err:
+        return err
+    try:
+        return jsonify(fetch_nfl_game_story(target_date))
+    except (requests.RequestException, ValueError) as exc:
+        return jsonify({"error": f"NFL game story unavailable: {exc}"}), 502
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

@@ -1,0 +1,31 @@
+<div class="layout layout--col">
+  <div class="flex flex--col flex--between w--full h--full gap--small">
+    <div class="flex flex--row flex--between flex--center-y w--full">
+      <div class="flex flex--row flex--center-y gap--small">
+        {% if away_logo != blank %}
+          <img class="image image-dither w--[22px] h--[22px] object--contain shrink-0" src="{{ away_logo }}" alt="{{ away_abbr }}" />
+        {% endif %}
+        <span class="title title--small value--tnums">{{ away_abbr }} {{ away_score }}&ndash;{{ home_score }} {{ home_abbr }}</span>
+        {% if home_logo != blank %}
+          <img class="image image-dither w--[22px] h--[22px] object--contain shrink-0" src="{{ home_logo }}" alt="{{ home_abbr }}" />
+        {% endif %}
+      </div>
+      <span class="label label--small label--inverted px--1 rounded">{{ winner }}</span>
+    </div>
+    <svg viewBox="0 0 300 100" preserveAspectRatio="none" class="w--full h--[46cqh]">
+      <rect x="0.5" y="0.5" width="299" height="99" fill="#fff" stroke="#000" stroke-width="1" />
+      <line x1="0" y1="50" x2="300" y2="50" stroke="#999" stroke-width="0.9" stroke-dasharray="3,3" />
+      {% if wp_polyline != "" %}
+        <polyline fill="none" stroke="#000" stroke-width="2" points="{{ wp_polyline }}" />
+      {% endif %}
+    </svg>
+    {% if mvp %}
+      <div class="description text--left clamp--1"><strong>{{ mvp.name }}:</strong> {{ mvp.line }}</div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">{{ date }}</span>
+</div>

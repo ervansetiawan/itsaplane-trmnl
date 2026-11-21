@@ -1,0 +1,11 @@
+name: NFL Final Whistle
+description: Post-game NFL recap & win prob
+refresh_interval: 60
+custom_fields:
+  - keyname: author_bio
+    field_type: author_bio
+    name: About This Plugin
+    category: sports
+    description: Post-game NFL recap & win prob
+    github_url: https://github.com/ervansetiawan/itsaplane-trmnl
+    email_address: ervansetiawan@gmail.com

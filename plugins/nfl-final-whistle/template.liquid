@@ -1,0 +1,165 @@
+<div class="layout layout--col">
+  <div class="flex flex--col flex--between w--full h--full gap--small">
+    <div class="flex flex--row flex--between flex--center-y w--full">
+      <div class="flex flex--row flex--center-y gap--small">
+        {% if away_logo != blank %}
+          <img class="image image-dither w--[38px] h--[38px] object--contain shrink-0" src="{{ away_logo }}" alt="{{ away_abbr }}" />
+        {% endif %}
+        <span class="title title--base lg:title--large value--tnums">{{ away_abbr }} {{ away_score }}</span>
+        <span class="label label--base">&ndash;</span>
+        <span class="title title--base lg:title--large value--tnums">{{ home_score }} {{ home_abbr }}</span>
+        {% if home_logo != blank %}
+          <img class="image image-dither w--[38px] h--[38px] object--contain shrink-0" src="{{ home_logo }}" alt="{{ home_abbr }}" />
+        {% endif %}
+      </div>
+      <div class="flex flex--row flex--center-y gap--small">
+        {% if reason %}<span class="label label--small">{{ reason }}</span>{% endif %}
+        <span class="label label--base label--inverted px--2 rounded">FINAL{% if ot_label != blank %} ({{ ot_label }}){% endif %} &middot; {{ winner }} WIN</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="flex flex--row portrait:flex--col w--full stretch-y gap--large">
+      <div class="flex flex--col flex--between w--[52cqw] portrait:w--full text--left">
+        <div class="w--full">
+          <div class="flex flex--row flex--between flex--center-y mb--1">
+            <span class="label label--base label--underline">WIN PROBABILITY</span>
+            <span class="label label--small value--tnums">{{ lead_changes }} SWINGS &middot; LOW {{ min_winner_wp }}%</span>
+          </div>
+          <svg viewBox="0 0 300 100" preserveAspectRatio="none" class="w--full h--[34cqh]">
+            <defs>
+              <pattern id="wp-hatch" width="4" height="4" patternUnits="userSpaceOnUse">
+                <circle cx="1.2" cy="1.2" r="0.8" fill="#000" />
+              </pattern>
+            </defs>
+            <rect x="0.5" y="0.5" width="299" height="99" fill="#fff" stroke="#000" stroke-width="1" />
+            <line x1="0" y1="50" x2="300" y2="50" stroke="#999" stroke-width="0.9" stroke-dasharray="3,3" />
+            <line x1="75" y1="0" x2="75" y2="100" stroke="#ddd" stroke-width="0.7" />
+            <line x1="150" y1="0" x2="150" y2="100" stroke="#ddd" stroke-width="0.7" />
+            <line x1="225" y1="0" x2="225" y2="100" stroke="#ddd" stroke-width="0.7" />
+            {% if wp_polygon != blank %}
+              <polygon fill="url(#wp-hatch)" points="{{ wp_polygon }}" />
+            {% endif %}
+            <text x="5" y="11" font-size="8" font-weight="700" fill="#000" font-family="sans-serif">{{ home_abbr }} 100%</text>
+            <text x="5" y="95" font-size="8" font-weight="700" fill="#000" font-family="sans-serif">{{ away_abbr }} 100%</text>
+            {% if wp_polyline != "" %}
+              <polyline fill="none" stroke="#000" stroke-width="2" points="{{ wp_polyline }}" />
+            {% endif %}
+          </svg>
+          <div class="flex flex--row flex--between w--full mb--2">
+            <span class="label label--small">Q1</span>
+            <span class="label label--small">Q2</span>
+            <span class="label label--small">Q3</span>
+            <span class="label label--small">Q4</span>
+          </div>
+        </div>
+
+        {% if quarter_bars.size > 0 %}
+          <div class="w--full">
+            <div class="flex flex--row flex--between flex--center-y mb--1">
+              <span class="label label--small label--underline">QUARTER FLOW</span>
+              <span class="label label--small">{{ away_abbr }} (OUTLINE) &middot; {{ home_abbr }} (SOLID)</span>
+            </div>
+            <svg viewBox="0 0 240 42" class="w--full h--[46px]">
+              {% assign step = 240 | divided_by: quarter_bars.size %}
+              {% for qb in quarter_bars %}
+                {% assign gx = forloop.index0 | times: step | plus: 14 %}
+                {% assign ay = 30 | minus: qb.away_h %}
+                {% assign hy = 30 | minus: qb.home_h %}
+                <rect x="{{ gx }}" y="{{ ay }}" width="11" height="{{ qb.away_h }}" fill="#fff" stroke="#000" stroke-width="1.2" />
+                <rect x="{{ gx | plus: 13 }}" y="{{ hy }}" width="11" height="{{ qb.home_h }}" fill="#000" />
+                <text x="{{ gx | plus: 12 }}" y="40" text-anchor="middle" font-size="7.5" font-weight="700" fill="#000" font-family="sans-serif">{{ qb.label }}</text>
+              {% endfor %}
+            </svg>
+          </div>
+        {% endif %}
+
+        {% if other_finals.size > 0 %}
+          <div class="w--full">
+            <div class="divider mb--1"></div>
+            <div class="label label--small text--left">OTHER FINALS: {% for f in other_finals %}{{ f }}{% unless forloop.last %} &middot; {% endunless %}{% endfor %}</div>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="divider--v portrait:hidden"></div>
+
+      <div class="flex flex--col flex--between stretch-x text--left">
+        <div class="w--full">
+          <div class="flex flex--row flex--between flex--center-y mb--1 w--full">
+            <span class="label label--base label--underline">QUARTER SCORING</span>
+            <div class="flex flex--row flex--center-y">
+              {% for qb in quarter_bars %}
+                <span class="description w--[24px] text--right"><strong>{{ qb.label }}</strong></span>
+              {% endfor %}
+              <span class="description w--[28px] text--right"><strong>T</strong></span>
+            </div>
+          </div>
+          <div class="flex flex--row flex--between flex--center-y w--full mb--1">
+            <span class="description"><strong>{{ away_abbr }}</strong> ({{ away_record }})</span>
+            <div class="flex flex--row flex--center-y">
+              {% for q in away_q %}
+                <span class="description w--[24px] text--right value--tnums">{{ q }}</span>
+              {% endfor %}
+              <span class="description w--[28px] text--right value--tnums"><strong>{{ away_score }}</strong></span>
+            </div>
+          </div>
+          <div class="flex flex--row flex--between flex--center-y w--full">
+            <span class="description"><strong>{{ home_abbr }}</strong> ({{ home_record }})</span>
+            <div class="flex flex--row flex--center-y">
+              {% for q in home_q %}
+                <span class="description w--[24px] text--right value--tnums">{{ q }}</span>
+              {% endfor %}
+              <span class="description w--[28px] text--right value--tnums"><strong>{{ home_score }}</strong></span>
+            </div>
+          </div>
+        </div>
+
+        {% if team_compare.size > 0 %}
+          <div class="w--full">
+            <div class="divider mb--1"></div>
+            <div class="flex flex--row flex--between flex--center-y mb--1 w--full">
+              <span class="label label--small label--underline">TEAM STATS</span>
+              <span class="label label--small">{{ away_abbr }} vs {{ home_abbr }}</span>
+            </div>
+            <div class="flex flex--col gap--small w--full">
+              {% for row in team_compare %}
+                <div class="flex flex--row flex--center-y gap--small w--full">
+                  <span class="description w--[6cqw] text--left shrink-0">{{ row.label }}</span>
+                  <span class="description w--[6cqw] text--right shrink-0 value--tnums">{{ row.away_val }}</span>
+                  <svg viewBox="0 0 100 7" preserveAspectRatio="none" class="stretch-x h--[7px]">
+                    <rect x="0" y="0" width="{{ row.away_pct }}" height="7" fill="#fff" stroke="#000" stroke-width="1" />
+                    <rect x="{{ row.away_pct }}" y="0" width="{{ row.home_pct }}" height="7" fill="#000" />
+                  </svg>
+                  <span class="description w--[6cqw] text--right shrink-0 value--tnums">{{ row.home_val }}</span>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+        {% if mvp %}
+          <div class="w--full">
+            <div class="divider mb--1"></div>
+            <div class="label label--base label--underline mb--1 text--left">GAME MVP</div>
+            <div class="title title--small text--left">{{ mvp.name }} ({{ mvp.team }})</div>
+            <div class="description text--left value--tnums">{{ mvp.line }}</div>
+          </div>
+        {% endif %}
+
+        {% if runner_up %}
+          <div class="w--full">
+            <div class="divider mb--1"></div>
+            <div class="description text--left">Opposing Leader: <strong>{{ runner_up.name }}</strong> ({{ runner_up.line }})</div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">{{ matchup }} &middot; {{ date }}</span>
+</div>

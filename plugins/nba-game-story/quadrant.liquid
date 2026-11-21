@@ -1,8 +1,16 @@
 <div class="layout layout--col">
   <div class="flex flex--col flex--between w--full h--full gap--small">
     <div class="flex flex--row flex--between flex--center-y w--full">
-      <span class="title title--small">{{ away_abbr }} {{ away_score }}–{{ home_score }} {{ home_abbr }}</span>
-      <span class="label label--small label--inverted px--1">{{ winner }}</span>
+      <div class="flex flex--row flex--center-y gap--small">
+        {% if away_logo != blank %}
+          <img class="image image-dither w--[22px] h--[22px] object--contain shrink-0" src="{{ away_logo }}" alt="{{ away_abbr }}" />
+        {% endif %}
+        <span class="title title--small value--tnums">{{ away_abbr }} {{ away_score }}–{{ home_score }} {{ home_abbr }}</span>
+        {% if home_logo != blank %}
+          <img class="image image-dither w--[22px] h--[22px] object--contain shrink-0" src="{{ home_logo }}" alt="{{ home_abbr }}" />
+        {% endif %}
+      </div>
+      <span class="label label--small label--inverted px--1 rounded">{{ winner }}</span>
     </div>
     <svg viewBox="0 0 300 100" preserveAspectRatio="none" class="w--full h--[46cqh]">
       <rect x="0.5" y="0.5" width="299" height="99" fill="#fff" stroke="#000" stroke-width="1" />
