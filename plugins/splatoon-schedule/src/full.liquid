@@ -1,8 +1,8 @@
 <div class="layout layout--col">
   <div class="flex flex--col flex--between w--full h--full gap--small">
-    <div class="grid grid--cols-3 gap--medium w--full stretch-y">
+    <div class="flex flex--row gap--medium w--full stretch-y">
       {% if turf %}
-        <div class="flex flex--col flex--between w--full text--left">
+        <div class="flex flex--col flex--between stretch-x text--left">
           <div class="flex flex--row flex--between flex--center-y w--full mb--1">
             <span class="label label--small label--inverted px--2 rounded">REGULAR</span>
             <span class="label label--small">{{ turf.rule }}</span>
@@ -16,8 +16,10 @@
         </div>
       {% endif %}
 
+      <div class="divider--v"></div>
+
       {% if series %}
-        <div class="flex flex--col flex--between w--full text--left">
+        <div class="flex flex--col flex--between stretch-x text--left">
           <div class="flex flex--row flex--between flex--center-y w--full mb--1">
             <span class="label label--small label--inverted px--2 rounded">SERIES</span>
             <span class="label label--small">{{ series.rule }}</span>
@@ -31,8 +33,10 @@
         </div>
       {% endif %}
 
+      <div class="divider--v"></div>
+
       {% if open %}
-        <div class="flex flex--col flex--between w--full text--left">
+        <div class="flex flex--col flex--between stretch-x text--left">
           <div class="flex flex--row flex--between flex--center-y w--full mb--1">
             <span class="label label--small label--inverted px--2 rounded">OPEN</span>
             <span class="label label--small">{{ open.rule }}</span>
