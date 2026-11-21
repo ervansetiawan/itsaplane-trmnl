@@ -17,6 +17,13 @@
     {% assign flight_phase = "Climbing" %}
   {% elsif baro_rate < -300 %}
     {% assign flight_phase = "Descending" %}
+  {% elsif alt_baro < 18000 and nav_altitude_mcp > 0 %}
+    {% assign alt_diff = nav_altitude_mcp | minus: alt_baro %}
+    {% if alt_diff > 1500 %}
+      {% assign flight_phase = "Climbing" %}
+    {% else %}
+      {% assign flight_phase = "Cruising" %}
+    {% endif %}
   {% else %}
     {% assign flight_phase = "Cruising" %}
   {% endif %}
@@ -99,8 +106,8 @@
         </div>
 
         <div class="flex flex--row flex--between gap--medium w--full">
-          <span class="label label--small text--left clamp--1">{{ origin.name }}</span>
-          <span class="label label--small text--right clamp--1">{{ dest.name }}</span>
+          <span class="label label--small text--left clamp--1 w--[46%]">{{ origin.name }}</span>
+          <span class="label label--small text--right clamp--1 w--[46%]">{{ dest.name }}</span>
         </div>
       {% else %}
         <div class="flex flex--col flex--center h--full gap--small">
@@ -144,8 +151,8 @@
     <div class="item">
       <div class="meta"></div>
       <div class="content">
-        <span class="value value--base lg:value--large value--tnums" data-value-fit="true">{{ track }}{% if track_cardinal != blank %} {{ track_cardinal }}{% endif %}</span>
-        <span class="label label--base">Course</span>
+        <span class="value value--base lg:value--large value--tnums" data-value-fit="true">{{ track }}</span>
+        <span class="label label--base">Course{% if track_cardinal != blank %} &middot; {{ track_cardinal }}{% endif %}</span>
       </div>
     </div>
   </div>
