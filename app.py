@@ -398,10 +398,11 @@ def closest_flight():
         closest_flight_json.get('r') or closest_flight_json.get('registration') or 'Unknown'
     )
 
+    raw_track = flight_data['track']
     flight_data['baro_rate_symbol'] = rate_to_arrow(flight_data['baro_rate'])
     flight_data['geom_rate_symbol'] = rate_to_arrow(flight_data['geom_rate'])
     flight_data['dir_cardinal'] = degrees_to_cardinal(flight_data['dir'])
-    flight_data['track_cardinal'] = degrees_to_cardinal(flight_data['track'])
+    flight_data['track_cardinal'] = degrees_to_cardinal(raw_track)
     flight_data['category_label'] = CATEGORY_LABELS.get(flight_data.get('category', ''), '')
 
     # Format Headings cleanly
@@ -412,6 +413,7 @@ def closest_flight():
     route_response_json = get_route_info_json(flight, flight_data.get('lat'), flight_data.get('lon'))
     flight_data['distance_journey'] = 0
     flight_data['distance_to_dest'] = 0
+    flight_data['route_map'] = None
 
     if route_response_json:
         # Static file directly returns the object, not an array
@@ -431,6 +433,14 @@ def closest_flight():
                 if is_route_plausible(origin_lat, origin_lon, dest_lat, dest_lon, flight_data['lat'], flight_data['lon']):
                     flight_data['distance_journey'] = int(calculate_distance(origin_lat, origin_lon, dest_lat, dest_lon))
                     flight_data['distance_to_dest'] = int(calculate_distance(float(flight_data['lat']), float(flight_data['lon']), dest_lat, dest_lon))
+                    dj = flight_data['distance_journey']
+                    prog = max(0.0, min(100.0, ((dj - flight_data['distance_to_dest']) / dj * 100.0) if dj > 0 else 0.0))
+                    from route_map import build_route_map
+                    flight_data['route_map'] = build_route_map(
+                        origin_lat, origin_lon, dest_lat, dest_lon,
+                        flight_data['lat'], flight_data['lon'],
+                        track_deg=raw_track, progress_pct=prog,
+                    )
                 else:
                     print(f"Discarding implausible route {flight_data['route_iata']} for {flight}")
                     flight_data['route_iata'] = []

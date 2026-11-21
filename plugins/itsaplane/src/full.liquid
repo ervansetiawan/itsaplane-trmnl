@@ -82,15 +82,51 @@
           </div>
         </div>
 
-        <svg viewBox="0 0 360 24" class="w--full">
-          <circle cx="10" cy="12" r="3.5" fill="currentColor" />
-          <line x1="13" y1="12" x2="{{ plane_x }}" y2="12" stroke="currentColor" stroke-width="2.5" />
-          <line x1="{{ plane_x }}" y1="12" x2="346" y2="12" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 3" />
-          <circle cx="350" cy="12" r="3.5" fill="none" stroke="currentColor" stroke-width="2" />
-          <g transform="translate({{ plane_x }}, 12)">
-            <path d="M 8,0 L 3,-1.5 L 1,-7 L -2,-7 L -1,-1.5 L -6,-1.5 L -8,-4 L -9,-4 L -7.5,0 L -9,4 L -8,4 L -6,1.5 L -1,1.5 L -2,7 L 1,7 L 3,1.5 Z" fill="currentColor" />
-          </g>
-        </svg>
+        {% if route_map %}
+          <svg viewBox="0 0 360 96" class="w--full">
+            <defs>
+              <clipPath id="map-clip">
+                <rect x="1" y="1" width="358" height="94" rx="2.5" />
+              </clipPath>
+            </defs>
+            <rect x="0.5" y="0.5" width="359" height="95" rx="3" fill="#fff" />
+            <g clip-path="url(#map-clip)">
+              {% for lp in route_map.land_paths %}
+                <path d="{{ lp }}" fill="#e0e0e0" stroke="#777" stroke-width="0.9" />
+              {% endfor %}
+              {% for lk in route_map.lake_paths %}
+                <path d="{{ lk }}" fill="#fff" stroke="#777" stroke-width="0.7" />
+              {% endfor %}
+              {% for bp in route_map.border_paths %}
+                <path d="{{ bp }}" fill="none" stroke="#888" stroke-width="0.7" stroke-dasharray="2 2" />
+              {% endfor %}
+              {% if route_map.flown_path != blank %}
+                <path d="{{ route_map.flown_path }}" fill="none" stroke="#000" stroke-width="2.2" />
+              {% endif %}
+              {% if route_map.rem_path != blank %}
+                <path d="{{ route_map.rem_path }}" fill="none" stroke="#000" stroke-width="1.5" stroke-dasharray="4 3" />
+              {% endif %}
+              <circle cx="{{ route_map.ox }}" cy="{{ route_map.oy }}" r="3.5" fill="#000" />
+              <circle cx="{{ route_map.dx }}" cy="{{ route_map.dy }}" r="3.5" fill="#fff" stroke="#000" stroke-width="1.8" />
+              <text x="{{ route_map.ox_lbl }}" y="{{ route_map.oy_lbl }}" text-anchor="{{ route_map.ox_anchor | default: 'middle' }}" font-size="8.5" font-weight="700" fill="#000" font-family="sans-serif">{{ origin.iata }}</text>
+              <text x="{{ route_map.dx_lbl }}" y="{{ route_map.dy_lbl }}" text-anchor="{{ route_map.dx_anchor | default: 'middle' }}" font-size="8.5" font-weight="700" fill="#000" font-family="sans-serif">{{ dest.iata }}</text>
+              <g transform="translate({{ route_map.px }}, {{ route_map.py }}) rotate({{ route_map.plane_angle }})">
+                <path d="M 8,0 L 3,-1.5 L 1,-7 L -2,-7 L -1,-1.5 L -6,-1.5 L -8,-4 L -9,-4 L -7.5,0 L -9,4 L -8,4 L -6,1.5 L -1,1.5 L -2,7 L 1,7 L 3,1.5 Z" fill="#000" stroke="#fff" stroke-width="0.7" />
+              </g>
+            </g>
+            <rect x="0.5" y="0.5" width="359" height="95" rx="3" fill="none" stroke="#000" stroke-width="1" />
+          </svg>
+        {% else %}
+          <svg viewBox="0 0 360 24" class="w--full">
+            <circle cx="10" cy="12" r="3.5" fill="currentColor" />
+            <line x1="13" y1="12" x2="{{ plane_x }}" y2="12" stroke="currentColor" stroke-width="2.5" />
+            <line x1="{{ plane_x }}" y1="12" x2="346" y2="12" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 3" />
+            <circle cx="350" cy="12" r="3.5" fill="none" stroke="currentColor" stroke-width="2" />
+            <g transform="translate({{ plane_x }}, 12)">
+              <path d="M 8,0 L 3,-1.5 L 1,-7 L -2,-7 L -1,-1.5 L -6,-1.5 L -8,-4 L -9,-4 L -7.5,0 L -9,4 L -8,4 L -6,1.5 L -1,1.5 L -2,7 L 1,7 L 3,1.5 Z" fill="currentColor" />
+            </g>
+          </svg>
+        {% endif %}
 
         <div class="flex flex--row flex--between gap--small w--full">
           <span class="label label--small value--tnums">{{ flown | number_with_delimiter }} mi flown</span>

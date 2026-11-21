@@ -432,3 +432,14 @@ def test_stoic_daily_endpoint():
     assert body["challenge"]
 
 
+def test_build_route_map_projects_coastlines_and_arc():
+    from route_map import build_route_map
+
+    rm = build_route_map(44.88, -93.22, 33.68, -117.87, 41.2, -101.5, track_deg=245.0, progress_pct=35.0)
+    assert rm is not None
+    assert len(rm["land_paths"]) >= 1
+    assert rm["flown_path"].startswith("M ")
+    assert rm["rem_path"].startswith("M ")
+    assert rm["plane_angle"] == 155.0
+
+
