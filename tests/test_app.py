@@ -495,3 +495,16 @@ def test_splatoon_schedule_endpoint():
     assert len(body["turf"]["stages"]) == 2
 
 
+def test_iq_daily_endpoint():
+    client = app.test_client()
+    for day in ("2026-11-20", "2026-11-21", "2026-11-22", "2026-11-23", "2026-11-24"):
+        resp = client.get(f"/iq/daily?date={day}")
+        assert resp.status_code == 200
+        body = resp.get_json()
+        assert body["title"] == "Daily IQ Challenge"
+        assert len(body["tiles"]) == 8
+        assert len(body["choices"]) == 4
+        assert body["yesterday"]["answer"] in ("A", "B", "C", "D")
+        assert body["yesterday"]["explanation"]
+
+

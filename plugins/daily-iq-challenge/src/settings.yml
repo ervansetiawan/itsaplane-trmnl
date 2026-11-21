@@ -1,0 +1,11 @@
+name: Daily IQ Challenge
+description: Daily 3x3 visual IQ matrix puzzle
+refresh_interval: 1440
+custom_fields:
+  - keyname: author_bio
+    field_type: author_bio
+    name: About This Plugin
+    category: games
+    description: Daily 3x3 visual IQ matrix puzzle
+    github_url: https://github.com/ervansetiawan/itsaplane-trmnl
+    email_address: ervansetiawan@gmail.com

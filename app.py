@@ -670,5 +670,14 @@ def splatoon_schedule():
         return jsonify({"error": f"Splatoon schedule unavailable: {exc}"}), 502
 
 
+@app.route('/iq/daily')
+def iq_daily():
+    from iq_puzzle import generate_daily_iq
+    target_date, err = _parse_optional_date()
+    if err:
+        return err
+    return jsonify(generate_daily_iq(target_date))
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

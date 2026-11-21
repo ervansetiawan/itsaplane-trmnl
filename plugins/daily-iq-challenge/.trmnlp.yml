@@ -1,0 +1,47 @@
+{
+  "watch": [
+    "src",
+    ".trmnlp.yml"
+  ],
+  "custom_fields": {},
+  "variables": {
+    "title": "Daily IQ Challenge",
+    "date": "NOV 21, 2026",
+    "puzzle_num": 325,
+    "category": "Pip Arithmetic",
+    "difficulty": "Standard",
+    "tiles": [
+      "<circle cx=\"20\" cy=\"20\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"60\" cy=\"60\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" />",
+      "<circle cx=\"20\" cy=\"20\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"60\" cy=\"20\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"20\" cy=\"60\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"60\" cy=\"60\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" />",
+      "<circle cx=\"20\" cy=\"20\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"60\" cy=\"20\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"20\" cy=\"60\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"60\" cy=\"60\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" />",
+      "<circle cx=\"20\" cy=\"20\" r=\"5.5\" fill=\"#fff\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"60\" cy=\"20\" r=\"5.5\" fill=\"#fff\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"40\" cy=\"40\" r=\"5.5\" fill=\"#fff\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"20\" cy=\"60\" r=\"5.5\" fill=\"#fff\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"60\" cy=\"60\" r=\"5.5\" fill=\"#fff\" stroke=\"#000\" stroke-width=\"2\" />",
+      "<circle cx=\"20\" cy=\"20\" r=\"5.5\" fill=\"#fff\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"60\" cy=\"20\" r=\"5.5\" fill=\"#fff\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"20\" cy=\"60\" r=\"5.5\" fill=\"#fff\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"60\" cy=\"60\" r=\"5.5\" fill=\"#fff\" stroke=\"#000\" stroke-width=\"2\" />",
+      "<circle cx=\"20\" cy=\"20\" r=\"5.5\" fill=\"#fff\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"60\" cy=\"20\" r=\"5.5\" fill=\"#fff\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"40\" cy=\"40\" r=\"5.5\" fill=\"#fff\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"20\" cy=\"60\" r=\"5.5\" fill=\"#fff\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"60\" cy=\"60\" r=\"5.5\" fill=\"#fff\" stroke=\"#000\" stroke-width=\"2\" />",
+      "<circle cx=\"20\" cy=\"20\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"60\" cy=\"20\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"20\" cy=\"40\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"40\" cy=\"40\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"60\" cy=\"40\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"20\" cy=\"60\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"60\" cy=\"60\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" />",
+      "<circle cx=\"20\" cy=\"20\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"40\" cy=\"20\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"60\" cy=\"20\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"20\" cy=\"40\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"60\" cy=\"40\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"20\" cy=\"60\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"40\" cy=\"60\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"60\" cy=\"60\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" />"
+    ],
+    "choices": [
+      {
+        "label": "A",
+        "svg": "<circle cx=\"20\" cy=\"20\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"60\" cy=\"20\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"20\" cy=\"40\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"40\" cy=\"40\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"60\" cy=\"40\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"20\" cy=\"60\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"60\" cy=\"60\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" />"
+      },
+      {
+        "label": "B",
+        "svg": "<circle cx=\"20\" cy=\"20\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"40\" cy=\"20\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"60\" cy=\"20\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"20\" cy=\"40\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"60\" cy=\"40\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"20\" cy=\"60\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"40\" cy=\"60\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"60\" cy=\"60\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" />"
+      },
+      {
+        "label": "C",
+        "svg": "<circle cx=\"20\" cy=\"20\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"40\" cy=\"20\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"60\" cy=\"20\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"20\" cy=\"40\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"40\" cy=\"40\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"60\" cy=\"40\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"20\" cy=\"60\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"40\" cy=\"60\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"60\" cy=\"60\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" />"
+      },
+      {
+        "label": "D",
+        "svg": "<circle cx=\"20\" cy=\"20\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"60\" cy=\"20\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"40\" cy=\"40\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"20\" cy=\"60\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" /><circle cx=\"60\" cy=\"60\" r=\"5.5\" fill=\"#000\" stroke=\"#000\" stroke-width=\"2\" />"
+      }
+    ],
+    "yesterday": {
+      "answer": "A",
+      "category": "Spatial Rotation",
+      "explanation": "Each step shifts shape, fill, and rotates by +45\u00b0."
+    }
+  }
+}

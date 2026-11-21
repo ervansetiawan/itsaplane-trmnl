@@ -1,0 +1,41 @@
+<div class="layout layout--col">
+  <div class="flex flex--col flex--between w--full h--full gap--small">
+    <div class="flex flex--row flex--between flex--center-y w--full">
+      <span class="label label--small label--inverted px--2 rounded">{{ category | upcase }}</span>
+      <span class="label label--small">{{ difficulty | upcase }}</span>
+    </div>
+
+    <div class="flex flex--col flex--center w--full">
+      <svg viewBox="0 0 276 276" class="w--[66cqw] h--[48cqh]">
+        <rect x="1" y="1" width="274" height="274" rx="4" fill="#fff" stroke="#000" stroke-width="2" />
+        {% for tile in tiles %}
+          {% assign col = forloop.index0 | modulo: 3 %}
+          {% assign row = forloop.index0 | divided_by: 3 %}
+          {% assign tx = col | times: 88 | plus: 10 %}
+          {% assign ty = row | times: 88 | plus: 10 %}
+          <rect x="{{ tx }}" y="{{ ty }}" width="80" height="80" rx="3" fill="#fff" stroke="#000" stroke-width="1.2" />
+          <g transform="translate({{ tx }}, {{ ty }})">{{ tile }}</g>
+        {% endfor %}
+        <rect x="186" y="186" width="80" height="80" rx="3" fill="#000" />
+        <text x="226" y="242" text-anchor="middle" font-size="44" font-weight="700" fill="#fff" font-family="sans-serif">?</text>
+      </svg>
+    </div>
+
+    <div class="grid grid--cols-4 gap--small w--full">
+      {% for opt in choices %}
+        <div class="flex flex--col flex--center gap--small">
+          <svg viewBox="0 0 80 80" class="w--[48px] h--[48px]">
+            <rect x="1" y="1" width="78" height="78" rx="3" fill="#fff" stroke="#000" stroke-width="1.5" />
+            {{ opt.svg }}
+          </svg>
+          <span class="label label--small label--inverted px--1 rounded">{{ opt.label }}</span>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">{{ date }}</span>
+</div>
