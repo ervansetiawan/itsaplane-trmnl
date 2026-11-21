@@ -679,5 +679,11 @@ def iq_daily():
     return jsonify(generate_daily_iq(target_date))
 
 
+@app.route('/map/pixel')
+def map_pixel():
+    from pixel_map import generate_pixel_map
+    return jsonify(generate_pixel_map())
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
