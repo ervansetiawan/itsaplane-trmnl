@@ -1,0 +1,89 @@
+<div class="layout layout--col">
+  <div class="flex flex--row portrait:flex--col w--full h--full gap--large">
+    <div class="flex flex--col flex--between w--[44cqw] portrait:w--full shrink-0 text--left">
+      <div class="w--full">
+        <div class="flex flex--row flex--between flex--center-y w--full mb--1">
+          <span class="label label--small label--underline">SOLAR HORIZON</span>
+          <span class="label label--small value--tnums">{{ day_pct }}% DAYLIGHT</span>
+        </div>
+        <svg viewBox="0 0 280 124" class="w--full">
+          <path d="M 50,104 A 90,90 0 0 1 230,104" fill="none" stroke="#000" stroke-width="1.5" stroke-dasharray="4 3" />
+          <line x1="20" y1="104" x2="260" y2="104" stroke="#000" stroke-width="1.5" />
+          <line x1="140" y1="10" x2="140" y2="18" stroke="#000" stroke-width="1.2" />
+          <circle cx="{{ sun_x }}" cy="{{ sun_y }}" r="13" fill="#fff" stroke="#000" stroke-width="1" stroke-dasharray="2 2" />
+          <circle cx="{{ sun_x }}" cy="{{ sun_y }}" r="8" fill="#000" />
+          <text x="50" y="119" text-anchor="middle" font-size="8" font-weight="600" fill="#000" font-family="sans-serif">DAWN</text>
+          <text x="140" y="119" text-anchor="middle" font-size="8" font-weight="600" fill="#000" font-family="sans-serif">NOON</text>
+          <text x="230" y="119" text-anchor="middle" font-size="8" font-weight="600" fill="#000" font-family="sans-serif">DUSK</text>
+        </svg>
+      </div>
+
+      <div class="w--full">
+        <div class="flex flex--row flex--between flex--center-y w--full mb--1">
+          <span class="label label--small label--underline">{{ year }} MATRIX (52 WEEKS)</span>
+          <span class="label label--small value--tnums">WK {{ current_week }} / 52</span>
+        </div>
+        <svg viewBox="0 0 240 78" class="w--full" shape-rendering="crispEdges">
+          {% for w in weeks %}
+            {% if w.state == "past" %}
+              <rect x="{{ w.x }}" y="{{ w.y }}" width="13" height="13" rx="2" fill="#000" />
+            {% elsif w.state == "current" %}
+              <rect x="{{ w.x }}" y="{{ w.y }}" width="13" height="13" rx="2" fill="#fff" stroke="#000" stroke-width="2" />
+              <circle cx="{{ w.x | plus: 6.5 }}" cy="{{ w.y | plus: 6.5 }}" r="2.5" fill="#000" />
+            {% else %}
+              <rect x="{{ w.x }}" y="{{ w.y }}" width="13" height="13" rx="2" fill="#fff" stroke="#999" stroke-width="1" />
+            {% endif %}
+          {% endfor %}
+        </svg>
+        <div class="flex flex--row flex--between w--full mt--1">
+          <span class="label label--small value--tnums">DAY {{ day_of_year }} / {{ total_days }}</span>
+          <span class="label label--small value--tnums">{{ days_left }} DAYS LEFT</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider--v portrait:hidden"></div>
+
+    <div class="flex flex--col flex--between stretch-x h--full text--left">
+      <div class="w--full">
+        <div class="flex flex--row flex--between flex--center-y w--full mb--2">
+          <span class="label label--base label--inverted px--2 rounded">{{ phase | upcase }}</span>
+          <span class="label label--small value--tnums">{{ year_pct }}% OF {{ year }}</span>
+        </div>
+        <div class="title title--small lg:title--base text--left mb--2">&ldquo;{{ quote }}&rdquo;</div>
+        <div class="description text--left"><strong>&mdash; {{ author }}</strong>{% if source != blank %} &middot; {{ source }}{% endif %}</div>
+      </div>
+
+      <div class="w--full">
+        <div class="divider mb--2"></div>
+        <div class="label label--small label--underline mb--1 text--left">DAILY MICRO-CHALLENGE</div>
+        <div class="description text--left">{{ challenge }}</div>
+      </div>
+
+      <div class="w--full">
+        <div class="divider mb--2"></div>
+        <div class="grid grid--cols-2 gap--small w--full">
+          <div class="item">
+            <div class="meta"></div>
+            <div class="content">
+              <span class="value value--small value--tnums">{{ daylight }}</span>
+              <span class="label label--small">Daylight</span>
+            </div>
+          </div>
+          <div class="item">
+            <div class="meta"></div>
+            <div class="content">
+              <span class="value value--small value--tnums">{{ weeks_left }} wks</span>
+              <span class="label label--small">Remaining</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">Memento Mori &middot; {{ date }}</span>
+</div>

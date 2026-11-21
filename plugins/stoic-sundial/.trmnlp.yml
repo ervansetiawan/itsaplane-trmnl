@@ -1,0 +1,341 @@
+{
+  "watch": [
+    "src",
+    ".trmnlp.yml"
+  ],
+  "custom_fields": {},
+  "variables": {
+    "title": "Stoic Sundial",
+    "date": "NOV 21, 2026",
+    "year": 2026,
+    "day_of_year": 325,
+    "total_days": 365,
+    "days_left": 40,
+    "year_pct": 89,
+    "current_week": 47,
+    "weeks_left": 5,
+    "day_pct": 51,
+    "phase": "Solar Noon",
+    "daylight": "9h 24m",
+    "sun_x": 142.8,
+    "sun_y": 14.0,
+    "weeks": [
+      {
+        "week": 1,
+        "x": 4,
+        "y": 4,
+        "state": "past"
+      },
+      {
+        "week": 2,
+        "x": 22,
+        "y": 4,
+        "state": "past"
+      },
+      {
+        "week": 3,
+        "x": 40,
+        "y": 4,
+        "state": "past"
+      },
+      {
+        "week": 4,
+        "x": 58,
+        "y": 4,
+        "state": "past"
+      },
+      {
+        "week": 5,
+        "x": 76,
+        "y": 4,
+        "state": "past"
+      },
+      {
+        "week": 6,
+        "x": 94,
+        "y": 4,
+        "state": "past"
+      },
+      {
+        "week": 7,
+        "x": 112,
+        "y": 4,
+        "state": "past"
+      },
+      {
+        "week": 8,
+        "x": 130,
+        "y": 4,
+        "state": "past"
+      },
+      {
+        "week": 9,
+        "x": 148,
+        "y": 4,
+        "state": "past"
+      },
+      {
+        "week": 10,
+        "x": 166,
+        "y": 4,
+        "state": "past"
+      },
+      {
+        "week": 11,
+        "x": 184,
+        "y": 4,
+        "state": "past"
+      },
+      {
+        "week": 12,
+        "x": 202,
+        "y": 4,
+        "state": "past"
+      },
+      {
+        "week": 13,
+        "x": 220,
+        "y": 4,
+        "state": "past"
+      },
+      {
+        "week": 14,
+        "x": 4,
+        "y": 22,
+        "state": "past"
+      },
+      {
+        "week": 15,
+        "x": 22,
+        "y": 22,
+        "state": "past"
+      },
+      {
+        "week": 16,
+        "x": 40,
+        "y": 22,
+        "state": "past"
+      },
+      {
+        "week": 17,
+        "x": 58,
+        "y": 22,
+        "state": "past"
+      },
+      {
+        "week": 18,
+        "x": 76,
+        "y": 22,
+        "state": "past"
+      },
+      {
+        "week": 19,
+        "x": 94,
+        "y": 22,
+        "state": "past"
+      },
+      {
+        "week": 20,
+        "x": 112,
+        "y": 22,
+        "state": "past"
+      },
+      {
+        "week": 21,
+        "x": 130,
+        "y": 22,
+        "state": "past"
+      },
+      {
+        "week": 22,
+        "x": 148,
+        "y": 22,
+        "state": "past"
+      },
+      {
+        "week": 23,
+        "x": 166,
+        "y": 22,
+        "state": "past"
+      },
+      {
+        "week": 24,
+        "x": 184,
+        "y": 22,
+        "state": "past"
+      },
+      {
+        "week": 25,
+        "x": 202,
+        "y": 22,
+        "state": "past"
+      },
+      {
+        "week": 26,
+        "x": 220,
+        "y": 22,
+        "state": "past"
+      },
+      {
+        "week": 27,
+        "x": 4,
+        "y": 40,
+        "state": "past"
+      },
+      {
+        "week": 28,
+        "x": 22,
+        "y": 40,
+        "state": "past"
+      },
+      {
+        "week": 29,
+        "x": 40,
+        "y": 40,
+        "state": "past"
+      },
+      {
+        "week": 30,
+        "x": 58,
+        "y": 40,
+        "state": "past"
+      },
+      {
+        "week": 31,
+        "x": 76,
+        "y": 40,
+        "state": "past"
+      },
+      {
+        "week": 32,
+        "x": 94,
+        "y": 40,
+        "state": "past"
+      },
+      {
+        "week": 33,
+        "x": 112,
+        "y": 40,
+        "state": "past"
+      },
+      {
+        "week": 34,
+        "x": 130,
+        "y": 40,
+        "state": "past"
+      },
+      {
+        "week": 35,
+        "x": 148,
+        "y": 40,
+        "state": "past"
+      },
+      {
+        "week": 36,
+        "x": 166,
+        "y": 40,
+        "state": "past"
+      },
+      {
+        "week": 37,
+        "x": 184,
+        "y": 40,
+        "state": "past"
+      },
+      {
+        "week": 38,
+        "x": 202,
+        "y": 40,
+        "state": "past"
+      },
+      {
+        "week": 39,
+        "x": 220,
+        "y": 40,
+        "state": "past"
+      },
+      {
+        "week": 40,
+        "x": 4,
+        "y": 58,
+        "state": "past"
+      },
+      {
+        "week": 41,
+        "x": 22,
+        "y": 58,
+        "state": "past"
+      },
+      {
+        "week": 42,
+        "x": 40,
+        "y": 58,
+        "state": "past"
+      },
+      {
+        "week": 43,
+        "x": 58,
+        "y": 58,
+        "state": "past"
+      },
+      {
+        "week": 44,
+        "x": 76,
+        "y": 58,
+        "state": "past"
+      },
+      {
+        "week": 45,
+        "x": 94,
+        "y": 58,
+        "state": "past"
+      },
+      {
+        "week": 46,
+        "x": 112,
+        "y": 58,
+        "state": "past"
+      },
+      {
+        "week": 47,
+        "x": 130,
+        "y": 58,
+        "state": "current"
+      },
+      {
+        "week": 48,
+        "x": 148,
+        "y": 58,
+        "state": "future"
+      },
+      {
+        "week": 49,
+        "x": 166,
+        "y": 58,
+        "state": "future"
+      },
+      {
+        "week": 50,
+        "x": 184,
+        "y": 58,
+        "state": "future"
+      },
+      {
+        "week": 51,
+        "x": 202,
+        "y": 58,
+        "state": "future"
+      },
+      {
+        "week": 52,
+        "x": 220,
+        "y": 58,
+        "state": "future"
+      }
+    ],
+    "quote": "How we spend our days is, of course, how we spend our lives.",
+    "author": "Annie Dillard",
+    "source": "The Writing Life",
+    "challenge": "Protect one 45-minute block of uninterrupted deep work."
+  }
+}

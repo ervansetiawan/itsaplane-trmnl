@@ -1,0 +1,22 @@
+<div class="layout layout--col">
+  <div class="flex flex--col flex--between w--full h--full gap--small">
+    <div class="flex flex--row flex--between flex--center-y w--full">
+      <span class="label label--small label--inverted px--2 rounded">{{ phase | upcase }}</span>
+      <span class="label label--small value--tnums">DAY {{ day_of_year }}/{{ total_days }}</span>
+    </div>
+
+    <div class="w--full text--left stretch-y flex flex--col flex--center">
+      <div class="description text--left clamp--3"><strong>&ldquo;{{ quote }}&rdquo;</strong></div>
+      <div class="label label--small text--left mt--1">&mdash; {{ author }}</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="label label--small text--left value--tnums">{{ daylight }} DAYLIGHT &middot; {{ days_left }} DAYS LEFT</div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">{{ date }}</span>
+</div>

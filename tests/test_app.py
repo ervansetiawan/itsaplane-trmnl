@@ -420,3 +420,15 @@ def test_museum_daily_uses_cleveland_open_access():
     assert body["image_url"].startswith("https://openaccess-cdn.clevelandart.org/")
 
 
+def test_stoic_daily_endpoint():
+    client = app.test_client()
+    resp = client.get("/stoic/daily?date=2026-11-21&lat=44.97&lon=-93.26")
+    assert resp.status_code == 200
+    body = resp.get_json()
+    assert body["title"] == "Stoic Sundial"
+    assert len(body["weeks"]) == 52
+    assert sum(1 for w in body["weeks"] if w["state"] == "current") == 1
+    assert body["quote"]
+    assert body["challenge"]
+
+

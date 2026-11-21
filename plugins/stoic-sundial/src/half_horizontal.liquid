@@ -1,0 +1,27 @@
+<div class="layout layout--col">
+  <div class="flex flex--row portrait:flex--col w--full h--full gap--medium lg:gap--large">
+    <div class="flex flex--col flex--between w--[38cqw] portrait:w--full shrink-0 text--left">
+      <svg viewBox="0 0 280 124" class="w--full">
+        <path d="M 50,104 A 90,90 0 0 1 230,104" fill="none" stroke="#000" stroke-width="1.5" stroke-dasharray="4 3" />
+        <line x1="20" y1="104" x2="260" y2="104" stroke="#000" stroke-width="1.5" />
+        <circle cx="{{ sun_x }}" cy="{{ sun_y }}" r="9" fill="#000" />
+        <text x="50" y="119" text-anchor="middle" font-size="8" fill="#000" font-family="sans-serif">DAWN</text>
+        <text x="140" y="119" text-anchor="middle" font-size="8" fill="#000" font-family="sans-serif">{{ day_pct }}%</text>
+        <text x="230" y="119" text-anchor="middle" font-size="8" fill="#000" font-family="sans-serif">DUSK</text>
+      </svg>
+      <div class="label label--small value--tnums">WK {{ current_week }}/52 &middot; {{ days_left }}D LEFT</div>
+    </div>
+
+    <div class="divider--v portrait:hidden"></div>
+
+    <div class="flex flex--col flex--between stretch-x h--full text--left">
+      <div class="description text--left clamp--3"><strong>&ldquo;{{ quote }}&rdquo;</strong> &mdash; {{ author }}</div>
+      <div class="description text--left clamp--2"><strong>Challenge:</strong> {{ challenge }}</div>
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">{{ date }}</span>
+</div>

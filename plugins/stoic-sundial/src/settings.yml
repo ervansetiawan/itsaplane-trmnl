@@ -1,0 +1,11 @@
+name: Stoic Sundial
+description: Solar horizon, year matrix & Stoic
+refresh_interval: 60
+custom_fields:
+  - keyname: author_bio
+    field_type: author_bio
+    name: About This Plugin
+    category: education
+    description: Solar horizon, year matrix & Stoic
+    github_url: https://github.com/ervansetiawan/itsaplane-trmnl
+    email_address: ervansetiawan@gmail.com

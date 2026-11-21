@@ -626,5 +626,19 @@ def nfl_story():
         return jsonify({"error": f"NFL game story unavailable: {exc}"}), 502
 
 
+@app.route('/stoic/daily')
+def stoic_daily():
+    from stoic_sundial import generate_stoic_sundial
+    target_date, err = _parse_optional_date()
+    if err:
+        return err
+    try:
+        lat = float(request.args.get('lat') or 41.88)
+        lon = float(request.args.get('lon') or -87.63)
+    except ValueError:
+        lat, lon = 41.88, -87.63
+    return jsonify(generate_stoic_sundial(target_date, lat=lat, lon=lon))
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
