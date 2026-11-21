@@ -1,6 +1,5 @@
 """Live BGP & Internet Outage Radar backed by Georgia Tech IODA v2."""
 
-from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 import time
 import requests
@@ -8,7 +7,7 @@ import requests
 IODA_ALERTS_URL = "https://api.ioda.inetintel.cc.gatech.edu/v2/outages/alerts"
 _CACHE: dict = {"ts": 0.0, "data": None}
 _RESPONSE_CACHE: dict = {"data": None}
-_CACHE_TTL_SECONDS = 600
+_CACHE_TTL_SECONDS = 1800
 
 # ISO-2 country centroids (lat, lon) for equirectangular map projection
 COUNTRY_COORDS: dict[str, tuple[float, float]] = {
@@ -107,7 +106,7 @@ def _fetch_alert_window(start: int, until: int) -> list[dict]:
         try:
             resp = requests.get(
                 IODA_ALERTS_URL,
-                params={"from": start, "until": until, "limit": 400},
+                params={"from": start, "until": until, "limit": 500},
                 headers={
                     "User-Agent": "Mozilla/5.0 (compatible; TRMNL-Outage-Radar/1.0)",
                     "Accept": "application/json",
@@ -115,7 +114,7 @@ def _fetch_alert_window(start: int, until: int) -> list[dict]:
                 timeout=10,
             )
             if resp.status_code == 429 and attempt == 0:
-                time.sleep(0.8)
+                time.sleep(1.0)
                 continue
             resp.raise_for_status()
             return resp.json().get("data", [])
@@ -132,12 +131,13 @@ def fetch_outage_radar() -> dict:
         alerts = _CACHE["data"]
     else:
         until = int(now)
-        # IODA returns alerts oldest-first; fetch 4 x 6h windows so the full 24h timeline + recent outages are covered
-        windows = [(until - (4 - i) * 21600, until - (3 - i) * 21600) for i in range(4)]
+        # Fetch 2 sequential 12h windows (no parallel burst) to cover the full 24h timeline gently
+        windows = [(until - 86400, until - 43200), (until - 43200, until)]
         alerts = []
-        with ThreadPoolExecutor(max_workers=4) as pool:
-            for chunk in pool.map(lambda w: _fetch_alert_window(w[0], w[1]), windows):
-                alerts.extend(chunk)
+        for idx, (w_start, w_end) in enumerate(windows):
+            if idx > 0:
+                time.sleep(0.25)
+            alerts.extend(_fetch_alert_window(w_start, w_end))
         if alerts:
             _CACHE["ts"] = now
             _CACHE["data"] = alerts
