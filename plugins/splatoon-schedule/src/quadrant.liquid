@@ -1,0 +1,17 @@
+<div class="layout layout--col">
+  <div class="flex flex--col flex--between w--full h--full gap--small">
+    <div class="flex flex--row flex--between flex--center-y w--full">
+      <span class="label label--small label--inverted px--2 rounded">TURF WAR</span>
+      <span class="label label--small value--tnums">{{ turf.window }}</span>
+    </div>
+    {% if turf %}
+      <img src="{{ turf.stages[0].image_url }}" alt="{{ turf.stages[0].name }}" class="image image-dither image--contain w--full h--[46cqh] rounded" />
+      <div class="description text--left clamp--1"><strong>{{ turf.stages[0].name }}</strong> &amp; {{ turf.stages[1].name }}</div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">{{ date }}</span>
+</div>

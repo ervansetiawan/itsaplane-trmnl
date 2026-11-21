@@ -454,3 +454,44 @@ def test_retro_random_endpoint():
     assert body["trivia"]
 
 
+def test_splatoon_schedule_endpoint():
+    import splatoon_schedule
+
+    splatoon_schedule._CACHE["data"] = None
+    splatoon_schedule._CACHE["ts"] = 0.0
+
+    mock_resp = MagicMock(status_code=200)
+    mock_resp.raise_for_status.return_value = None
+    mock_resp.json.return_value = {
+        "data": {
+            "regularSchedules": {
+                "nodes": [
+                    {
+                        "startTime": "2026-11-21T20:00:00Z",
+                        "endTime": "2026-11-21T22:00:00Z",
+                        "regularMatchSetting": {
+                            "vsRule": {"name": "Turf War"},
+                            "vsStages": [
+                                {"name": "Eeltail Alley", "image": {"url": "https://assets.splatoon3.ink/a.png"}},
+                                {"name": "Flounder Heights", "image": {"url": "https://assets.splatoon3.ink/b.png"}},
+                            ],
+                        },
+                    }
+                ]
+            },
+            "bankaraSchedules": {"nodes": []},
+            "coopGroupingSchedule": {"regularSchedules": {"nodes": []}},
+        }
+    }
+
+    with patch("splatoon_schedule.requests.get", return_value=mock_resp):
+        client = app.test_client()
+        resp = client.get("/splatoon/schedule")
+
+    assert resp.status_code == 200
+    body = resp.get_json()
+    assert body["title"] == "Splatoon 3 Schedule"
+    assert body["turf"]["rule"] == "Turf War"
+    assert len(body["turf"]["stages"]) == 2
+
+

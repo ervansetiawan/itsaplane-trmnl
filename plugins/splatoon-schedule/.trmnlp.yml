@@ -1,0 +1,65 @@
+{
+  "watch": [
+    "src",
+    ".trmnlp.yml"
+  ],
+  "custom_fields": {},
+  "variables": {
+    "title": "Splatoon 3 Schedule",
+    "date": "NOV 21 \u00b7 21:00 UTC",
+    "turf": {
+      "rule": "Turf War",
+      "window": "20:00\u201322:00 UTC",
+      "stages": [
+        {
+          "name": "Eeltail Alley",
+          "image_url": "https://assets.splatoon3.ink/splatnet/v3/stage_img/icon/low_resolution/898e1ae6c737a9d44552c7c81f9b710676492681525c514eadc68a6780aa52af_1.png"
+        },
+        {
+          "name": "Flounder Heights",
+          "image_url": "https://assets.splatoon3.ink/splatnet/v3/stage_img/icon/low_resolution/488017f3ce712fca9fb37d61fe306343054449bb2d2bb1751d95f54a98564cae_1.png"
+        }
+      ]
+    },
+    "series": {
+      "rule": "Rainmaker",
+      "window": "20:00\u201322:00 UTC",
+      "stages": [
+        {
+          "name": "Crableg Capital",
+          "image_url": "https://assets.splatoon3.ink/splatnet/v3/stage_img/icon/low_resolution/4e0e9e2046aff1d635e23946d9f0a461486d2aab349079e551037e426ac82c7a_1.png"
+        },
+        {
+          "name": "Lemuria Hub",
+          "image_url": "https://assets.splatoon3.ink/splatnet/v3/stage_img/icon/low_resolution/2ba481293efc554ac217f21b6d56dd08f9d66e72b286f20714abd5ef1520f47a_1.png"
+        }
+      ]
+    },
+    "open": {
+      "rule": "Splat Zones",
+      "window": "20:00\u201322:00 UTC",
+      "stages": [
+        {
+          "name": "Hammerhead Bridge",
+          "image_url": "https://assets.splatoon3.ink/splatnet/v3/stage_img/icon/low_resolution/1db8ab338b64b464df50e7f9e270e59423ff8caac6f09679a24f1b7acf3a82f3_1.png"
+        },
+        {
+          "name": "Sturgeon Shipyard",
+          "image_url": "https://assets.splatoon3.ink/splatnet/v3/stage_img/icon/low_resolution/48684c69d5c5a4ffaf16b712a4895545a8d01196115d514fc878ce99863bb3e9_1.png"
+        }
+      ]
+    },
+    "salmon": {
+      "stage": "Salmonid Smokeyard",
+      "image_url": "https://assets.splatoon3.ink/splatnet/v3/stage_img/icon/low_resolution/630d89698e3e260ef12cb2a32e1cb2c4c83c0e58fc882762da1fa2cea19a5260_1.png",
+      "boss": "Megalodontia",
+      "weapons": [
+        "Heavy Edit Splatling",
+        "Octobrush",
+        "Splat Roller",
+        ".96 Gal"
+      ],
+      "window": "08:00\u201300:00 UTC"
+    }
+  }
+}

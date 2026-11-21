@@ -1,0 +1,66 @@
+<div class="layout layout--col">
+  <div class="flex flex--col flex--between w--full h--full gap--small">
+    <div class="grid grid--cols-3 gap--medium w--full stretch-y">
+      {% if turf %}
+        <div class="flex flex--col flex--between w--full text--left">
+          <div class="flex flex--row flex--between flex--center-y w--full mb--1">
+            <span class="label label--small label--inverted px--2 rounded">REGULAR</span>
+            <span class="label label--small">{{ turf.rule }}</span>
+          </div>
+          {% for s in turf.stages %}
+            <div class="w--full mb--1">
+              <img src="{{ s.image_url }}" alt="{{ s.name }}" class="image image-dither image--contain w--full h--[24cqh] rounded mb--1" />
+              <div class="description text--center clamp--1"><strong>{{ s.name }}</strong></div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if series %}
+        <div class="flex flex--col flex--between w--full text--left">
+          <div class="flex flex--row flex--between flex--center-y w--full mb--1">
+            <span class="label label--small label--inverted px--2 rounded">SERIES</span>
+            <span class="label label--small">{{ series.rule }}</span>
+          </div>
+          {% for s in series.stages %}
+            <div class="w--full mb--1">
+              <img src="{{ s.image_url }}" alt="{{ s.name }}" class="image image-dither image--contain w--full h--[24cqh] rounded mb--1" />
+              <div class="description text--center clamp--1"><strong>{{ s.name }}</strong></div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if open %}
+        <div class="flex flex--col flex--between w--full text--left">
+          <div class="flex flex--row flex--between flex--center-y w--full mb--1">
+            <span class="label label--small label--inverted px--2 rounded">OPEN</span>
+            <span class="label label--small">{{ open.rule }}</span>
+          </div>
+          {% for s in open.stages %}
+            <div class="w--full mb--1">
+              <img src="{{ s.image_url }}" alt="{{ s.name }}" class="image image-dither image--contain w--full h--[24cqh] rounded mb--1" />
+              <div class="description text--center clamp--1"><strong>{{ s.name }}</strong></div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    {% if salmon %}
+      <div class="divider"></div>
+      <div class="flex flex--row flex--between flex--center-y w--full gap--medium">
+        <div class="flex flex--row flex--center-y gap--small">
+          <span class="label label--small label--inverted px--2 rounded shrink-0">SALMON RUN</span>
+          <span class="description clamp--1"><strong>{{ salmon.stage }}</strong>{% if salmon.boss != blank %} &middot; {{ salmon.boss }}{% endif %}</span>
+        </div>
+        <span class="label label--small clamp--1">{{ salmon.weapons | join: " · " }}</span>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">{% if turf.window != blank %}{{ turf.window }} &middot; {% endif %}splatoon3.ink</span>
+</div>

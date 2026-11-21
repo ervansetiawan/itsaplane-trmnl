@@ -661,5 +661,14 @@ def retro_random():
     return jsonify(fetch_random_retro_game(seed=seed))
 
 
+@app.route('/splatoon/schedule')
+def splatoon_schedule():
+    from splatoon_schedule import fetch_splatoon_schedule
+    try:
+        return jsonify(fetch_splatoon_schedule())
+    except requests.RequestException as exc:
+        return jsonify({"error": f"Splatoon schedule unavailable: {exc}"}), 502
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
