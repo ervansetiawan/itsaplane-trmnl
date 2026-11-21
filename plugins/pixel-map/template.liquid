@@ -1,0 +1,28 @@
+<style>
+  .pixel-map-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .pixel-map-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    image-rendering: pixelated;
+    border: 2px solid #000;
+  }
+</style>
+
+<div class="layout layout--col">
+  <div class="pixel-map-wrap">
+    <img class="pixel-map-img" src="{{ image_url }}" alt="{{ name }}" />
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ name }}</span>
+  <span class="instance">{{ coords }}</span>
+</div>
