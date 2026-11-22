@@ -1,6 +1,6 @@
 name: Solar System Orrery
 description: Live heliocentric solar system map
-strategy: static
+strategy: polling
 polling_url: https://itsaplane-trmnl.onrender.com/solar/daily
 polling_verb: get
 polling_headers: ""

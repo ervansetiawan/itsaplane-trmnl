@@ -31,7 +31,7 @@ def _solve_eccentric_anomaly(M_rad: float, e: float) -> float:
     return E
 
 
-def _moon_phase_info(d: date) -> tuple[str, int, bool]:
+def _moon_phase_info(d: date) -> tuple[str, int, int]:
     dt = datetime(d.year, d.month, d.day, 12, 0, tzinfo=timezone.utc)
     known = datetime(2000, 1, 6, 18, 14, tzinfo=timezone.utc)
     cycle = ((dt - known).total_seconds() / 86400.0 % 29.53058867) / 29.53058867
@@ -40,7 +40,30 @@ def _moon_phase_info(d: date) -> tuple[str, int, bool]:
         "Full Moon", "Waning Gib.", "Last Quarter", "Waning Cres.",
     ]
     illum = round((1.0 - math.cos(2.0 * math.pi * cycle)) / 2.0 * 100)
-    return names[int((cycle * 8) + 0.5) % 8], illum, cycle < 0.5
+    days_to_full = round(((0.5 - cycle) % 1.0) * 29.53058867)
+    return names[int((cycle * 8) + 0.5) % 8], illum, days_to_full
+
+
+def _sky_visibility(ex: float, ey: float, px: float, py: float) -> tuple[str, float, str]:
+    """Computes sky visibility, Earth distance (AU), and light-travel time from Earth."""
+    dx, dy = px - ex, py - ey
+    dist_au = math.hypot(dx, dy)
+    light_min = dist_au * 8.3167
+    light_str = f"{light_min:.1f}m" if light_min < 10 else f"{round(light_min)}m"
+
+    sun_ang = math.atan2(-ey, -ex)
+    pl_ang = math.atan2(dy, dx)
+    elong = (math.degrees(pl_ang - sun_ang) + 180.0) % 360.0 - 180.0
+
+    if abs(elong) < 15:
+        vis = "Near Sun"
+    elif abs(elong) >= 135:
+        vis = "All Night"
+    elif elong > 0:
+        vis = "Evening"
+    else:
+        vis = "Morning"
+    return vis, dist_au, light_str
 
 
 def _build_bezel() -> tuple[list[dict], list[dict], list[dict]]:
@@ -62,8 +85,8 @@ def _build_bezel() -> tuple[list[dict], list[dict], list[dict]]:
         rad = math.radians(idx * 30 + 15)
         sectors.append({
             "label": z,
-            "x": round(150 + 148.5 * math.cos(rad), 1),
-            "y": round(150 - 148.5 * math.sin(rad) + 2.5, 1),
+            "x": round(150 + 153.5 * math.cos(rad), 1),
+            "y": round(150 - 153.5 * math.sin(rad) + 2.5, 1),
         })
     rays = []
     for deg in range(0, 360, 45):
@@ -129,10 +152,23 @@ def generate_solar_orrery(target_date: date | None = None) -> dict:
     earth_mars_au = math.hypot(mx - ex, my - ey)
     earth_venus_au = math.hypot(vx - ex, vy - ey)
 
+    for p in planets_out:
+        if p["abbr"] == "EAR":
+            p["sky"] = "Home"
+            p["earth_au"] = "0.00 AU"
+            p["light_time"] = "0m"
+        else:
+            px, py = vectors_au[p["abbr"]]
+            vis, edist, lstr = _sky_visibility(ex, ey, px, py)
+            p["sky"] = vis
+            p["earth_au"] = f"{edist:.2f} AU"
+            p["light_time"] = lstr
+
     earth_p = next(p for p in planets_out if p["abbr"] == "EAR")
     mars_p = next(p for p in planets_out if p["abbr"] == "MAR")
-    moon_phase, moon_illum, _ = _moon_phase_info(d)
+    moon_phase, moon_illum, days_to_full = _moon_phase_info(d)
     ticks, sectors, rays = _build_bezel()
+    full_moon_label = "Full Moon today" if days_to_full == 0 else f"Full Moon in {days_to_full}d"
 
     return {
         "title": "Solar System Orrery",
@@ -140,6 +176,7 @@ def generate_solar_orrery(target_date: date | None = None) -> dict:
         "day_of_year": d.timetuple().tm_yday,
         "moon_phase": moon_phase,
         "moon_illum": moon_illum,
+        "full_moon_label": full_moon_label,
         "earth_mars_au": f"{earth_mars_au:.2f} AU",
         "earth_mars_mkm": f"{earth_mars_au * 149.598:.0f}M km",
         "earth_venus_au": f"{earth_venus_au:.2f} AU",

@@ -28,7 +28,7 @@
         {% for p in planets %}
           <div class="flex flex--row flex--between w--full">
             <span class="description lg:description--xlarge"><strong>{{ p.abbr }}</strong> {{ p.name }}</span>
-            <span class="label label--small lg:label--large value--tnums">{{ p.lon }} ({{ p.zodiac }})</span>
+            <span class="label label--small lg:label--large value--tnums">{% if p.is_earth %}{{ p.zodiac }}{% else %}{{ p.sky }} &middot; {{ p.light_time }}{% endif %}</span>
           </div>
         {% endfor %}
       </div>
