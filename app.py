@@ -527,8 +527,9 @@ def rce_daily():
     target_date, err = _parse_optional_date()
     if err:
         return err
+    vendor = request.args.get('vendor', '')
     try:
-        return jsonify(fetch_rce_dashboard(target_date))
+        return jsonify(fetch_rce_dashboard(target_date, vendor_filter=vendor))
     except requests.RequestException as exc:
         return jsonify({"error": f"CISA KEV feed unavailable: {exc}"}), 502
 

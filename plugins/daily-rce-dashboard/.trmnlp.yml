@@ -1,0 +1,102 @@
+watch:
+- src
+- .trmnlp.yml
+custom_fields: {}
+variables:
+  title: Daily RCE Dashboard
+  date: NOV 19, 2026
+  catalog_version: 2026.11.18
+  total_kev: 1786
+  total_rce: 483
+  ransomware_count: 154
+  recent_30d: 8
+  featured:
+    cve_id: CVE-2024-10441
+    vendor: Synology
+    product: DiskStation Manager (DSM)
+    name: Synology DiskStation Manager (DSM) Improper Encoding or Escaping of Output
+      Vulnerability
+    description: Synology DSM contains an improper encoding or escaping of output
+      vulnerability in the system plugin daemon in Synology BeeStation OS (BSM) that
+      cou...
+    date_added: '2026-11-18'
+    due_date: '2026-11-21'
+    ransomware: false
+    cvss: 9.8
+    cvss_pct: 98
+    severity: CRITICAL
+    epss: 2.1%
+    epss_pct: 2
+  items:
+  - cve_id: CVE-2026-90436
+    vendor: Apache
+    product: Axis
+    name: Apache Axis Unsafe Reflection Vulnerability
+    description: Apache Axis contains an unsafe reflection vulnerability that could
+      allow an unauthenticated...
+    date_added: '2026-11-18'
+    due_date: '2026-11-21'
+    ransomware: false
+    cvss: 9.8
+    cvss_pct: 98
+    severity: CRITICAL
+    epss: 1.8%
+    epss_pct: 2
+  - cve_id: CVE-2026-125350
+    vendor: Google
+    product: Chromium
+    name: Google Chromium Use-After-Free Vulnerability
+    description: Google Chromium contains a use-after-free vulnerability in the XML
+      component that could allo...
+    date_added: '2026-11-10'
+    due_date: '2026-11-24'
+    ransomware: false
+    cvss: 8.8
+    cvss_pct: 88
+    severity: HIGH
+    epss: 1.0%
+    epss_pct: 2
+  - cve_id: CVE-2026-97229
+    vendor: GitLab
+    product: Community Edition and Enterprise Edition
+    name: GitLab Community Edition and Enterprise Edition Integer Overflow or Wraparound
+      Vulnerability
+    description: GitLab Community Edition and Enterprise Edition contain a integer
+      overflow or wraparound vul...
+    date_added: '2026-10-29'
+    due_date: '2026-11-01'
+    ransomware: false
+    cvss: 10.0
+    cvss_pct: 100
+    severity: CRITICAL
+    epss: 69.3%
+    epss_pct: 69
+  - cve_id: CVE-2026-48356
+    vendor: Adobe
+    product: Commerce and Magento
+    name: Adobe Commerce and Magento Unrestricted Upload of File with Dangerous Type
+      Vulnerability
+    description: Adobe Commerce and Magento contain an unrestricted upload of file
+      with dangerous type vulner...
+    date_added: '2026-10-27'
+    due_date: '2026-11-10'
+    ransomware: false
+    cvss: 9.3
+    cvss_pct: 93
+    severity: CRITICAL
+    epss: 66.4%
+    epss_pct: 66
+  - cve_id: CVE-2026-111497
+    vendor: Google
+    product: Brotli
+    name: Google Brotli Unchecked Return Value Vulnerability
+    description: Google Brotli contains an unchecked return value vulnerability that
+      allows a remote unauthen...
+    date_added: '2026-10-27'
+    due_date: '2026-11-10'
+    ransomware: false
+    cvss: 9.2
+    cvss_pct: 92
+    severity: CRITICAL
+    epss: 82.4%
+    epss_pct: 82

@@ -4,15 +4,15 @@
       <div class="item">
         <div class="meta"></div>
         <div class="content">
-          <span class="value value--base value--tnums">{{ total_rce }}</span>
-          <span class="label label--base">RCE KEVs</span>
+          <span class="value value--base lg:value--xlarge value--tnums">{{ total_rce }}</span>
+          <span class="label label--base lg:label--large">RCE KEVs</span>
         </div>
       </div>
       <div class="item">
         <div class="meta"></div>
         <div class="content">
-          <span class="value value--base value--tnums">{{ recent_30d }}</span>
-          <span class="label label--base">Last 30d</span>
+          <span class="value value--base lg:value--xlarge value--tnums">{{ recent_30d }}</span>
+          <span class="label label--base lg:label--large">Last 30d</span>
         </div>
       </div>
     </div>
@@ -20,15 +20,15 @@
     {% if featured %}
       <div class="w--full text--left">
         <div class="divider mb--1"></div>
-        <div class="title title--small text--left value--tnums">{{ featured.cve_id }}{% if featured.cvss %} &middot; CVSS {{ featured.cvss }}{% endif %}</div>
-        <div class="description text--left clamp--1">{{ featured.vendor }} {{ featured.product }}</div>
+        <div class="title title--small lg:title--large text--left value--tnums">{{ featured.cve_id }}{% if featured.cvss %} &middot; CVSS {{ featured.cvss }}{% endif %}</div>
+        <div class="description lg:description--xlarge text--left clamp--1">{{ featured.vendor }} {{ featured.product }} &middot; {{ featured.due_label }}</div>
       </div>
     {% endif %}
 
     <div class="w--full stretch-y text--left flex flex--col flex--between">
       <div class="divider mb--1"></div>
       {% for item in items limit: 4 %}
-        <div class="description text--left clamp--1 w--full value--tnums"><strong>{{ item.cve_id }}</strong>{% if item.cvss %} ({{ item.cvss }}){% endif %} &mdash; {{ item.vendor }}</div>
+        <div class="description lg:description--xlarge text--left clamp--1 w--full value--tnums"><strong>{{ item.cve_id }}</strong>{% if item.cvss %} ({{ item.cvss }}){% endif %} &mdash; {{ item.vendor }}</div>
       {% endfor %}
     </div>
   </div>

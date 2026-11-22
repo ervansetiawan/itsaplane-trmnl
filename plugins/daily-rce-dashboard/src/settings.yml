@@ -1,6 +1,12 @@
 name: Daily RCE Dashboard
 description: Exploited RCE CVEs + EPSS risk
+strategy: polling
+polling_url: 'https://itsaplane-trmnl.onrender.com/rce/daily?vendor={{ vendor }}'
+polling_verb: get
+polling_headers: ""
 refresh_interval: 1440
+dark_mode: "no"
+no_screen_padding: "no"
 custom_fields:
   - keyname: author_bio
     field_type: author_bio
@@ -9,3 +15,8 @@ custom_fields:
     description: Exploited RCE CVEs + EPSS risk
     github_url: https://github.com/ervansetiawan/itsaplane-trmnl
     email_address: ervansetiawan@gmail.com
+  - keyname: vendor
+    field_type: string
+    name: Vendor Filter (optional)
+    description: Comma-separated vendors (e.g. microsoft, cisco). Blank = all.
+    optional: true

@@ -121,10 +121,28 @@ def _is_important(vuln: dict) -> bool:
     return any(mv in vendor for mv in MAJOR_VENDORS)
 
 
-def _format_item(vuln: dict, short_desc_limit: int = 150, epss_map: dict[str, tuple[str, int]] | None = None) -> dict:
+def _format_item(vuln: dict, short_desc_limit: int = 150, epss_map: dict[str, tuple[str, int]] | None = None, today: date | None = None) -> dict:
     desc = (vuln.get("shortDescription") or "").strip()
     if len(desc) > short_desc_limit:
         desc = desc[: short_desc_limit - 3].rstrip() + "..."
+    action = (vuln.get("requiredAction") or "").strip()
+    if len(action) > 120:
+        action = action[:117].rstrip() + "..."
+    cwes = vuln.get("cwes") or []
+    cwe = cwes[0] if isinstance(cwes, list) and cwes else ""
+    due_date = vuln.get("dueDate", "")
+    due_label = f"DUE {due_date}" if due_date else ""
+    if due_date and today:
+        try:
+            delta = (date.fromisoformat(due_date) - today).days
+            if delta < 0:
+                due_label = f"OVERDUE {abs(delta)}d"
+            elif delta == 0:
+                due_label = "DUE TODAY"
+            elif delta <= 14:
+                due_label = f"DUE IN {delta}d"
+        except ValueError:
+            pass
     cve_id = vuln.get("cveID", "")
     cvss, severity = _fetch_cvss(cve_id)
     epss, epss_pct = (epss_map or {}).get(cve_id, ("", 0))
@@ -135,8 +153,11 @@ def _format_item(vuln: dict, short_desc_limit: int = 150, epss_map: dict[str, tu
         "product": vuln.get("product", ""),
         "name": vuln.get("vulnerabilityName", ""),
         "description": desc,
+        "action": action,
+        "cwe": cwe,
         "date_added": vuln.get("dateAdded", ""),
-        "due_date": vuln.get("dueDate", ""),
+        "due_date": due_date,
+        "due_label": due_label,
         "ransomware": vuln.get("knownRansomwareCampaignUse", "Unknown") == "Known",
         "cvss": cvss,
         "cvss_pct": cvss_pct,
@@ -146,7 +167,48 @@ def _format_item(vuln: dict, short_desc_limit: int = 150, epss_map: dict[str, tu
     }
 
 
-def fetch_rce_dashboard(today: date | None = None) -> dict:
+def _build_monthly_bars(vulns: list[dict], d: date) -> list[dict]:
+    """Builds 12 monthly bar coordinates (viewBox 0 0 240 42) for RCE KEV trend."""
+    months = []
+    y, m = d.year, d.month
+    for _ in range(12):
+        months.append(f"{y:04d}-{m:02d}")
+        m -= 1
+        if m == 0:
+            m = 12
+            y -= 1
+    months.reverse()
+
+    totals = {ym: 0 for ym in months}
+    rw_totals = {ym: 0 for ym in months}
+    for v in vulns:
+        ym = (v.get("dateAdded") or "")[:7]
+        if ym in totals:
+            totals[ym] += 1
+            if v.get("knownRansomwareCampaignUse") == "Known":
+                rw_totals[ym] += 1
+
+    peak = max(totals.values() or [1]) or 1
+    bars = []
+    for idx, ym in enumerate(months):
+        tot = totals[ym]
+        rw = rw_totals[ym]
+        h = max(2, round(tot / peak * 34)) if tot else 0
+        rh = max(2, round(rw / peak * 34)) if rw else 0
+        bars.append(
+            {
+                "ym": ym,
+                "x": idx * 20 + 3,
+                "y": 38 - h,
+                "h": h,
+                "ry": 38 - rh,
+                "rh": rh,
+            }
+        )
+    return bars
+
+
+def fetch_rce_dashboard(today: date | None = None, vendor_filter: str = "") -> dict:
     now = time.time()
     if _CACHE["data"] is not None and (now - _CACHE["ts"]) < _CACHE_TTL_SECONDS:
         raw = _CACHE["data"]
@@ -169,6 +231,15 @@ def fetch_rce_dashboard(today: date | None = None) -> dict:
     vulns = raw.get("vulnerabilities", [])
     rce_vulns = [v for v in vulns if _is_rce(v)]
     important_rce = [v for v in rce_vulns if _is_important(v)]
+    vfilter = (vendor_filter or "").strip().lower()
+    if vfilter:
+        tokens = [t.strip() for t in vfilter.split(",") if t.strip()]
+        filtered = [
+            v for v in important_rce
+            if any(t in f"{v.get('vendorProject', '')} {v.get('product', '')}".lower() for t in tokens)
+        ]
+        if filtered:
+            important_rce = filtered
     important_rce.sort(key=lambda x: x.get("dateAdded", ""), reverse=True)
 
     top_vulns = important_rce[:6]
@@ -178,7 +249,7 @@ def fetch_rce_dashboard(today: date | None = None) -> dict:
     epss_map = _fetch_epss_batch(top_ids)
 
     formatted = [
-        _format_item(v, short_desc_limit=150 if idx == 0 else 95, epss_map=epss_map)
+        _format_item(v, short_desc_limit=150 if idx == 0 else 95, epss_map=epss_map, today=d)
         for idx, v in enumerate(top_vulns)
     ]
     ransomware_count = sum(1 for v in important_rce if v.get("knownRansomwareCampaignUse") == "Known")
@@ -192,6 +263,7 @@ def fetch_rce_dashboard(today: date | None = None) -> dict:
         "total_rce": len(important_rce),
         "ransomware_count": ransomware_count,
         "recent_30d": recent_30d,
+        "monthly_bars": _build_monthly_bars(important_rce, d),
         "featured": formatted[0] if formatted else None,
         "items": formatted[1:6],
     }
