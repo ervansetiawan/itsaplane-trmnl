@@ -1,0 +1,95 @@
+watch:
+- src
+- .trmnlp.yml
+custom_fields: {}
+variables:
+  title: Daily Mini
+  grid:
+  - - black: true
+    - black: true
+    - letter: S
+      number: 1
+    - letter: P
+      number: 2
+    - letter: A
+      number: 3
+  - - black: true
+    - letter: S
+      number: 4
+    - letter: T
+    - letter: O
+    - letter: P
+  - - letter: S
+      number: 5
+    - letter: T
+    - letter: O
+    - letter: N
+    - letter: E
+  - - letter: H
+      number: 6
+    - letter: A
+    - letter: R
+    - letter: D
+    - black: true
+  - - letter: E
+      number: 7
+    - letter: Y
+    - letter: E
+    - black: true
+    - black: true
+  across:
+  - number: 1
+    clue: Relaxing resort
+  - number: 4
+    clue: Halt
+  - number: 5
+    clue: Rock or 14 lbs
+  - number: 6
+    clue: Not soft
+  - number: 7
+    clue: Sight organ
+  down:
+  - number: 1
+    clue: Shop
+  - number: 2
+    clue: Small lake
+  - number: 3
+    clue: Gorilla or chimp
+  - number: 4
+    clue: Remain
+  - number: 5
+    clue: That woman
+  date: NOV 20, 2026
+  yesterday_grid:
+  - - black: true
+    - black: true
+    - letter: S
+      number: 1
+    - letter: P
+      number: 2
+    - letter: A
+      number: 3
+  - - black: true
+    - letter: S
+      number: 4
+    - letter: T
+    - letter: A
+    - letter: R
+  - - letter: S
+      number: 5
+    - letter: H
+    - letter: A
+    - letter: R
+    - letter: K
+  - - letter: P
+      number: 6
+    - letter: O
+    - letter: R
+    - letter: T
+    - black: true
+  - - letter: Y
+      number: 7
+    - letter: E
+    - letter: T
+    - black: true
+    - black: true

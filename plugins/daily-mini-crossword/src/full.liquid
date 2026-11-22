@@ -1,0 +1,61 @@
+<div class="layout layout--col">
+  <div class="flex flex--row portrait:flex--col w--full h--full gap--large">
+    <div class="flex flex--col flex--center shrink-0 portrait:h--auto">
+      <table border="1" cellspacing="0" cellpadding="2" class="w--[42cqw] h--[80cqh] portrait:w--[52cqw] portrait:h--[38cqh]">
+        {% for row in grid %}
+          <tr>
+            {% for cell in row %}
+              <td width="20%" height="20%" valign="top" align="left" class="{% if cell.black %}bg--black{% else %}bg--white{% endif %}">
+                {% if cell.number %}
+                  <span class="label label--small lg:label--large">{{ cell.number }}</span>
+                {% endif %}
+              </td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
+
+    <div class="flex flex--col flex--between gap--medium stretch-x h--full portrait:h--auto grow">
+      <div class="flex flex--row gap--large w--full stretch-y">
+        <div class="text--left stretch-x">
+          <div class="label label--small lg:label--large label--underline mb--2 text--left">ACROSS</div>
+          {% for item in across %}
+            <div class="description lg:description--xlarge text--left mb--1"><strong>{{ item.number }}.</strong> {{ item.clue }}</div>
+          {% endfor %}
+        </div>
+        <div class="text--left stretch-x">
+          <div class="label label--small lg:label--large label--underline mb--2 text--left">DOWN</div>
+          {% for item in down %}
+            <div class="description lg:description--xlarge text--left mb--1"><strong>{{ item.number }}.</strong> {{ item.clue }}</div>
+          {% endfor %}
+        </div>
+      </div>
+
+      {% if yesterday_grid %}
+        <div class="w--full">
+          <div class="divider mb--2"></div>
+          <div class="flex flex--row flex--end flex--center-y gap--small">
+            <span class="label label--small lg:label--large text--right">Yesterday's<br/>Solution</span>
+            <table border="1" cellspacing="0" cellpadding="0" class="w--[90px] h--[90px] lg:w--[140px] lg:h--[140px] text--bold">
+              {% for row in yesterday_grid %}
+                <tr>
+                  {% for cell in row %}
+                    <td width="20%" height="20%" align="center" valign="middle" class="{% if cell.black %}bg--black{% else %}bg--white{% endif %}">
+                      {% unless cell.black %}{{ cell.letter }}{% endunless %}
+                    </td>
+                  {% endfor %}
+                </tr>
+              {% endfor %}
+            </table>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">{{ date }}</span>
+</div>

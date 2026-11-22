@@ -1,12 +1,12 @@
 <div class="layout layout--col">
-  <div class="flex flex--row portrait:flex--col flex--center-y w--full h--full gap--medium lg:gap--large">
+  <div class="flex flex--row flex--center-y w--full h--full gap--medium lg:gap--large">
     <table border="1" cellspacing="0" cellpadding="2" class="w--[22cqw] h--[90cqh] shrink-0">
       {% for row in grid %}
         <tr>
           {% for cell in row %}
             <td width="20%" height="20%" valign="top" align="left" class="{% if cell.black %}bg--black{% else %}bg--white{% endif %}">
               {% if cell.number %}
-                <span class="label label--small">{{ cell.number }}</span>
+                <span class="label label--small lg:label--large">{{ cell.number }}</span>
               {% endif %}
             </td>
           {% endfor %}
@@ -14,17 +14,17 @@
       {% endfor %}
     </table>
 
-    <div class="flex flex--row portrait:flex--col gap--medium lg:gap--large stretch-x">
+    <div class="flex flex--row gap--medium lg:gap--large stretch-x">
       <div class="text--left stretch-x">
-        <div class="label label--small label--underline mb--1 text--left">ACROSS</div>
+        <div class="label label--small lg:label--large label--underline mb--1 text--left">ACROSS</div>
         {% for item in across %}
-          <div class="description text--left mb--1"><strong>{{ item.number }}.</strong> {{ item.clue }}</div>
+          <div class="description lg:description--xlarge text--left mb--1"><strong>{{ item.number }}.</strong> {{ item.clue }}</div>
         {% endfor %}
       </div>
       <div class="text--left stretch-x">
-        <div class="label label--small label--underline mb--1 text--left">DOWN</div>
+        <div class="label label--small lg:label--large label--underline mb--1 text--left">DOWN</div>
         {% for item in down %}
-          <div class="description text--left mb--1"><strong>{{ item.number }}.</strong> {{ item.clue }}</div>
+          <div class="description lg:description--xlarge text--left mb--1"><strong>{{ item.number }}.</strong> {{ item.clue }}</div>
         {% endfor %}
       </div>
     </div>
