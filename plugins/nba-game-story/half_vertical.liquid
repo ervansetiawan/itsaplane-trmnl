@@ -3,17 +3,17 @@
     <div class="flex flex--row flex--between flex--center-y w--full">
       <div class="flex flex--row flex--center-y gap--small">
         {% if away_logo != blank %}
-          <img class="image image-dither w--[26px] h--[26px] object--contain shrink-0" src="{{ away_logo }}" alt="{{ away_abbr }}" />
+          <img class="image image-dither w--[26px] h--[26px] lg:w--[44px] lg:h--[44px] object--contain shrink-0" src="{{ away_logo }}" alt="{{ away_abbr }}" />
         {% endif %}
-        <span class="title title--small value--tnums">{{ away_abbr }} {{ away_score }} &ndash; {{ home_score }} {{ home_abbr }}</span>
+        <span class="title title--small lg:title--large value--tnums">{{ away_abbr }} {{ away_score }} &ndash; {{ home_score }} {{ home_abbr }}</span>
         {% if home_logo != blank %}
-          <img class="image image-dither w--[26px] h--[26px] object--contain shrink-0" src="{{ home_logo }}" alt="{{ home_abbr }}" />
+          <img class="image image-dither w--[26px] h--[26px] lg:w--[44px] lg:h--[44px] object--contain shrink-0" src="{{ home_logo }}" alt="{{ home_abbr }}" />
         {% endif %}
       </div>
-      <span class="label label--small label--inverted px--1 rounded">{{ winner }} WIN</span>
+      <span class="label label--small lg:label--large label--inverted px--1 rounded">{{ winner }} WIN</span>
     </div>
 
-    <svg viewBox="0 0 300 100" preserveAspectRatio="none" class="w--full h--[42cqh]">
+    <svg viewBox="0 0 300 100" preserveAspectRatio="none" class="w--full grow">
       <rect x="0.5" y="0.5" width="299" height="99" fill="#fff" stroke="#000" stroke-width="1" />
       <line x1="0" y1="50" x2="300" y2="50" stroke="#999" stroke-width="0.9" stroke-dasharray="3,3" />
       {% if wp_polyline != "" %}
@@ -24,8 +24,8 @@
     {% if mvp %}
       <div class="w--full text--left">
         <div class="divider mb--1"></div>
-        <div class="label label--small">GAME MVP</div>
-        <div class="description text--left"><strong>{{ mvp.name }}</strong> &mdash; {{ mvp.pts }}P / {{ mvp.reb }}R / {{ mvp.ast }}A</div>
+        <div class="label label--small lg:label--large">GAME MVP</div>
+        <div class="description lg:description--xlarge text--left"><strong>{{ mvp.name }}</strong> &mdash; {{ mvp.pts }}P / {{ mvp.reb }}R / {{ mvp.ast }}A</div>
       </div>
     {% endif %}
   </div>
