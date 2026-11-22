@@ -139,7 +139,7 @@ def famous_address():
     except (requests.RequestException, RuntimeError, OSError) as exc:
         return jsonify({"error": f"Failed to build address map: {exc}"}), 502
 
-    story = fetch_wiki_story(item["wiki"], item["fallback"])
+    story = item["fallback"]
     return jsonify(
         {
             "title": "Famous Address",
