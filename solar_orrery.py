@@ -66,6 +66,41 @@ def _sky_visibility(ex: float, ey: float, px: float, py: float) -> tuple[str, fl
     return vis, dist_au, light_str
 
 
+def _next_season_event(d: date) -> str:
+    """Returns days until the next astronomical solstice or equinox."""
+    events = [
+        (3, 20, "Vernal Equinox"),
+        (6, 21, "Summer Solstice"),
+        (9, 22, "Autumn Equinox"),
+        (12, 21, "Winter Solstice"),
+    ]
+    best_days = 999
+    best_name = ""
+    for yr in (d.year, d.year + 1):
+        for mo, dy, name in events:
+            ev = date(yr, mo, dy)
+            diff = (ev - d).days
+            if 0 <= diff < best_days:
+                best_days = diff
+                best_name = name
+    return f"{best_name} today" if best_days == 0 else f"{best_days}d to {best_name}"
+
+
+def _sky_highlight(planets_out: list[dict]) -> str:
+    """Summarizes tonight's best naked-eye/telescopic planet visibility."""
+    all_night = [p["abbr"] for p in planets_out if not p["is_earth"] and p["sky"] == "All Night"]
+    evening = [p["abbr"] for p in planets_out if not p["is_earth"] and p["sky"] == "Evening"]
+    morning = [p["abbr"] for p in planets_out if not p["is_earth"] and p["sky"] == "Morning"]
+    parts = []
+    if all_night:
+        parts.append(f"All Night: {' '.join(all_night)}")
+    if evening:
+        parts.append(f"Eve: {' '.join(evening)}")
+    if morning and not all_night:
+        parts.append(f"AM: {' '.join(morning)}")
+    return " · ".join(parts) or "Planets near Sun"
+
+
 def _build_bezel() -> tuple[list[dict], list[dict], list[dict]]:
     """Precomputes 36 astrolabe bezel ticks, 12 zodiac sector labels, and 8 sun rays."""
     ticks = []
@@ -177,6 +212,8 @@ def generate_solar_orrery(target_date: date | None = None) -> dict:
         "moon_phase": moon_phase,
         "moon_illum": moon_illum,
         "full_moon_label": full_moon_label,
+        "sky_highlight": _sky_highlight(planets_out),
+        "season_countdown": _next_season_event(d),
         "earth_mars_au": f"{earth_mars_au:.2f} AU",
         "earth_mars_mkm": f"{earth_mars_au * 149.598:.0f}M km",
         "earth_venus_au": f"{earth_venus_au:.2f} AU",

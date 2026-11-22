@@ -82,6 +82,11 @@
             <span class="description lg:description--xlarge shrink-0 value--tnums">{% if p.is_earth %}{{ p.lon }} &middot; {{ p.zodiac }}{% else %}{{ p.sky }} &middot; {{ p.light_time }} &middot; {{ p.zodiac }}{% endif %}</span>
           </div>
         {% endfor %}
+        <div class="divider mt--2 mb--1"></div>
+        <div class="flex flex--row flex--between flex--center-y w--full">
+          <span class="label label--small lg:label--large">{{ sky_highlight }}</span>
+          <span class="label label--small lg:label--large">{{ season_countdown }}</span>
+        </div>
       </div>
     </div>
   </div>
