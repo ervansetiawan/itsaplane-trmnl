@@ -1,16 +1,20 @@
 <div class="layout layout--row gap--medium lg:gap--large">
-  <div class="flex flex--center shrink-0 w--[32cqw] lg:portrait:w--[42cqw] h--full">
+  <div class="flex flex--center shrink-0 w--[23cqw] lg:portrait:w--[30cqw] h--full">
     <img src="{{ image_url }}" alt="{{ name }}" class="image image-dither image--contain w--full h--full rounded" />
   </div>
 
-  <div class="stretch-x text--left">
-    <div class="flex flex--row flex--center-y gap--small mb--1">
+  <div class="stretch-x text--left grow">
+    <div class="flex flex--row flex--left flex--center-y gap--small w--full mb--1">
       <span class="label label--small lg:label--large label--inverted px--2">{{ timeline }}</span>
       <span class="label label--small lg:label--large label--outline px--2">{{ faction | upcase }}</span>
     </div>
     <div class="title title--small lg:title--large text--left">{{ name }}</div>
     <div class="label label--small lg:label--large text--left mb--1">{{ mobile_suit }} &middot; {{ series }}</div>
     <div class="description lg:description--xlarge text--left clamp--2"><strong>"{{ quote }}"</strong> {{ bio }}</div>
+  </div>
+
+  <div class="flex flex--center shrink-0 w--[21cqw] lg:portrait:w--[26cqw] h--full bg--gray-70 rounded p--1">
+    <img src="{{ mech_url }}" alt="{{ mobile_suit }}" class="image image-dither image--contain w--full h--full" />
   </div>
 </div>
 

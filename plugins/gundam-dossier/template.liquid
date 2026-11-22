@@ -1,28 +1,36 @@
 <div class="layout layout--row portrait:flex--col gap--medium lg:gap--large">
-  <div class="flex flex--col flex--center shrink-0 w--[38cqw] lg:w--[40cqw] h--[82cqh] portrait:w--full portrait:h--auto">
-    <img src="{{ image_url }}" alt="{{ name }}" class="image image-dither image--contain w--full h--[74cqh] portrait:h--[40cqh] rounded" />
+  <div class="flex flex--col flex--center shrink-0 w--[30cqw] lg:w--[32cqw] h--[82cqh] portrait:w--full portrait:h--auto">
+    <img src="{{ image_url }}" alt="{{ name }}" class="image image-dither image--contain w--full h--[74cqh] portrait:h--[36cqh] rounded" />
     <div class="label label--small lg:label--large mt--1">{{ native }}</div>
   </div>
 
   <div class="divider--v portrait:hidden"></div>
 
   <div class="stretch-x text--left portrait:h--auto grow">
-    <div class="flex flex--row flex--center-y gap--small mb--1">
+    <div class="flex flex--row flex--left flex--center-y gap--small w--full mb--1">
       <span class="label label--small lg:label--large label--inverted px--2">{{ timeline }}</span>
       <span class="label label--small lg:label--large label--outline px--2">{{ faction | upcase }}</span>
       <span class="label label--small lg:label--large">{{ medium | upcase }}</span>
     </div>
 
-    <div class="title title--base lg:title--xlarge text--left mb--1">{{ name }}</div>
-    <div class="label label--small lg:label--large text--left mb--2">{{ series }}</div>
+    <div class="title title--base lg:title--xlarge text--left w--full mb--1">{{ name }}</div>
+    <div class="label label--small lg:label--large text--left w--full mb--2">{{ series }}</div>
 
-    <div class="bg--gray-70 rounded p--2 text--left mb--2">
-      <div class="label label--small lg:label--large mb--1">ASSIGNED UNIT</div>
-      <div class="title title--small lg:title--large text--left">{{ mobile_suit }}</div>
+    <div class="flex flex--row portrait:flex--col gap--medium items--stretch w--full">
+      <div class="grow text--left">
+        <div class="bg--gray-70 rounded p--2 text--left w--full mb--2">
+          <div class="label label--small lg:label--large text--left mb--1">ASSIGNED UNIT</div>
+          <div class="title title--small lg:title--large text--left w--full">{{ mobile_suit }}</div>
+        </div>
+
+        <div class="description lg:description--xlarge text--left w--full mb--2"><strong>"{{ quote }}"</strong></div>
+        <div class="description lg:description--xlarge text--left w--full clamp--4">{{ bio }}</div>
+      </div>
+
+      <div class="shrink-0 w--[24cqw] lg:w--[26cqw] portrait:w--full bg--gray-70 rounded p--2 flex flex--col flex--center">
+        <img src="{{ mech_url }}" alt="{{ mobile_suit }}" class="image image-dither image--contain w--full h--[44cqh] portrait:h--[22cqh]" />
+      </div>
     </div>
-
-    <div class="description lg:description--xlarge text--left mb--2"><strong>"{{ quote }}"</strong></div>
-    <div class="description lg:description--xlarge text--left clamp--4">{{ bio }}</div>
   </div>
 </div>
 

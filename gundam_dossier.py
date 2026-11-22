@@ -1,9 +1,10 @@
 """Gundam Pilot & Mobile Suit Dossier - TRMNL plugin Blueprint."""
 
 from datetime import date, datetime, timezone
+from pathlib import Path
 import random
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, send_file
 
 gundam_dossier_bp = Blueprint("gundam_dossier", __name__)
 
@@ -18,6 +19,7 @@ CHARACTERS = [
         "series": "Mobile Suit Gundam (1979)",
         "medium": "TV Anime",
         "mobile_suit": "RX-78-2 Gundam",
+        "mech_url": "https://static.wikia.nocookie.net/gundam/images/3/36/01._RX-78-2_Gundam.jpg/revision/latest/scale-to-width-down/243?cb=20170821232511",
         "quote": "Amuro, launching!",
         "bio": "Civilian teen turned Earth Federation ace pilot aboard White Base. Awakened as a Newtype during the One Year War and famously piloted the RX-93 Nu Gundam against Char in UC 0093.",
     },
@@ -30,6 +32,7 @@ CHARACTERS = [
         "series": "Char's Counterattack (1988)",
         "medium": "Movie",
         "mobile_suit": "MSN-04 Sazabi",
+        "mech_url": "https://static.wikia.nocookie.net/gundam/images/b/b8/MSN-04_Sazabi_-_Front.png/revision/latest/scale-to-width-down/294?cb=20171001171810",
         "quote": "I came here to laugh at you.",
         "bio": "The Red Comet—son of Zeon Zum Deikun and Amuro Ray's lifelong rival. Known for piloting red mobile suits at three times the speed of standard units.",
     },
@@ -42,6 +45,7 @@ CHARACTERS = [
         "series": "Mobile Suit Zeta Gundam (1985)",
         "medium": "TV Anime",
         "mobile_suit": "MSZ-006 Zeta Gundam",
+        "mech_url": "https://static.wikia.nocookie.net/gundam/images/d/d9/Zeta_Gundam_Front_HD.png/revision/latest/scale-to-width-down/251?cb=20240911030026",
         "quote": "A name is a name. What's wrong with a boy having a girl's name?",
         "bio": "Gifted mobile suit designer and one of the most powerful Newtypes in the Universal Century. Designed and piloted the transformable Zeta Gundam during the Gryps Conflict.",
     },
@@ -54,6 +58,7 @@ CHARACTERS = [
         "series": "Gundam ZZ (1986)",
         "medium": "TV Anime",
         "mobile_suit": "MSZ-010 ZZ Gundam",
+        "mech_url": "https://static.wikia.nocookie.net/gundam/images/8/81/ZZ_Gundam_Front_HD.png/revision/latest/scale-to-width-down/272?cb=20260809140233",
         "quote": "Adults just keep making messes and expecting kids to clean them up!",
         "bio": "Resourceful junk collector from Shangri-La Colony who stepped into the cockpit of the Double Zeta Gundam to protect his sister Leina during the First Neo Zeon War.",
     },
@@ -66,6 +71,7 @@ CHARACTERS = [
         "series": "Mobile Suit Gundam Unicorn (2010)",
         "medium": "OVA",
         "mobile_suit": "RX-0 Unicorn Gundam",
+        "mech_url": "https://static.wikia.nocookie.net/gundam/images/b/b2/Unicorn_Gundam_Unicorn_Mode_front.png/revision/latest/scale-to-width-down/228?cb=20260603135516",
         "quote": "Even so!",
         "bio": "Industrial colony student entrusted with the Unicorn Gundam—the key to Laplace's Box. His empathy and psycho-frame resonance reshaped the fate of the Earth Sphere.",
     },
@@ -78,6 +84,7 @@ CHARACTERS = [
         "series": "Gundam Hathaway (2021)",
         "medium": "Movie",
         "mobile_suit": "RX-105 Xi Gundam",
+        "mech_url": "https://static.wikia.nocookie.net/gundam/images/1/11/Xi_gundam_anime_front_HQ.png/revision/latest/scale-to-width-down/261?cb=20201112115233",
         "quote": "If you want to change the world, you have to take responsibility for it.",
         "bio": "Son of White Base captain Bright Noa who secretly leads the anti-Federation group Mafty Navue Erin, piloting the Minovsky-flight-equipped Xi Gundam.",
     },
@@ -90,6 +97,7 @@ CHARACTERS = [
         "series": "The 08th MS Team (1996)",
         "medium": "OVA",
         "mobile_suit": "RX-79[G]Ez-8 Gundam Ez8",
+        "mech_url": "https://static.wikia.nocookie.net/gundam/images/7/75/Gundam_EZ8_Front_HD.png/revision/latest/scale-to-width-down/189?cb=20241022131752",
         "quote": "I'm going to live, and I'm going to marry Aina!",
         "bio": "Idealistic commander of the Kojima Battalion's 08th MS Team in Southeast Asia. Fought gritty ground-warfare battles while falling in love with Zeon test pilot Aina Sahalin.",
     },
@@ -102,6 +110,7 @@ CHARACTERS = [
         "series": "0083: Stardust Memory (1991)",
         "medium": "OVA",
         "mobile_suit": "RX-78GP01Fb Zephyranthes",
+        "mech_url": "https://static.wikia.nocookie.net/gundam/images/1/19/Rx-78gp01-fb.jpg/revision/latest/scale-to-width-down/238?cb=20201008135355",
         "quote": "Gato! Give back the Gundam!",
         "bio": "Rookie Federation test pilot at Torrington Base thrust into pursuing Anavel Gato after the theft of the nuclear-armed GP02A Physalis.",
     },
@@ -114,6 +123,7 @@ CHARACTERS = [
         "series": "Gundam Thunderbolt (2012)",
         "medium": "Manga / Movie",
         "mobile_suit": "FA-78 Full Armor Gundam",
+        "mech_url": "https://static.wikia.nocookie.net/gundam/images/6/66/Full_Armor_Gundam_Thunderbolt-ova.png/revision/latest/scale-to-width-down/394?cb=20160421131813",
         "quote": "When you hear jazz, that's your cue that I'm coming for you.",
         "bio": "Reckless jazz-loving ace of the Moore Brotherhood who duels Zeon sniper Daryl Lorenz amid the electrified debris of the Thunderbolt Sector.",
     },
@@ -126,6 +136,7 @@ CHARACTERS = [
         "series": "Crossbone Gundam (1994)",
         "medium": "Manga",
         "mobile_suit": "XM-X1 Crossbone Gundam X-1",
+        "mech_url": "https://static.wikia.nocookie.net/gundam/images/b/b3/XM-X1_Crossbone_Gundam_X-1_Front.png/revision/latest/scale-to-width-down/236?cb=20190827123805",
         "quote": "Humans aren't tools for someone else's empire!",
         "bio": "Exchange student bound for Jupiter who joins Kincade Nau's space pirates to stop the Jupiter Empire, inheriting the skull-emblazoned Crossbone Gundam.",
     },
@@ -138,6 +149,7 @@ CHARACTERS = [
         "series": "Gundam: The Origin (2001)",
         "medium": "Manga / Movie",
         "mobile_suit": "FF-X7-Bst Core Booster",
+        "mech_url": "https://static.wikia.nocookie.net/gundam/images/d/db/Ff-x7bst.jpg/revision/latest/scale-to-width-down/400?cb=20201112054334",
         "quote": "Casval... why do you keep fighting?",
         "bio": "Born Artesia Som Deikun, younger sister of Char Aznable. Served aboard White Base as a medical officer and Core Booster pilot while confronting her brother's vengeance.",
     },
@@ -150,6 +162,7 @@ CHARACTERS = [
         "series": "Mobile Suit Gundam (1979)",
         "medium": "TV Anime",
         "mobile_suit": "MS-07B Gouf",
+        "mech_url": "https://static.wikia.nocookie.net/gundam/images/d/d1/Ms-07b_1.jpg/revision/latest/scale-to-width-down/240?cb=20201101133303",
         "quote": "This is no Zaku, boy! No Zaku!",
         "bio": "Honorable Zeon veteran known as the Blue Giant. Piloted the custom blue Gouf in Earth's deserts and taught Amuro what true soldiers fight for.",
     },
@@ -162,6 +175,7 @@ CHARACTERS = [
         "series": "Gundam Wing: Endless Waltz (1998)",
         "medium": "TV / Movie",
         "mobile_suit": "XXXG-00W0 Wing Gundam Zero",
+        "mech_url": "https://static.wikia.nocookie.net/gundam/images/5/59/Wing_Zero_TV_Front_%28Official%29.png/revision/latest/scale-to-width-down/306?cb=20251010041724",
         "quote": "Mission accepted.",
         "bio": "Stoic colony-trained operative sent to Earth in Operation Meteor. Mastered the ZERO System aboard Wing Gundam Zero to end the Eve Wars.",
     },
@@ -174,6 +188,7 @@ CHARACTERS = [
         "series": "Mobile Suit Gundam Wing (1995)",
         "medium": "TV Anime",
         "mobile_suit": "XXXG-01D2 Deathscythe Hell",
+        "mech_url": "https://static.wikia.nocookie.net/gundam/images/8/88/Xxxg-01d2.jpg/revision/latest/scale-to-width-down/335?cb=20140413040815",
         "quote": "The God of Death is back from hell!",
         "bio": "Braided, wisecracking pilot of the stealth-equipped Gundam Deathscythe, wielding a twin beam scythe with unmatched close-quarters agility.",
     },
@@ -186,6 +201,7 @@ CHARACTERS = [
         "series": "Mobile Fighter G Gundam (1994)",
         "medium": "TV Anime",
         "mobile_suit": "GF13-017NJII God Gundam",
+        "mech_url": "https://static.wikia.nocookie.net/gundam/images/c/c9/God_Gundam_Front_%28transparent%29.png/revision/latest/scale-to-width-down/257?cb=20251012212727",
         "quote": "This hand of mine is burning red!",
         "bio": "King of Hearts and Neo Japan's representative in the 13th Gundam Fight. Channels martial arts mastery through Shining and God Gundam's Mobile Trace System.",
     },
@@ -198,6 +214,7 @@ CHARACTERS = [
         "series": "Mobile Suit Gundam SEED (2002)",
         "medium": "TV / Movie",
         "mobile_suit": "ZGMF-X10A Freedom Gundam",
+        "mech_url": "https://static.wikia.nocookie.net/gundam/images/d/d1/Freedom_gundam_front_lineart_color.png/revision/latest/scale-to-width-down/289?cb=20260103063443",
         "quote": "I don't want to fight anyone if I don't have to!",
         "bio": "The Ultimate Coordinator who piloted Strike and Freedom Gundam, famed for precision multi-lock targeting that disables enemy mobile suits without killing pilots.",
     },
@@ -210,6 +227,7 @@ CHARACTERS = [
         "series": "Gundam SEED Freedom (2024)",
         "medium": "TV / Movie",
         "mobile_suit": "ZGMF-X09A Justice Gundam",
+        "mech_url": "https://static.wikia.nocookie.net/gundam/images/b/bc/Justice_gundam_front_lineart_color.png/revision/latest/scale-to-width-down/274?cb=20251011054614",
         "quote": "What is it that we are really supposed to be fighting for?",
         "bio": "ZAFT elite red-coat and Kira Yamato's childhood friend-turned-rival who later fought beside him in the Aegis, Justice, and Infinite Justice Gundams.",
     },
@@ -222,6 +240,7 @@ CHARACTERS = [
         "series": "Mobile Suit Gundam 00 (2007)",
         "medium": "TV / Movie",
         "mobile_suit": "GN-001 Gundam Exia",
+        "mech_url": "https://static.wikia.nocookie.net/gundam/images/d/d9/GN-001_%28Front%29.png/revision/latest/scale-to-width-down/203?cb=20210804123915",
         "quote": "I am Gundam.",
         "bio": "Former child soldier recruited by Celestial Being to eradicate war through armed intervention. Evolved into the first true Innovator aboard 00 Qan[T].",
     },
@@ -234,6 +253,7 @@ CHARACTERS = [
         "series": "Mobile Suit Gundam 00 (2007)",
         "medium": "TV Anime",
         "mobile_suit": "GN-002 Gundam Dynames",
+        "mech_url": "https://static.wikia.nocookie.net/gundam/images/4/4c/Gundam_Dynames_%28Front%29_01.png/revision/latest/scale-to-width-down/246?cb=20220717103940",
         "quote": "Targeted and firing!",
         "bio": "Neil Dylandy—Celestial Being's sharpshooter and big brother to the Gundam Meisters, capable of sniping targets from orbit with Gundam Dynames.",
     },
@@ -246,6 +266,7 @@ CHARACTERS = [
         "series": "Iron-Blooded Orphans (2015)",
         "medium": "TV Anime",
         "mobile_suit": "ASW-G-08 Gundam Barbatos",
+        "mech_url": "https://static.wikia.nocookie.net/gundam/images/8/8e/ASW-G-08_Gundam_Barbatos_1st_Form_%28Front%29.png/revision/latest/scale-to-width-down/240?cb=20181007005623",
         "quote": "Tell me, Orga. What should I do next?",
         "bio": "Fierce Martian orphan wired directly into Gundam Barbatos via three Alaya-Vijnana implants, fighting relentlessly to secure a home for Tekkadan.",
     },
@@ -258,6 +279,7 @@ CHARACTERS = [
         "series": "Iron-Blooded Orphans (2015)",
         "medium": "TV Anime",
         "mobile_suit": "Shiden Custom (King's Throne)",
+        "mech_url": "https://static.wikia.nocookie.net/gundam/images/6/6a/Shino_shiden_front.png/revision/latest/scale-to-width-down/276?cb=20160926220510",
         "quote": "Don't you ever stop.",
         "bio": "Charismatic leader of Tekkadan and Mikazuki's sworn brother, who led Mars' child soldiers from CGS outcasts to major power brokers.",
     },
@@ -270,6 +292,7 @@ CHARACTERS = [
         "series": "The Witch from Mercury (2022)",
         "medium": "TV Anime",
         "mobile_suit": "XVX-016 Gundam Aerial",
+        "mech_url": "https://static.wikia.nocookie.net/gundam/images/3/3d/Gundam_Aerial_Bit_On_Form_Front.png/revision/latest/scale-to-width-down/311?cb=20260809142138",
         "quote": "If you run, you gain one; if you move forward, you gain two.",
         "bio": "Shy pilot from Mercury who transfers to Asticassia School of Technology, becoming the school's Holder and uncovering the secret of Gundam Aerial.",
     },
@@ -282,10 +305,24 @@ CHARACTERS = [
         "series": "The Witch from Mercury (2022)",
         "medium": "TV Anime",
         "mobile_suit": "GUND-ARM Founder",
+        "mech_url": "https://static.wikia.nocookie.net/gundam/images/f/f0/Gundam_Aerial_Rebuild_Front.png/revision/latest/scale-to-width-down/363?cb=20260809142759",
         "quote": "I decide my own future!",
         "bio": "Brilliant strategist and greenhouse-keeping daughter of Benerit Group president Delling Rembran who founded GUND-ARM Inc. to protect Suletta and Aerial.",
     },
 ]
+
+
+MECH_CACHE_DIR = Path(__file__).resolve().parent / "cache" / "gundam"
+
+
+@gundam_dossier_bp.route("/gundam/mech/<int:char_idx>", methods=["GET"])
+def gundam_mech_image(char_idx):
+    """Serves the cached Mobile Suit PNG for a character index."""
+    idx = char_idx % len(CHARACTERS)
+    img_path = MECH_CACHE_DIR / f"mech_{idx}.png"
+    if not img_path.exists():
+        return jsonify({"error": "Mech image not cached"}), 404
+    return send_file(img_path, mimetype="image/png", max_age=86400)
 
 
 @gundam_dossier_bp.route("/gundam/random", methods=["GET"])
@@ -295,11 +332,14 @@ def gundam_dossier():
     mode = (request.args.get("mode") or "random").strip().lower()
     idx = request.args.get("index")
     if idx is not None and idx.isdigit():
-        char = CHARACTERS[int(idx) % len(CHARACTERS)]
+        char_idx = int(idx) % len(CHARACTERS)
     elif mode == "daily":
-        char = CHARACTERS[date.today().toordinal() % len(CHARACTERS)]
+        char_idx = date.today().toordinal() % len(CHARACTERS)
     else:
-        char = random.choice(CHARACTERS)
+        char_idx = random.randrange(len(CHARACTERS))
+    char = CHARACTERS[char_idx]
+    scheme = request.headers.get("X-Forwarded-Proto", request.scheme)
+    mech_url = f"{scheme}://{request.host}/gundam/mech/{char_idx}"
 
     return jsonify(
         {
@@ -312,6 +352,7 @@ def gundam_dossier():
             "series": char["series"],
             "medium": char["medium"],
             "mobile_suit": char["mobile_suit"],
+            "mech_url": mech_url,
             "quote": char["quote"],
             "bio": char["bio"],
             "date": datetime.now(timezone.utc).strftime("%b %d, %Y"),

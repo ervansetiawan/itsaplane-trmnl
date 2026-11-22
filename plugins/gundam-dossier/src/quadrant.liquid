@@ -1,6 +1,11 @@
 <div class="layout layout--col gap--small">
-  <div class="flex flex--center w--full h--[64cqh] lg:portrait:h--[48cqh] shrink-0">
-    <img src="{{ image_url }}" alt="{{ name }}" class="image image-dither image--contain w--full h--full rounded" />
+  <div class="flex flex--row flex--center gap--small w--full h--[58cqh] lg:portrait:h--[46cqh] shrink-0">
+    <div class="flex flex--center w--[48cqw] h--full">
+      <img src="{{ image_url }}" alt="{{ name }}" class="image image-dither image--contain w--full h--full rounded" />
+    </div>
+    <div class="flex flex--center w--[48cqw] h--full bg--gray-70 rounded p--1">
+      <img src="{{ mech_url }}" alt="{{ mobile_suit }}" class="image image-dither image--contain w--full h--full" />
+    </div>
   </div>
 
   <div class="stretch-x text--left">
