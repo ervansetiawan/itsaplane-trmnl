@@ -7,9 +7,11 @@ from math import radians, sin, cos, sqrt, atan2
 import requests
 from flask import Flask, jsonify, request, send_from_directory
 
+from famous_address import famous_address_bp
 from pixel_airports import pixel_airports_bp
 
 app = Flask(__name__)
+app.register_blueprint(famous_address_bp)
 app.register_blueprint(pixel_airports_bp)
 
 _SESSION = requests.Session()

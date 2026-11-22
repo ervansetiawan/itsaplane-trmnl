@@ -1,0 +1,26 @@
+<div class="layout layout--row portrait:flex--col gap--medium lg:gap--large">
+  <div class="flex flex--center shrink-0 lg:w--[54cqw] lg:h--[78cqh] portrait:w--full portrait:h--[42cqh]">
+    <img src="{{ map_data_uri }}" alt="{{ name }}" class="image image-dither image--contain w--[432px] h--[324px] lg:w--full lg:h--full portrait:w--full portrait:h--full" />
+  </div>
+
+  <div class="stretch-x text--left">
+    <div class="flex flex--row flex--center-y gap--small mb--1">
+      <span class="label label--small lg:label--large label--inverted px--2">{{ category | upcase }}</span>
+      <span class="label label--small lg:label--large label--outline px--2">{{ year }}</span>
+    </div>
+
+    <div class="title title--base lg:title--xlarge text--left mb--1">{{ address }}</div>
+    <div class="title title--small lg:title--large text--left mb--1">{{ name }}</div>
+    <div class="label label--small lg:label--large text--left mb--2">{{ city }}, {{ country }} &middot; {{ coords }}</div>
+
+    <div class="divider mb--2"></div>
+
+    <div class="label label--small lg:label--large label--underline mb--1 text--left">WHAT HAPPENED HERE</div>
+    <div class="description lg:description--xlarge text--left">{{ story }}</div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">{{ date }}</span>
+</div>

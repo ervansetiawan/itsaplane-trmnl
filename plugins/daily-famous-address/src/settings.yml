@@ -1,0 +1,24 @@
+---
+name: Daily Famous Address
+description: Daily famous address map & story
+strategy: polling
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+polling_url: 'https://itsaplane-trmnl.onrender.com/famous_address?slug={{ slug }}'
+polling_headers: ''
+refresh_interval: 1440
+custom_fields:
+  - keyname: author_bio
+    field_type: author_bio
+    name: About This Plugin
+    category: education
+    description: Daily famous address map & story
+    github_url: https://github.com/ervansetiawan/itsaplane-trmnl
+    email_address: ervansetiawan@gmail.com
+  - keyname: slug
+    field_type: string
+    name: Address Slug (optional)
+    description: Optional slug (e.g. abbey-road, stonewall-inn). Blank = daily.
+    optional: true

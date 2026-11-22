@@ -1,0 +1,20 @@
+<div class="layout layout--col gap--small lg:gap--medium">
+  <div class="flex flex--center w--full shrink-0 h--[38cqh] lg:h--[45cqh] lg:portrait:h--[40cqh]">
+    <img src="{{ map_data_uri }}" alt="{{ name }}" class="image image-dither image--contain w--full h--full" />
+  </div>
+
+  <div class="stretch-x text--left">
+    <div class="flex flex--row flex--center-y gap--small mb--1">
+      <span class="label label--small lg:label--large label--inverted px--2">{{ category | upcase }}</span>
+      <span class="label label--small lg:label--large label--outline px--2">{{ year }}</span>
+    </div>
+    <div class="title title--small lg:title--large text--left">{{ address }}</div>
+    <div class="label label--small lg:label--large text--left mb--1">{{ name }} &middot; {{ city }}, {{ country }}</div>
+    <div class="description lg:description--xlarge text--left clamp--4">{{ story }}</div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">{{ date }}</span>
+</div>
