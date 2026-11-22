@@ -1,6 +1,6 @@
 name: Solar System Orrery
 description: Live heliocentric solar system map
-strategy: polling
+strategy: static
 polling_url: https://itsaplane-trmnl.onrender.com/solar/daily
 polling_verb: get
 polling_headers: ""
@@ -11,7 +11,7 @@ custom_fields:
   - keyname: author_bio
     field_type: author_bio
     name: About This Plugin
-    category: education
+    category: science
     description: Live heliocentric solar system map
     github_url: https://github.com/ervansetiawan/itsaplane-trmnl
     email_address: ervansetiawan@gmail.com

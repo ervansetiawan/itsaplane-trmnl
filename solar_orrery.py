@@ -31,12 +31,50 @@ def _solve_eccentric_anomaly(M_rad: float, e: float) -> float:
     return E
 
 
-def _moon_phase_name(d: date) -> str:
+def _moon_phase_info(d: date) -> tuple[str, int, bool]:
     dt = datetime(d.year, d.month, d.day, 12, 0, tzinfo=timezone.utc)
     known = datetime(2000, 1, 6, 18, 14, tzinfo=timezone.utc)
     cycle = ((dt - known).total_seconds() / 86400.0 % 29.53058867) / 29.53058867
-    names = ["New Moon", "Waxing Cres.", "First Quarter", "Waxing Gib.", "Full Moon", "Waning Gib.", "Last Quarter", "Waning Cres."]
-    return names[int((cycle * 8) + 0.5) % 8]
+    names = [
+        "New Moon", "Waxing Cres.", "First Quarter", "Waxing Gib.",
+        "Full Moon", "Waning Gib.", "Last Quarter", "Waning Cres.",
+    ]
+    illum = round((1.0 - math.cos(2.0 * math.pi * cycle)) / 2.0 * 100)
+    return names[int((cycle * 8) + 0.5) % 8], illum, cycle < 0.5
+
+
+def _build_bezel() -> tuple[list[dict], list[dict], list[dict]]:
+    """Precomputes 36 astrolabe bezel ticks, 12 zodiac sector labels, and 8 sun rays."""
+    ticks = []
+    for deg in range(0, 360, 10):
+        rad = math.radians(deg)
+        major = deg % 30 == 0
+        r_in = 136 if major else 140
+        ticks.append({
+            "x1": round(150 + r_in * math.cos(rad), 1),
+            "y1": round(150 - r_in * math.sin(rad), 1),
+            "x2": round(150 + 144 * math.cos(rad), 1),
+            "y2": round(150 - 144 * math.sin(rad), 1),
+            "major": major,
+        })
+    sectors = []
+    for idx, z in enumerate(ZODIAC):
+        rad = math.radians(idx * 30 + 15)
+        sectors.append({
+            "label": z,
+            "x": round(150 + 148.5 * math.cos(rad), 1),
+            "y": round(150 - 148.5 * math.sin(rad) + 2.5, 1),
+        })
+    rays = []
+    for deg in range(0, 360, 45):
+        rad = math.radians(deg)
+        rays.append({
+            "x1": round(150 + 8.5 * math.cos(rad), 1),
+            "y1": round(150 - 8.5 * math.sin(rad), 1),
+            "x2": round(150 + 13.5 * math.cos(rad), 1),
+            "y2": round(150 - 13.5 * math.sin(rad), 1),
+        })
+    return ticks, sectors, rays
 
 
 def generate_solar_orrery(target_date: date | None = None) -> dict:
@@ -91,14 +129,27 @@ def generate_solar_orrery(target_date: date | None = None) -> dict:
     earth_mars_au = math.hypot(mx - ex, my - ey)
     earth_venus_au = math.hypot(vx - ex, vy - ey)
 
+    earth_p = next(p for p in planets_out if p["abbr"] == "EAR")
+    mars_p = next(p for p in planets_out if p["abbr"] == "MAR")
+    moon_phase, moon_illum, _ = _moon_phase_info(d)
+    ticks, sectors, rays = _build_bezel()
+
     return {
         "title": "Solar System Orrery",
         "date": d.strftime("%b %d, %Y").upper(),
         "day_of_year": d.timetuple().tm_yday,
-        "moon_phase": _moon_phase_name(d),
+        "moon_phase": moon_phase,
+        "moon_illum": moon_illum,
         "earth_mars_au": f"{earth_mars_au:.2f} AU",
         "earth_mars_mkm": f"{earth_mars_au * 149.598:.0f}M km",
         "earth_venus_au": f"{earth_venus_au:.2f} AU",
         "earth_venus_mkm": f"{earth_venus_au * 149.598:.0f}M km",
+        "earth_cx": earth_p["cx"],
+        "earth_cy": earth_p["cy"],
+        "mars_cx": mars_p["cx"],
+        "mars_cy": mars_p["cy"],
+        "bezel_ticks": ticks,
+        "zodiac_sectors": sectors,
+        "sun_rays": rays,
         "planets": planets_out,
     }

@@ -1,11 +1,13 @@
 <div class="layout layout--col">
-  <div class="flex flex--row portrait:flex--col w--full h--full gap--medium lg:gap--large">
+  <div class="flex flex--row w--full h--full gap--medium lg:gap--large">
     <div class="flex flex--col flex--center shrink-0">
       <svg viewBox="0 0 300 300" class="w--[28cqw] h--[90cqh]">
-        <circle cx="150" cy="150" r="144" fill="none" stroke="#000" stroke-width="1.2" />
+        <circle cx="150" cy="150" r="144" fill="none" stroke="#000" stroke-width="1.3" />
+        <circle cx="150" cy="150" r="90" fill="none" stroke="#888" stroke-width="1" stroke-dasharray="1,3" />
         {% for p in planets %}
           <circle cx="150" cy="150" r="{{ p.orbit_r }}" fill="none" stroke="#000" stroke-width="0.7" stroke-dasharray="2,2" />
         {% endfor %}
+        <line x1="{{ earth_cx }}" y1="{{ earth_cy }}" x2="{{ mars_cx }}" y2="{{ mars_cy }}" stroke="#555" stroke-width="0.8" stroke-dasharray="3,2" />
         <circle cx="150" cy="150" r="7" fill="#000" />
         {% for p in planets %}
           {% if p.is_saturn %}
@@ -19,14 +21,14 @@
 
     <div class="flex flex--col flex--between stretch-x h--full text--left">
       <div class="flex flex--row flex--between flex--center-y">
-        <span class="label label--small label--inverted px--2">{{ moon_phase | upcase }}</span>
-        <span class="label label--small">MARS {{ earth_mars_au }}</span>
+        <span class="label label--small lg:label--large label--inverted px--2">{{ moon_phase | upcase }}</span>
+        <span class="label label--small lg:label--large">MARS {{ earth_mars_au }}</span>
       </div>
       <div class="w--full">
         {% for p in planets %}
           <div class="flex flex--row flex--between w--full">
-            <span class="label label--small"><strong>{{ p.abbr }}</strong> {{ p.name }}</span>
-            <span class="label label--small">{{ p.lon }} ({{ p.zodiac }})</span>
+            <span class="description lg:description--xlarge"><strong>{{ p.abbr }}</strong> {{ p.name }}</span>
+            <span class="label label--small lg:label--large value--tnums">{{ p.lon }} ({{ p.zodiac }})</span>
           </div>
         {% endfor %}
       </div>
