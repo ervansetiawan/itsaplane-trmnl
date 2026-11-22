@@ -1,60 +1,60 @@
-<div class="layout layout--row portrait:flex--col gap--medium">
-  <div class="flex flex--center shrink-0">
-    <img src="{{ diagram_data_uri }}" alt="{{ name }} airport diagram" class="image w--[432px] h--[324px] portrait:w--full portrait:h--auto" />
+<div class="layout layout--row portrait:flex--col gap--medium lg:gap--large">
+  <div class="flex flex--center shrink-0 lg:w--[54cqw] lg:h--[78cqh] portrait:w--full portrait:h--[42cqh]">
+    <img src="{{ diagram_data_uri }}" alt="{{ name }} airport diagram" class="image image--contain w--[432px] h--[324px] lg:w--full lg:h--full portrait:w--full portrait:h--full" />
   </div>
 
   <div class="stretch-x text--left">
     <div class="flex flex--row flex--center-y gap--small mb--1">
-      <span class="value value--large">{{ iata }}</span>
-      <span class="label label--small label--inverted px--2">{{ icao }}</span>
+      <span class="value value--large lg:value--xxlarge">{{ iata }}</span>
+      <span class="label label--small lg:label--large label--inverted px--2">{{ icao }}</span>
       {% if flt_cat != '' %}
-        <span class="label label--small label--outline px--2">{{ flt_cat }}</span>
+        <span class="label label--small lg:label--large label--outline px--2">{{ flt_cat }}</span>
       {% endif %}
     </div>
 
-    <div class="title title--small text--left">{{ name }}</div>
-    <div class="label label--small text--left">{{ city }}, {{ country }} · {{ tagline }}</div>
-    <div class="description text--left mt--1 mb--2"><strong>RWY</strong> {{ runways }}</div>
+    <div class="title title--small lg:title--large text--left">{{ name }}</div>
+    <div class="label label--small lg:label--large text--left">{{ city }}, {{ country }} · {{ tagline }}</div>
+    <div class="description lg:description--xlarge text--left mt--1 mb--2"><strong>RWY</strong> {{ runways }}</div>
 
     <div class="divider mb--2"></div>
 
-    <div class="grid grid--cols-2 gap--small mb--2">
+    <div class="grid grid--cols-2 gap--small lg:gap--medium mb--2">
       <div class="item bg--gray-70 rounded p--2">
         <div class="meta"></div>
         <div class="content">
-          <span class="value value--xsmall">{{ wind }}</span>
-          <span class="label label--small">RWY {{ active_runway }} · {{ wind_components }}</span>
+          <span class="value value--xsmall lg:value--base">{{ wind }}</span>
+          <span class="label label--small lg:label--base">RWY {{ active_runway }} · {{ wind_components }}</span>
         </div>
       </div>
 
       <div class="item bg--gray-70 rounded p--2">
         <div class="meta"></div>
         <div class="content">
-          <span class="value value--xsmall">{% if temp_c != nil %}{{ temp_c }}°C{% else %}--{% endif %}</span>
-          <span class="label label--small">{{ ceiling }} · {{ visibility }}</span>
+          <span class="value value--xsmall lg:value--base">{% if temp_c != nil %}{{ temp_c }}°C{% else %}--{% endif %}</span>
+          <span class="label label--small lg:label--base">{{ ceiling }} · {{ visibility }}</span>
         </div>
       </div>
 
       <div class="item bg--gray-70 rounded p--2">
         <div class="meta"></div>
         <div class="content">
-          <span class="value value--xsmall">{{ traffic_count }}</span>
-          <span class="label label--small">{{ closest_flight }}</span>
+          <span class="value value--xsmall lg:value--base">{{ traffic_count }}</span>
+          <span class="label label--small lg:label--base">{{ closest_flight }}</span>
         </div>
       </div>
 
       <div class="item bg--gray-70 rounded p--2">
         <div class="meta"></div>
         <div class="content">
-          <span class="value value--xsmall">{{ longest_runway }}</span>
-          <span class="label label--small">Elev {{ elevation }}</span>
+          <span class="value value--xsmall lg:value--base">{{ longest_runway }}</span>
+          <span class="label label--small lg:label--base">Elev {{ elevation }}</span>
         </div>
       </div>
     </div>
 
     <div class="flex flex--row flex--between">
-      <span class="label label--small">{{ altim }}</span>
-      <span class="label label--small">{{ local_time }}</span>
+      <span class="label label--small lg:label--large">{{ altim }}</span>
+      <span class="label label--small lg:label--large">{{ local_time }}</span>
     </div>
   </div>
 </div>
