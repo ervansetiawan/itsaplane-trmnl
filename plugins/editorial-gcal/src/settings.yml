@@ -1,0 +1,35 @@
+---
+name: Editorial Google Calendar
+description: Editorial Google Calendar planner
+strategy: polling
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+polling_url: 'https://itsaplane-trmnl.onrender.com/gcal/dashboard?ics_url={{ ics_url | url_encode }}&tz={{ tz | url_encode }}&calendar_names={{ calendar_names | url_encode }}'
+polling_headers: ''
+refresh_interval: 15
+custom_fields:
+  - keyname: author_bio
+    field_type: author_bio
+    name: About This Plugin
+    category: productivity
+    description: Editorial Google Calendar planner
+    github_url: https://github.com/ervansetiawan/itsaplane-trmnl
+    email_address: ervansetiawan@gmail.com
+  - keyname: ics_url
+    field_type: string
+    name: Google Calendar Secret iCal URL(s)
+    description: Secret address in iCal format (comma-separate multiple calendars). Leave blank for Demo Mode.
+    optional: true
+  - keyname: tz
+    field_type: string
+    name: Timezone (IANA)
+    description: e.g. America/Chicago, America/New_York, Europe/London
+    default: America/Chicago
+    optional: true
+  - keyname: calendar_names
+    field_type: string
+    name: Calendar Labels (optional)
+    description: Comma-separated names matching your iCal URLs (e.g. Work, Personal).
+    optional: true

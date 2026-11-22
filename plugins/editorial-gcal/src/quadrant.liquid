@@ -1,0 +1,34 @@
+<div class="layout layout--col gap--small">
+  <div class="flex flex--row flex--between flex--center-y w--full">
+    <div class="flex flex--row flex--left flex--center-y gap--small">
+      <span class="title title--base text--left">{{ day_num }}</span>
+      <span class="label label--small label--inverted px--2">{{ weekday }}</span>
+    </div>
+    <span class="label label--small">{{ event_count }} events</span>
+  </div>
+
+  {% if hero %}
+    <div class="bg--gray-70 rounded p--2 w--full text--left">
+      <div class="label label--small text--left w--full">{{ hero.status }} &middot; {{ hero.start_short }} ({{ hero.countdown }})</div>
+      <div class="title title--small text--left w--full clamp--1">{{ hero.title }}</div>
+    </div>
+  {% else %}
+    <div class="bg--gray-70 rounded p--2 w--full text--left">
+      <div class="title title--small text--left w--full">Clear for today</div>
+    </div>
+  {% endif %}
+
+  <div class="flex flex--col gap--xsmall w--full">
+    {% for ev in today_events limit: 2 %}
+      <div class="flex flex--row flex--between flex--center-y w--full">
+        <span class="label label--small w--[58px] shrink-0">{{ ev.start_short }}</span>
+        <span class="description text--left grow clamp--1">{{ ev.title }}</span>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">{{ now_time }}</span>
+</div>

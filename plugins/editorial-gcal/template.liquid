@@ -1,0 +1,107 @@
+<div class="layout layout--row flex--top portrait:flex--col gap--medium lg:gap--large">
+  <div class="flex flex--col shrink-0 w--[268px] lg:w--[280px] portrait:w--full gap--small">
+    <div class="flex flex--row flex--left flex--center-y gap--medium w--full">
+      <div class="title title--xlarge lg:title--xxlarge text--left">{{ day_num }}</div>
+      <div class="flex flex--col text--left">
+        <div class="label label--small lg:label--base label--inverted px--2 text--left">{{ weekday }}</div>
+        <div class="label label--small lg:label--base text--left mt--1">{{ month_year }}</div>
+      </div>
+    </div>
+
+    <div class="label label--small text--left w--full">{{ summary_line }}</div>
+
+    <img src="{{ overview_png }}" alt="Month and day timeline" class="image image--contain w--[264px] h--[260px] portrait:hidden" />
+    <img src="{{ daybar_png }}" alt="Day timeline" class="image image--contain w--[260px] h--[58px] hidden portrait:block" />
+
+    <div class="label label--small text--left w--full">{{ free_window }}</div>
+  </div>
+
+  <div class="divider--v portrait:hidden"></div>
+
+  <div class="stretch-x text--left grow h--full flex flex--col flex--top gap--small">
+    {% if all_day.size > 0 %}
+      <div class="flex flex--row flex--left flex--center-y gap--small w--full">
+        <span class="label label--small label--inverted px--2">ALL DAY</span>
+        {% for ad in all_day %}
+          <span class="label label--small label--outline px--2">{{ ad.title }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if hero %}
+      <div class="bg--gray-70 rounded p--2 w--full text--left">
+        <div class="flex flex--row flex--between flex--center-y w--full mb--1">
+          <div class="flex flex--row flex--left flex--center-y gap--small">
+            <span class="label label--small label--inverted px--2">{{ hero.status }}</span>
+            <span class="label label--small">{{ hero.time_range }}</span>
+            <span class="label label--small label--outline px--1">{{ hero.duration }}</span>
+          </div>
+          <span class="label label--small"><strong>{{ hero.countdown }}</strong></span>
+        </div>
+        <div class="title title--small lg:title--base text--left w--full">{{ hero.title }}</div>
+        {% if hero.location != "" or hero.meet_tag != "" or hero.calendar != "" %}
+          <div class="flex flex--row flex--left flex--center-y gap--small w--full mt--1">
+            {% if hero.meet_tag != "" %}
+              <span class="label label--small label--outline px--1">{{ hero.meet_tag }}</span>
+            {% endif %}
+            {% if hero.location != "" %}
+              <span class="label label--small">{{ hero.location }}</span>
+            {% endif %}
+            {% if hero.calendar != "" %}
+              <span class="label label--small">&middot; {{ hero.calendar }}</span>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    {% else %}
+      <div class="bg--gray-70 rounded p--2 w--full text--left">
+        <div class="title title--small text--left w--full">Clear for the rest of today</div>
+        <div class="label label--small text--left w--full">{{ free_window }}</div>
+      </div>
+    {% endif %}
+
+    <div class="label label--small text--left w--full mt--1">UPCOMING TODAY</div>
+    {% if today_events.size > 0 %}
+      <div class="flex flex--col gap--xsmall w--full">
+        {% for ev in today_events limit: 4 %}
+          <div class="flex flex--row flex--between flex--center-y w--full border--b pb--1">
+            <div class="flex flex--row flex--left flex--center-y gap--small">
+              <span class="label label--small w--[64px] shrink-0">{{ ev.start_short }}</span>
+              <span class="description text--left clamp--1"><strong>{{ ev.title }}</strong></span>
+            </div>
+            <div class="flex flex--row flex--center-y gap--xsmall shrink-0">
+              {% if ev.meet_tag != "" %}
+                <span class="label label--small label--outline px--1">{{ ev.meet_tag }}</span>
+              {% endif %}
+              <span class="label label--small">{{ ev.duration }}</span>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="description text--left w--full">No additional timed events today.</div>
+    {% endif %}
+
+    {% if tomorrow_events.size > 0 %}
+      <div class="mt--auto pt--1 w--full">
+        <div class="label label--small text--left w--full mb--1">TOMORROW &middot; {{ tomorrow_label }}</div>
+        <div class="flex flex--col gap--xsmall w--full">
+          {% for tev in tomorrow_events limit: 3 %}
+            <div class="flex flex--row flex--between flex--center-y w--full">
+              <div class="flex flex--row flex--left flex--center-y gap--small">
+                <span class="label label--small w--[64px] shrink-0">{{ tev.start_short }}</span>
+                <span class="label label--small text--left clamp--1">{{ tev.title }}</span>
+              </div>
+              <span class="label label--small shrink-0">{{ tev.duration }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }} &middot; {{ date_label }}</span>
+  <span class="instance">{% if is_demo %}Demo Mode &middot; {% endif %}Updated {{ now_time }}</span>
+</div>

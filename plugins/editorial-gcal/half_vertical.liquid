@@ -1,0 +1,39 @@
+<div class="layout layout--col layout--col--top gap--small">
+  <div class="flex flex--row flex--between flex--center-y w--full">
+    <div class="flex flex--row flex--left flex--center-y gap--small">
+      <div class="title title--large text--left">{{ day_num }}</div>
+      <div class="flex flex--col text--left">
+        <div class="label label--small label--inverted px--2 text--left">{{ weekday }}</div>
+        <div class="label label--small text--left">{{ month_year }}</div>
+      </div>
+    </div>
+    <div class="label label--small text--right">{{ summary_line }}</div>
+  </div>
+
+  <img src="{{ daybar_png }}" alt="Day timeline" class="image image--contain w--[260px] h--[58px]" />
+
+  {% if hero %}
+    <div class="bg--gray-70 rounded p--2 w--full text--left">
+      <div class="flex flex--row flex--between flex--center-y w--full mb--1">
+        <span class="label label--small label--inverted px--1">{{ hero.status }} &middot; {{ hero.countdown }}</span>
+        <span class="label label--small">{{ hero.start_short }} ({{ hero.duration }})</span>
+      </div>
+      <div class="title title--small text--left w--full clamp--1">{{ hero.title }}</div>
+    </div>
+  {% endif %}
+
+  <div class="flex flex--col gap--xsmall w--full">
+    {% for ev in today_events limit: 4 %}
+      <div class="flex flex--row flex--between flex--center-y w--full border--b pb--1">
+        <span class="label label--small w--[60px] shrink-0">{{ ev.start_short }}</span>
+        <span class="description text--left grow clamp--1">{{ ev.title }}</span>
+        <span class="label label--small shrink-0">{{ ev.duration }}</span>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">{{ free_window }}</span>
+</div>
