@@ -6,8 +6,8 @@
 
     <div class="divider--v portrait:hidden"></div>
 
-    <div class="flex flex--col flex--between stretch-x h--full portrait:h--auto grow gap--small text--left">
-      <div class="w--full">
+    <div class="stretch-x text--left">
+      <div class="w--full mb--2">
         <div class="flex flex--row flex--between flex--center-y w--full mb--1">
           <span class="label label--base lg:label--large label--inverted px--2 rounded">{{ platform | upcase }} &middot; {{ year }}</span>
           <span class="label label--small lg:label--large">{{ genre | upcase }}</span>
@@ -18,7 +18,7 @@
       </div>
 
       {% if timeline_x != blank %}
-        <div class="w--full">
+        <div class="w--full mb--2">
           <div class="label label--small lg:label--large label--underline mb--1 text--left">CONSOLE ERA</div>
           <svg viewBox="0 0 200 22" class="w--full h--[34px] lg:h--[52px]">
             <line x1="10" y1="8" x2="190" y2="8" stroke="#000" stroke-width="1.5" />
