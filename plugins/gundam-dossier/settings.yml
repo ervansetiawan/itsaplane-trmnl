@@ -1,0 +1,25 @@
+---
+name: Gundam Pilot Dossier
+description: Random Gundam pilots & mobile suits
+strategy: polling
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+polling_url: 'https://itsaplane-trmnl.onrender.com/gundam/random?mode={{ mode }}'
+polling_headers: ''
+refresh_interval: 60
+custom_fields:
+  - keyname: author_bio
+    field_type: author_bio
+    name: About This Plugin
+    category: art
+    description: Random Gundam pilots & mobile suits
+    github_url: https://github.com/ervansetiawan/itsaplane-trmnl
+    email_address: ervansetiawan@gmail.com
+  - keyname: mode
+    field_type: string
+    name: Rotation Mode (optional)
+    description: random (default) or daily.
+    default: random
+    optional: true
