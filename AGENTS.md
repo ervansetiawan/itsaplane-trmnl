@@ -48,8 +48,18 @@ Follow `.agents/skills/trmnl-framework-3-4/SKILL.md`:
 - **`settings.yml` rules**:
   - `strategy: polling`
   - `polling_url: 'https://itsaplane-trmnl.onrender.com/<endpoint>'`
-  - `description` (and `author_bio.description`): **≤ 35 characters**
-  - `author_bio.category`: approved TRMNL category (`art`, `education`, `finance`, `games`, `nature`, `programming`, `sports`, `travel`, `weather`, etc.).
+  - `description`: **≤ 35 characters**
+  - Form fields & author bio must live under `custom_fields:` (not top-level `author_bio:`):
+    ```yaml
+    custom_fields:
+      - keyname: author_bio
+        field_type: author_bio
+        name: About This Plugin
+        category: travel   # approved TRMNL category (art, education, finance, games, nature, programming, sports, travel, weather, etc.)
+        description: <= 35 chars
+        github_url: https://github.com/ervansetiawan/itsaplane-trmnl
+        email_address: ervansetiawan@gmail.com
+    ```
 
 ---
 

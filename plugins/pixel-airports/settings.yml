@@ -1,15 +1,24 @@
 ---
+name: Pixel Airports
+description: Random world airport diagrams
 strategy: polling
 no_screen_padding: 'no'
 dark_mode: 'no'
 static_data: ''
 polling_verb: get
-polling_url: 'https://itsaplane-trmnl.onrender.com/airport'
+polling_url: 'https://itsaplane-trmnl.onrender.com/airport?iata={{ iata }}'
 polling_headers: ''
-name: Pixel Airports
 refresh_interval: 60
-description: Random world airport diagrams
-author_bio:
-  category: travel
-  description: Random world airport diagrams
-  email_address: ervansetiawan@gmail.com
+custom_fields:
+  - keyname: author_bio
+    field_type: author_bio
+    name: About This Plugin
+    category: travel
+    description: Random world airport diagrams
+    github_url: https://github.com/ervansetiawan/itsaplane-trmnl
+    email_address: ervansetiawan@gmail.com
+  - keyname: iata
+    field_type: string
+    name: Airport IATA (optional)
+    description: 3-letter IATA code (e.g. HNL, SFO). Leave blank for random.
+    optional: true
