@@ -1,0 +1,24 @@
+<div class="layout layout--row gap--medium">
+  <div class="flex flex--center shrink-0 h--full">
+    <img src="{{ diagram_data_uri }}" alt="{{ name }} airport diagram" class="image w--auto h--full" />
+  </div>
+
+  <div class="stretch-x text--left">
+    <div class="flex flex--row flex--center-y gap--small mb--1">
+      <span class="value value--small">{{ iata }}</span>
+      <span class="label label--small label--inverted px--2">{{ icao }}</span>
+      {% if flt_cat != '' %}
+        <span class="label label--small label--outline px--2">{{ flt_cat }}</span>
+      {% endif %}
+    </div>
+    <div class="title title--small text--left">{{ name }}</div>
+    <div class="label label--small text--left mb--1">{{ city }}, {{ country }}</div>
+    <div class="description text--left mb--1"><strong>RWY</strong> {{ runways }}</div>
+    <div class="label label--small text--left">{{ wind }} ({{ wind_components }}) · {{ traffic_count }}</div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">{{ date }}</span>
+</div>

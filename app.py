@@ -7,7 +7,10 @@ from math import radians, sin, cos, sqrt, atan2
 import requests
 from flask import Flask, jsonify, request, send_from_directory
 
+from pixel_airports import pixel_airports_bp
+
 app = Flask(__name__)
+app.register_blueprint(pixel_airports_bp)
 
 _SESSION = requests.Session()
 _SESSION.headers.update({"User-Agent": "itsaplane-trmnl/1.0"})
@@ -683,6 +686,33 @@ def iq_daily():
 def map_pixel():
     from pixel_map import generate_pixel_map
     return jsonify(generate_pixel_map())
+
+
+@app.route('/map/pixel/preview')
+def map_pixel_preview():
+    from pixel_map import generate_pixel_map
+    data = generate_pixel_map()
+    tpl_path = os.path.join(os.path.dirname(__file__), 'plugins', 'pixel-map', 'template.liquid')
+    with open(tpl_path, encoding='utf-8') as f:
+        html = f.read()
+    for key in ('image_url', 'name', 'coords'):
+        html = html.replace('{{ ' + key + ' }}', str(data[key]))
+    return f"""<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>TRMNL Pixel Map Preview</title>
+  <style>
+    body {{ margin: 0; background: #e5e5e5; display: flex; justify-content: center; align-items: center; min-height: 100vh; font-family: "Helvetica Neue", Arial, sans-serif; }}
+    .screen {{ width: 800px; height: 480px; background: #fff; box-shadow: 0 8px 30px rgba(0,0,0,.15); display: flex; flex-direction: column; padding: 16px; box-sizing: border-box; }}
+    .layout {{ flex: 1; min-height: 0; }}
+    .title_bar {{ display: flex; justify-content: space-between; align-items: center; border-top: 2px solid #000; padding-top: 8px; margin-top: 10px; font-weight: 700; }}
+    .title {{ font-size: 18px; text-transform: uppercase; }}
+    .instance {{ font-size: 14px; }}
+  </style>
+</head>
+<body><div class="screen">{html}</div></body>
+</html>"""
 
 
 if __name__ == '__main__':
