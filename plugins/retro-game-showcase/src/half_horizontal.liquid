@@ -1,18 +1,18 @@
 <div class="layout layout--col">
-  <div class="flex flex--row portrait:flex--col w--full h--full gap--medium lg:gap--large">
+  <div class="flex flex--row w--full h--full gap--medium lg:gap--large">
     <div class="flex flex--col flex--center w--[46cqw] h--full">
       <img src="{{ image_url }}" alt="{{ game_title }}" class="image image-dither image--contain w--full h--[88cqh] rounded" />
     </div>
 
-    <div class="divider--v portrait:hidden"></div>
+    <div class="divider--v"></div>
 
     <div class="flex flex--col flex--between stretch-x h--full text--left">
       <div class="w--full">
-        <span class="label label--small label--inverted px--2 rounded mb--1">{{ platform | upcase }} &middot; {{ year }}</span>
-        <div class="title title--small text--left mb--1">{{ game_title }}</div>
-        <div class="label label--small text--left">{{ developer }} &middot; {{ genre }}</div>
+        <span class="label label--small lg:label--large label--inverted px--2 rounded mb--1">{{ platform | upcase }} &middot; {{ year }}</span>
+        <div class="title title--small lg:title--large text--left mb--1">{{ game_title }}</div>
+        <div class="label label--small lg:label--large text--left">{{ developer }} &middot; {{ genre }}</div>
       </div>
-      <div class="description text--left clamp--3">{{ trivia }}</div>
+      <div class="description lg:description--xlarge text--left clamp--3">{{ trivia }}</div>
     </div>
   </div>
 </div>

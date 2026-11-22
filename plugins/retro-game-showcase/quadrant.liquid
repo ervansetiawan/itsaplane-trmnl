@@ -1,9 +1,10 @@
 <div class="layout layout--col">
   <div class="flex flex--col flex--between w--full h--full gap--small">
-    <img src="{{ image_url }}" alt="{{ game_title }}" class="image image-dither image--contain w--full h--[62cqh] rounded" />
+    <img src="{{ image_url }}" alt="{{ game_title }}" class="image image-dither image--contain w--full h--[62cqh] lg:portrait:h--[48cqh] rounded" />
     <div class="w--full text--left">
-      <div class="description text--left clamp--1"><strong>{{ game_title }}</strong></div>
-      <div class="label label--small text--left">{{ platform }} &middot; {{ year }} &middot; {{ developer }}</div>
+      <div class="description lg:description--xlarge text--left clamp--1"><strong>{{ game_title }}</strong></div>
+      <div class="label label--small lg:label--large text--left">{{ platform }} &middot; {{ year }} &middot; {{ developer }}</div>
+      <div class="hidden lg:portrait:block description lg:description--xlarge text--left mt--1">{{ trivia }}</div>
     </div>
   </div>
 </div>
