@@ -1,0 +1,15 @@
+---
+strategy: polling
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+polling_url: 'https://itsaplane-trmnl.onrender.com/airport'
+polling_headers: ''
+name: Pixel Airports
+refresh_interval: 60
+description: Random world airport diagrams
+author_bio:
+  category: travel
+  description: Random world airport diagrams
+  email_address: ervansetiawan@gmail.com
