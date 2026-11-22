@@ -1,22 +1,22 @@
 <div class="layout layout--col">
   <div class="flex flex--col flex--between w--full h--full gap--small">
     <div class="flex flex--row flex--between flex--center-y w--full">
-      <span class="value value--base value--tnums">{{ critical_count }} CRIT</span>
-      <span class="label label--small label--inverted px--2 rounded value--tnums">{{ bgp_count }} BGP</span>
+      <span class="value value--base lg:value--xlarge value--tnums">{{ critical_count }} CRIT</span>
+      <span class="label label--small lg:label--large label--inverted px--2 rounded value--tnums">{{ bgp_count }} BGP</span>
     </div>
 
     {% if featured %}
       <div class="w--full text--left">
         <div class="divider mb--1"></div>
-        <div class="description text--left clamp--1"><strong>{{ featured.name }}</strong></div>
-        <div class="label label--small text--left value--tnums">-{{ featured.drop_pct }}% ({{ featured.datasource }})</div>
+        <div class="description lg:description--xlarge text--left clamp--1"><strong>{{ featured.name }}</strong></div>
+        <div class="label label--small lg:label--large text--left value--tnums">-{{ featured.drop_pct }}% ({{ featured.datasource }})</div>
       </div>
     {% endif %}
 
     <div class="w--full stretch-y text--left flex flex--col flex--between">
       <div class="divider mb--1"></div>
       {% for item in items limit: 2 %}
-        <div class="description text--left clamp--1 w--full value--tnums"><strong>{{ item.name }}</strong> -{{ item.drop_pct }}%</div>
+        <div class="description lg:description--xlarge text--left clamp--1 w--full value--tnums"><strong>{{ item.name }}</strong> -{{ item.drop_pct }}%</div>
       {% endfor %}
     </div>
   </div>

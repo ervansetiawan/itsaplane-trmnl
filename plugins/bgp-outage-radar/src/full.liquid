@@ -4,29 +4,29 @@
       <div class="item">
         <div class="meta"></div>
         <div class="content">
-          <span class="value value--base lg:value--large value--tnums">{{ total_alerts }}</span>
-          <span class="label label--base">24h Alerts</span>
+          <span class="value value--base lg:value--xlarge value--tnums">{{ total_alerts }}</span>
+          <span class="label label--base lg:label--large">24h Alerts</span>
         </div>
       </div>
       <div class="item">
         <div class="meta"></div>
         <div class="content">
-          <span class="value value--base lg:value--large value--tnums">{{ critical_count }}</span>
-          <span class="label label--base">Critical</span>
+          <span class="value value--base lg:value--xlarge value--tnums">{{ critical_count }}</span>
+          <span class="label label--base lg:label--large">Critical</span>
         </div>
       </div>
       <div class="item">
         <div class="meta"></div>
         <div class="content">
-          <span class="value value--base lg:value--large value--tnums">{{ bgp_count }}</span>
-          <span class="label label--base">BGP Signals</span>
+          <span class="value value--base lg:value--xlarge value--tnums">{{ bgp_count }}</span>
+          <span class="label label--base lg:label--large">BGP Signals</span>
         </div>
       </div>
       <div class="item">
         <div class="meta"></div>
         <div class="content">
-          <span class="value value--base lg:value--large value--tnums">{{ affected_nets }}</span>
-          <span class="label label--base">Networks</span>
+          <span class="value value--base lg:value--xlarge value--tnums">{{ affected_nets }}</span>
+          <span class="label label--base lg:label--large">Networks</span>
         </div>
       </div>
     </div>
@@ -34,13 +34,13 @@
     <div class="divider"></div>
 
     <div class="flex flex--row portrait:flex--col w--full stretch-y gap--large">
-      <div class="flex flex--col flex--between w--[48cqw] portrait:w--full text--left">
+      <div class="flex flex--col flex--between w--[48cqw] portrait:w--full portrait:h--auto text--left">
         <div class="w--full">
           <div class="flex flex--row flex--between flex--center-y w--full mb--1">
-            <span class="label label--base label--underline">24H OUTAGE TIMELINE</span>
-            <span class="label label--small">SOLID = CRITICAL</span>
+            <span class="label label--base lg:label--large label--underline">24H OUTAGE TIMELINE</span>
+            <span class="label label--small lg:label--large">SOLID = CRITICAL</span>
           </div>
-          <svg viewBox="0 0 240 68" preserveAspectRatio="none" class="w--full h--[68px]">
+          <svg viewBox="0 0 240 68" preserveAspectRatio="none" class="w--full h--[68px] lg:h--[110px]">
             <line x1="0" y1="64" x2="240" y2="64" stroke="#000" stroke-width="1" />
             {% for b in hourly_bars %}
               <rect x="{{ b.x }}" y="{{ b.y }}" width="7" height="{{ b.h }}" fill="#fff" stroke="#000" stroke-width="1" />
@@ -50,25 +50,25 @@
             {% endfor %}
           </svg>
           <div class="flex flex--row flex--between w--full">
-            <span class="label label--small">-24H</span>
-            <span class="label label--small">-12H</span>
-            <span class="label label--small">NOW</span>
+            <span class="label label--small lg:label--large">-24H</span>
+            <span class="label label--small lg:label--large">-12H</span>
+            <span class="label label--small lg:label--large">NOW</span>
           </div>
         </div>
 
         <div class="w--full">
-          <div class="label label--base label--underline mb--1 text--left w--full">DETECTION CHANNELS</div>
+          <div class="label label--base lg:label--large label--underline mb--1 text--left w--full">DETECTION CHANNELS</div>
           <div class="flex flex--row flex--between flex--center-y w--full mb--1">
-            <span class="description">BGP Routing</span>
-            <span class="description value--tnums"><strong>{{ bgp_count }}</strong> ({{ bgp_pct }}%)</span>
+            <span class="description lg:description--xlarge">BGP Routing</span>
+            <span class="description lg:description--xlarge value--tnums"><strong>{{ bgp_count }}</strong> ({{ bgp_pct }}%)</span>
           </div>
           <div class="flex flex--row flex--between flex--center-y w--full mb--1">
-            <span class="description">Active Ping (/24)</span>
-            <span class="description value--tnums"><strong>{{ ping_count }}</strong> ({{ ping_pct }}%)</span>
+            <span class="description lg:description--xlarge">Active Ping (/24)</span>
+            <span class="description lg:description--xlarge value--tnums"><strong>{{ ping_count }}</strong> ({{ ping_pct }}%)</span>
           </div>
           <div class="flex flex--row flex--between flex--center-y w--full">
-            <span class="description">Darknet Telescope</span>
-            <span class="description value--tnums"><strong>{{ tele_count }}</strong> ({{ tele_pct }}%)</span>
+            <span class="description lg:description--xlarge">Darknet Telescope</span>
+            <span class="description lg:description--xlarge value--tnums"><strong>{{ tele_count }}</strong> ({{ tele_pct }}%)</span>
           </div>
         </div>
 
@@ -77,10 +77,10 @@
             <div class="divider mb--1"></div>
             <div class="flex flex--row flex--between flex--center-y w--full gap--small">
               <div class="flex flex--row flex--center-y gap--small stretch-x">
-                <span class="label label--small label--inverted px--2 rounded shrink-0">{{ featured.level }}</span>
-                <span class="description clamp--1"><strong>{{ featured.name }}</strong></span>
+                <span class="label label--small lg:label--large label--inverted px--2 rounded shrink-0">{{ featured.level }}</span>
+                <span class="description lg:description--xlarge clamp--1"><strong>{{ featured.name }}</strong></span>
               </div>
-              <span class="label label--base shrink-0 value--tnums">-{{ featured.drop_pct }}% &middot; {{ featured.time }}</span>
+              <span class="label label--base lg:label--large shrink-0 value--tnums">-{{ featured.drop_pct }}% &middot; {{ featured.time }}</span>
             </div>
           </div>
         {% endif %}
@@ -88,18 +88,18 @@
 
       <div class="divider--v portrait:hidden"></div>
 
-      <div class="stretch-x text--left flex flex--col flex--between">
-        <div class="label label--base label--underline mb--1 text--left w--full">ACTIVE NETWORK OUTAGES</div>
+      <div class="stretch-x text--left flex flex--col flex--between portrait:h--auto grow">
+        <div class="label label--base lg:label--large label--underline mb--1 text--left w--full">ACTIVE NETWORK OUTAGES</div>
         <div class="flex flex--col flex--between stretch-y w--full">
           {% for item in items limit: 4 %}
             <div class="w--full">
               <div class="flex flex--row flex--between flex--center-y w--full">
-                <span class="title title--small text--left clamp--1">{{ item.name }}</span>
-                <span class="label label--base shrink-0 value--tnums">-{{ item.drop_pct }}% &middot; {{ item.time }}</span>
+                <span class="title title--small lg:title--large text--left clamp--1">{{ item.name }}</span>
+                <span class="label label--base lg:label--large shrink-0 value--tnums">-{{ item.drop_pct }}% &middot; {{ item.time }}</span>
               </div>
               <div class="flex flex--row flex--between flex--center-y gap--small w--full">
-                <span class="description text--left clamp--1">{{ item.datasource }}{% if item.org != "" %} &middot; {{ item.org }}{% endif %}</span>
-                <svg viewBox="0 0 100 6" preserveAspectRatio="none" class="w--[60px] h--[6px] shrink-0">
+                <span class="description lg:description--xlarge text--left clamp--1">{{ item.datasource }}{% if item.org != "" %} &middot; {{ item.org }}{% endif %}</span>
+                <svg viewBox="0 0 100 6" preserveAspectRatio="none" class="w--[60px] lg:w--[100px] h--[6px] lg:h--[10px] shrink-0">
                   <rect x="0" y="0" width="100" height="6" fill="#fff" stroke="#000" stroke-width="1.5" />
                   <rect x="0" y="0" width="{{ item.drop_pct }}" height="6" fill="#000" />
                 </svg>
