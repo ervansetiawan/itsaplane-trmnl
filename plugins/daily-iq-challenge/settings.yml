@@ -1,13 +1,6 @@
 name: Daily IQ Challenge
 description: Daily 3x3 visual IQ matrix puzzle
-strategy: polling
-polling_url: https://itsaplane-trmnl.onrender.com/iq/daily
-polling_verb: get
-polling_headers: ""
-framework_version: 3.4
 refresh_interval: 1440
-dark_mode: "no"
-no_screen_padding: "no"
 custom_fields:
   - keyname: author_bio
     field_type: author_bio
