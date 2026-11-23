@@ -1,6 +1,6 @@
 name: Fear & Greed + VIX
 description: Market Fear & Greed + VIX gauge
-strategy: static
+strategy: polling
 polling_url: https://itsaplane-trmnl.onrender.com/markets/fear-greed
 polling_verb: get
 polling_headers: ""

@@ -1,20 +1,27 @@
-<div class="layout layout--col">
-  <div class="flex flex--col flex--between w--full h--full gap--small">
-    <svg viewBox="0 0 220 128" class="w--full h--[52cqh]">
+<div class="layout layout--col gap--small">
+  <div class="flex flex--col flex--between w--full h--full gap--xsmall">
+    <svg viewBox="0 0 220 128" class="w--full h--[50cqh]">
       <path d="M 24 108 A 86 86 0 0 1 196 108" fill="none" stroke="#000" stroke-width="10" />
       <path d="M 24 108 A 86 86 0 0 1 196 108" fill="none" stroke="#fff" stroke-width="6" />
+      {% for t in dial_ticks %}
+        {% if t.major %}
+          <line x1="{{ t.x1 }}" y1="{{ t.y1 }}" x2="{{ t.x2 }}" y2="{{ t.y2 }}" stroke="#000" stroke-width="1.8" />
+        {% endif %}
+      {% endfor %}
+      <circle cx="{{ m1_x }}" cy="{{ m1_y }}" r="3.8" fill="#fff" stroke="#000" stroke-width="1.4" />
+      <circle cx="{{ w1_x }}" cy="{{ w1_y }}" r="3.0" fill="#666" stroke="#000" stroke-width="1" />
       <line x1="110" y1="108" x2="{{ nx }}" y2="{{ ny }}" stroke="#000" stroke-width="3.5" stroke-linecap="round" />
       <circle cx="110" cy="108" r="7" fill="#000" />
     </svg>
 
     <div class="flex flex--row flex--between flex--center-y w--full">
       <span class="title title--small">{{ score }} {{ rating }}</span>
-      <span class="label label--small">VIX {{ vix }}</span>
+      <span class="label label--small">VIX {{ vix }} &middot; P/C {{ put_call_ratio }}</span>
     </div>
   </div>
 </div>
 
 <div class="title_bar">
   <span class="title">{{ title }}</span>
-  <span class="instance">{{ date }}</span>
+  <span class="instance">{{ vix_term_regime }}</span>
 </div>
