@@ -1,0 +1,20 @@
+<div class="layout layout--col gap--small">
+  <div class="flex flex--row flex--between flex--center-y w--full">
+    <span class="label label--small label--inverted px--2">{{ regime }}</span>
+    <span class="label label--small">SPY {{ spy.m1_str }}</span>
+  </div>
+
+  <div class="flex flex--col gap--xsmall w--full">
+    {% for s in leaders %}
+      <div class="flex flex--row flex--between flex--center-y w--full border--b pb--1">
+        <span class="label label--small"><strong>{{ s.symbol }}</strong> {{ s.name }}</span>
+        <span class="label label--small">{{ s.m1_str }}</span>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">Sector Rotation</span>
+  <span class="instance">{{ as_of }}</span>
+</div>

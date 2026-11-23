@@ -1,0 +1,25 @@
+<div class="layout layout--col layout--col--top gap--small">
+  <div class="flex flex--row flex--between flex--center-y w--full">
+    <span class="title title--small text--left">{{ week_range }}</span>
+    <span class="label label--small">{{ week_total }} reports</span>
+  </div>
+
+  <img src="{{ compact_png }}" alt="Weekly earnings density" class="image image--contain w--[256px] h--[130px]" />
+
+  <div class="flex flex--col gap--xsmall w--full">
+    {% for m in marquee limit: 5 %}
+      <div class="flex flex--row flex--between flex--center-y w--full border--b pb--1">
+        <div class="flex flex--row flex--left flex--center-y gap--xsmall">
+          <span class="label label--small label--inverted px--1">{{ m.symbol }}</span>
+          <span class="label label--small">{{ m.day }} {{ m.slot }}</span>
+        </div>
+        <span class="label label--small">EPS {{ m.eps }} &middot; {{ m.mcap_str }}</span>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">{{ bmo_total }} BMO &middot; {{ amc_total }} AMC</span>
+</div>

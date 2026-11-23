@@ -1,0 +1,19 @@
+---
+name: S&P 500 Sector Rotation
+description: S&P 500 sector relative strength
+strategy: polling
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+polling_url: 'https://itsaplane-trmnl.onrender.com/markets/sectors'
+polling_headers: ''
+refresh_interval: 360
+custom_fields:
+  - keyname: author_bio
+    field_type: author_bio
+    name: About This Plugin
+    category: finance
+    description: S&P 500 sector relative strength
+    github_url: https://github.com/ervansetiawan/itsaplane-trmnl
+    email_address: ervansetiawan@gmail.com

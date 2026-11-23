@@ -1,0 +1,25 @@
+<div class="layout layout--row flex--top gap--medium lg:gap--large">
+  <div class="flex flex--col shrink-0 w--[260px] gap--xsmall">
+    <img src="{{ mini_conviction_png }}" alt="Top insider purchase volume" class="image image--contain w--[256px] h--[124px]" />
+  </div>
+
+  <div class="divider--v"></div>
+
+  <div class="stretch-x text--left grow flex flex--col gap--xsmall">
+    <div class="label label--small text--left w--full">TOP SEC FORM 4 OPEN-MARKET BUYS</div>
+    {% for f in filings limit: 4 %}
+      <div class="flex flex--row flex--between flex--center-y w--full border--b pb--1">
+        <div class="flex flex--row flex--left flex--center-y gap--xsmall">
+          <span class="label label--small label--inverted px--1">{{ f.ticker }}</span>
+          <span class="label label--small">{{ f.insider }} ({{ f.role }})</span>
+        </div>
+        <span class="label label--small shrink-0"><strong>{{ f.value_str }}</strong> @ {{ f.price }}</span>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">{{ summary_line }}</span>
+</div>

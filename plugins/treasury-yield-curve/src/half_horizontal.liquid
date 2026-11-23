@@ -1,0 +1,26 @@
+<div class="layout layout--row flex--top gap--medium lg:gap--large">
+  <div class="flex flex--col shrink-0 w--[260px] gap--xsmall">
+    <img src="{{ mini_curve_png }}" alt="US Treasury Yield Curve" class="image image--contain w--[256px] h--[136px]" />
+  </div>
+
+  <div class="divider--v"></div>
+
+  <div class="stretch-x text--left grow flex flex--col gap--xsmall">
+    <div class="flex flex--row flex--left flex--center-y gap--small w--full">
+      <span class="label label--small label--inverted px--2">{{ regime }}</span>
+      <span class="label label--small">2s10s {{ spread_10_2 }} &middot; 3m10s {{ spread_10_3m }}</span>
+    </div>
+    <div class="grid grid--cols-2 gap--xsmall w--full mt--1">
+      <div class="label label--small text--left"><strong>3M:</strong> {{ y3m }}</div>
+      <div class="label label--small text--left"><strong>2Y:</strong> {{ y2 }}</div>
+      <div class="label label--small text--left"><strong>10Y:</strong> {{ y10 }}</div>
+      <div class="label label--small text--left"><strong>30Y:</strong> {{ y30 }}</div>
+    </div>
+    <div class="description text--left clamp--2 mt--1">{{ regime_note }}</div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">As of {{ as_of }}</span>
+</div>

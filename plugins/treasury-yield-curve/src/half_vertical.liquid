@@ -1,0 +1,24 @@
+<div class="layout layout--col layout--col--top gap--small">
+  <div class="flex flex--row flex--between flex--center-y w--full">
+    <span class="label label--small label--inverted px--2">{{ regime }}</span>
+    <span class="label label--small">{{ as_of }}</span>
+  </div>
+
+  <img src="{{ mini_curve_png }}" alt="US Treasury Yield Curve" class="image image--contain w--[256px] h--[136px]" />
+
+  <div class="grid grid--cols-2 gap--small w--full">
+    <div class="bg--gray-70 rounded p--1 text--left">
+      <div class="label label--small text--left">10Y–2Y: <strong>{{ spread_10_2 }}</strong></div>
+      <div class="label label--small text--left">2Y {{ y2 }} &middot; 10Y {{ y10 }}</div>
+    </div>
+    <div class="bg--gray-70 rounded p--1 text--left">
+      <div class="label label--small text--left">10Y–3M: <strong>{{ spread_10_3m }}</strong></div>
+      <div class="label label--small text--left">3M {{ y3m }} &middot; 30Y {{ y30 }}</div>
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">10Y {{ y10 }}</span>
+</div>

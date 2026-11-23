@@ -1,0 +1,19 @@
+---
+name: US Treasury Yield Curve
+description: Daily US Treasury yield curve
+strategy: polling
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+polling_url: 'https://itsaplane-trmnl.onrender.com/markets/yield-curve'
+polling_headers: ''
+refresh_interval: 360
+custom_fields:
+  - keyname: author_bio
+    field_type: author_bio
+    name: About This Plugin
+    category: finance
+    description: Daily US Treasury yield curve
+    github_url: https://github.com/ervansetiawan/itsaplane-trmnl
+    email_address: ervansetiawan@gmail.com

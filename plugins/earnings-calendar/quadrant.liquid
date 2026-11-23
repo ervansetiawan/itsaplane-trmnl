@@ -1,0 +1,20 @@
+<div class="layout layout--col gap--small">
+  <div class="flex flex--row flex--between flex--center-y w--full">
+    <span class="label label--small label--inverted px--2">THIS WEEK</span>
+    <span class="label label--small">{{ week_total }} reports</span>
+  </div>
+
+  <div class="flex flex--col gap--xsmall w--full">
+    {% for m in marquee limit: 4 %}
+      <div class="flex flex--row flex--between flex--center-y w--full border--b pb--1">
+        <span class="label label--small"><strong>{{ m.symbol }}</strong> &middot; {{ m.day }} {{ m.slot }}</span>
+        <span class="label label--small">EPS {{ m.eps }}</span>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">{{ week_range }}</span>
+</div>

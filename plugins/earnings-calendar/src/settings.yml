@@ -1,0 +1,24 @@
+---
+name: Weekly Earnings Calendar
+description: Weekly BMO & AMC earnings calendar
+strategy: polling
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+polling_url: 'https://itsaplane-trmnl.onrender.com/markets/earnings?tickers={{ tickers | url_encode }}'
+polling_headers: ''
+refresh_interval: 180
+custom_fields:
+  - keyname: author_bio
+    field_type: author_bio
+    name: About This Plugin
+    category: finance
+    description: Weekly BMO & AMC earnings calendar
+    github_url: https://github.com/ervansetiawan/itsaplane-trmnl
+    email_address: ervansetiawan@gmail.com
+  - keyname: tickers
+    field_type: string
+    name: Priority Watchlist Tickers (optional)
+    description: Comma-separated symbols to pin first when they report (e.g. NVDA, AAPL, MSFT).
+    optional: true

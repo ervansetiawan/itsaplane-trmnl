@@ -10,12 +10,14 @@ from flask import Flask, jsonify, request, send_from_directory
 from famous_address import famous_address_bp
 from gcal_dashboard import gcal_dashboard_bp
 from gundam_dossier import gundam_dossier_bp
+from market_dashboards import market_dashboards_bp
 from pixel_airports import pixel_airports_bp
 
 app = Flask(__name__)
 app.register_blueprint(famous_address_bp)
 app.register_blueprint(gcal_dashboard_bp)
 app.register_blueprint(gundam_dossier_bp)
+app.register_blueprint(market_dashboards_bp)
 app.register_blueprint(pixel_airports_bp)
 
 _SESSION = requests.Session()

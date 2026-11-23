@@ -1,0 +1,22 @@
+<div class="layout layout--col layout--col--top gap--small">
+  <div class="flex flex--row flex--between flex--center-y w--full">
+    <span class="title title--small text--left">{{ total_value }} Bought</span>
+    <span class="label label--small">{{ buy_count }} filings</span>
+  </div>
+
+  <img src="{{ mini_conviction_png }}" alt="Top insider purchase volume" class="image image--contain w--[256px] h--[124px]" />
+
+  <div class="flex flex--col gap--xsmall w--full">
+    {% for f in filings limit: 4 %}
+      <div class="flex flex--row flex--between flex--center-y w--full border--b pb--1">
+        <span class="label label--small"><strong>{{ f.ticker }}</strong> &middot; {{ f.role }} ({{ f.filing_date }})</span>
+        <span class="label label--small"><strong>{{ f.value_str }}</strong> @ {{ f.price }}</span>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">SEC Insider Buying</span>
+  <span class="instance">{{ c_suite_count }} C-Suite buys</span>
+</div>

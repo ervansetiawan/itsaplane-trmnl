@@ -1,0 +1,20 @@
+<div class="layout layout--col gap--small">
+  <div class="flex flex--row flex--between flex--center-y w--full">
+    <span class="label label--small label--inverted px--2">FORM 4 BUYS</span>
+    <span class="label label--small">{{ total_value }}</span>
+  </div>
+
+  <div class="flex flex--col gap--xsmall w--full">
+    {% for f in filings limit: 4 %}
+      <div class="flex flex--row flex--between flex--center-y w--full border--b pb--1">
+        <span class="label label--small"><strong>{{ f.ticker }}</strong> ({{ f.role }})</span>
+        <span class="label label--small">{{ f.value_str }}</span>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">Insider Buying</span>
+  <span class="instance">{{ buy_count }} filings</span>
+</div>

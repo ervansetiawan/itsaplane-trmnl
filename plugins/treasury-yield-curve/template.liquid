@@ -1,0 +1,45 @@
+<div class="layout layout--row flex--top portrait:flex--col gap--medium lg:gap--large">
+  <div class="flex flex--col shrink-0 w--[344px] lg:w--[356px] portrait:w--full gap--small">
+    <div class="flex flex--row flex--left flex--center-y gap--small w--full">
+      <span class="label label--small label--inverted px--2">{{ regime }}</span>
+      <span class="label label--small">As of {{ as_of }}</span>
+    </div>
+
+    <img src="{{ curve_png }}" alt="US Treasury Yield Curve" class="image image--contain w--[336px] h--[228px] portrait:hidden" />
+    <img src="{{ mini_curve_png }}" alt="US Treasury Yield Curve" class="image image--contain w--[256px] h--[136px] hidden portrait:block" />
+
+    <div class="description text--left w--full">{{ regime_note }}</div>
+  </div>
+
+  <div class="divider--v portrait:hidden"></div>
+
+  <div class="stretch-x text--left grow flex flex--col flex--top gap--small">
+    <div class="grid grid--cols-2 gap--small w--full">
+      <div class="bg--gray-70 rounded p--2 text--left">
+        <div class="label label--small text--left">10Y–2Y SPREAD</div>
+        <div class="title title--small lg:title--base text--left">{{ spread_10_2 }}</div>
+        <div class="label label--small text--left">2Y {{ y2 }} &middot; 10Y {{ y10 }}</div>
+      </div>
+      <div class="bg--gray-70 rounded p--2 text--left">
+        <div class="label label--small text--left">10Y–3M SPREAD</div>
+        <div class="title title--small lg:title--base text--left">{{ spread_10_3m }}</div>
+        <div class="label label--small text--left">3M {{ y3m }} &middot; 30Y {{ y30 }}</div>
+      </div>
+    </div>
+
+    <div class="label label--small text--left w--full mt--1">PAR YIELD STRUCTURE &amp; 1-MONTH DELTA</div>
+    <div class="grid grid--cols-3 gap--xsmall w--full">
+      {% for t in tenors %}
+        <div class="flex flex--row flex--between flex--center-y border--b pb--1 pr--2">
+          <span class="label label--small"><strong>{{ t.tenor }}</strong></span>
+          <span class="label label--small">{{ t.yield_str }} ({{ t.m1_chg }})</span>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ title }}</span>
+  <span class="instance">10Y {{ y10 }} &middot; 2s10s {{ spread_10_2 }} &middot; {{ as_of }}</span>
+</div>

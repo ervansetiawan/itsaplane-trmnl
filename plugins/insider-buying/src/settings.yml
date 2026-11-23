@@ -1,0 +1,19 @@
+---
+name: SEC Form 4 Insider Buying
+description: SEC Form 4 open-market insider buys
+strategy: polling
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+polling_url: 'https://itsaplane-trmnl.onrender.com/markets/insiders'
+polling_headers: ''
+refresh_interval: 360
+custom_fields:
+  - keyname: author_bio
+    field_type: author_bio
+    name: About This Plugin
+    category: finance
+    description: SEC Form 4 open-market insider buys
+    github_url: https://github.com/ervansetiawan/itsaplane-trmnl
+    email_address: ervansetiawan@gmail.com
