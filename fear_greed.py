@@ -23,7 +23,7 @@ _SESSION = requests.Session()
 _SESSION.headers.update(HEADERS)
 
 _CACHE: dict = {"ts": 0.0, "data": None}
-_CACHE_TTL_SECONDS = 1800
+_CACHE_TTL_SECONDS = 300
 
 _PILLAR_KEYS = [
     ("Stock Momentum", "S&P momentum", "market_momentum_sp500"),
@@ -329,6 +329,13 @@ def fetch_fear_greed() -> dict:
         pillars,
     )
 
+    raw_ts = fg.get("timestamp")
+    try:
+        ts_dt = datetime.fromisoformat(str(raw_ts).replace("Z", "+00:00")).astimezone(timezone.utc)
+        date_str = ts_dt.strftime("%b %d, %Y · %H:%M UTC").upper()
+    except (ValueError, TypeError):
+        date_str = datetime.now(timezone.utc).strftime("%b %d, %Y").upper()
+
     result = {
         "title": "Fear & Greed + VIX",
         "score": score,
@@ -359,7 +366,7 @@ def fetch_fear_greed() -> dict:
         "spark_area": spark_area,
         "min_30d": min_30d,
         "max_30d": max_30d,
-        "date": datetime.now(timezone.utc).strftime("%b %d, %Y").upper(),
+        "date": date_str,
     }
     _CACHE["ts"] = now
     _CACHE["data"] = result
