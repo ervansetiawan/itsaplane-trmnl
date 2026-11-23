@@ -19,14 +19,11 @@
   </div>
 
   <div class="bg--gray-70 rounded p--2 w--full text--left">
-    <div class="flex flex--row flex--between flex--center-y w--full">
-      <span class="label label--small"><strong>VIX {{ vix }}</strong> ({{ vix_delta }})</span>
-      <span class="label label--small label--inverted px--1">{{ vix_term_regime }}</span>
-    </div>
-    <div class="label label--small text--left mt--1">9D {{ vix9d }} &middot; 3M {{ vix3m }} &middot; P/C {{ put_call_ratio }} &middot; {{ fear_pillars }}/7 Fear</div>
+    <div class="title title--small text--left w--full mb--1">{{ takeaway_headline }}</div>
+    <div class="description text--left w--full clamp--3">{{ takeaway_body }}</div>
   </div>
 
-  <div class="label label--small text--left w--full">Prev {{ prev_close }} &middot; 1W {{ one_week }} &middot; 1M {{ one_month }} &middot; 1Y {{ one_year }}</div>
+  <div class="label label--small text--left w--full">VIX {{ vix }} ({{ vix_mood }}) &middot; 1W {{ one_week }} &middot; 1M {{ one_month }}</div>
 </div>
 
 <div class="title_bar">

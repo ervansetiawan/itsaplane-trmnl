@@ -1,6 +1,6 @@
 <div class="layout layout--row flex--top gap--medium lg:gap--large">
-  <div class="flex flex--col flex--center w--[230px] shrink-0">
-    <svg viewBox="0 0 220 128" class="w--[200px] h--[112px]">
+  <div class="flex flex--col flex--center w--[220px] shrink-0">
+    <svg viewBox="0 0 220 128" class="w--[196px] h--[110px]">
       <path d="M 24 108 A 86 86 0 0 1 196 108" fill="none" stroke="#000" stroke-width="10" />
       <path d="M 24 108 A 86 86 0 0 1 196 108" fill="none" stroke="#fff" stroke-width="6" />
       {% for t in dial_ticks %}
@@ -19,17 +19,11 @@
 
   <div class="stretch-x text--left grow flex flex--col gap--xsmall">
     <div class="flex flex--row flex--between flex--center-y w--full">
-      <span class="title title--small">VIX {{ vix }} ({{ vix_delta }})</span>
-      <span class="label label--small label--inverted px--1">{{ vix_term_regime }}</span>
+      <span class="title title--small text--left">{{ takeaway_headline }}</span>
+      <span class="label label--small shrink-0">VIX {{ vix }} ({{ vix_mood }})</span>
     </div>
-    <div class="label label--small text--left">Term: 9D {{ vix9d }} &middot; 30D {{ vix }} &middot; 3M {{ vix3m }} &middot; P/C {{ put_call_ratio }}</div>
-    {% if sparkline != "" %}
-      <svg viewBox="0 0 240 60" preserveAspectRatio="none" class="w--full h--[40px]">
-        <line x1="0" y1="30" x2="240" y2="30" stroke="#aaa" stroke-width="0.8" stroke-dasharray="2,2" />
-        <polyline fill="none" stroke="#000" stroke-width="2" points="{{ sparkline }}" />
-      </svg>
-    {% endif %}
-    <div class="label label--small">Prev {{ prev_close }} &middot; 1W {{ one_week }} &middot; 1M {{ one_month }} &middot; {{ fear_pillars }}/7 Pillars in Fear</div>
+    <div class="description text--left w--full clamp--2">{{ takeaway_body }}</div>
+    <div class="label label--small text--left mt--1">1W Ago: {{ one_week }} &middot; 1M Ago: {{ one_month }} &middot; {{ fear_pillars }} of 7 signals in Fear</div>
   </div>
 </div>
 

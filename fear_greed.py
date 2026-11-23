@@ -1,4 +1,4 @@
-"""Market Fear & Greed + VIX Term Structure & 7-Pillar Equalizer."""
+"""Market Fear & Greed + VIX with Plain-English Market Summary & 7-Pillar Equalizer."""
 
 import base64
 from datetime import datetime, timezone
@@ -26,13 +26,13 @@ _CACHE: dict = {"ts": 0.0, "data": None}
 _CACHE_TTL_SECONDS = 1800
 
 _PILLAR_KEYS = [
-    ("S&P Momentum", "MOM", "market_momentum_sp500"),
-    ("Price Strength", "STR", "stock_price_strength"),
-    ("Volume Breadth", "BRD", "stock_price_breadth"),
-    ("Put/Call Options", "P/C", "put_call_options"),
-    ("VIX Volatility", "VIX", "market_volatility_vix"),
-    ("Junk Bond Demand", "HYB", "junk_bond_demand"),
-    ("Safe Haven Flow", "SHV", "safe_haven_demand"),
+    ("Stock Momentum", "S&P momentum", "market_momentum_sp500"),
+    ("52-Wk Strength", "52-week highs/lows", "stock_price_strength"),
+    ("Buying Volume", "volume breadth", "stock_price_breadth"),
+    ("Options Hedging", "put/call options", "put_call_options"),
+    ("VIX Calmness", "VIX volatility", "market_volatility_vix"),
+    ("Credit Appetite", "junk bond demand", "junk_bond_demand"),
+    ("Stocks vs Bonds", "safe-haven flows", "safe_haven_demand"),
 ]
 
 
@@ -122,8 +122,16 @@ def _fetch_vix_suite() -> dict:
         d = vix_p - vix_prev
         vix_delta = f"{'+' if d >= 0 else ''}{d:.2f}"
 
-    vix9d_str = f"{vix9d_p:.1f}" if vix9d_p is not None else vix_str
-    vix3m_str = f"{vix3m_p:.1f}" if vix3m_p is not None else vix_str
+    if vix_p is None:
+        vix_mood = "Unavailable"
+    elif vix_p >= 28:
+        vix_mood = "High Stress"
+    elif vix_p >= 20:
+        vix_mood = "Elevated"
+    elif vix_p >= 14:
+        vix_mood = "Normal Calm"
+    else:
+        vix_mood = "Very Calm"
 
     if vix9d_p is not None and vix3m_p is not None:
         if vix9d_p > vix3m_p + 0.35:
@@ -137,14 +145,70 @@ def _fetch_vix_suite() -> dict:
 
     return {
         "vix": vix_str,
+        "vix_num": vix_p,
         "vix_delta": vix_delta,
-        "vix9d": vix9d_str,
-        "vix3m": vix3m_str,
+        "vix_mood": vix_mood,
         "vix_term_regime": term_regime,
     }
 
 
-def _render_pillars_png(pillars: list[dict], width: int = 340, height: int = 160) -> str:
+def _build_plain_summary(
+    score: int,
+    one_week: int,
+    vix_mood: str,
+    vix_term_regime: str,
+    fear_pillars: int,
+    greed_pillars: int,
+    pillars: list[dict],
+) -> tuple[str, str]:
+    sorted_p = sorted(pillars, key=lambda x: x["score"])
+    weakest = sorted_p[0]
+    strongest = sorted_p[-1]
+    wk_diff = score - one_week
+
+    if score <= 24:
+        headline = "Widespread Fear — Investors Playing Defense"
+        tone = (
+            f"{fear_pillars} of 7 signals are in Fear, dragged down most by {weakest['prose']} "
+            f"({weakest['score']}/100)."
+        )
+        if vix_term_regime == "BACKWARDATION" or vix_mood in ("High Stress", "Elevated"):
+            outlook = "Volatility is spiked for the near term—historically an oversold zone when panic peaks."
+        else:
+            outlook = "Sentiment is washed out without a major volatility spike, often a contrarian accumulation zone."
+    elif score <= 44:
+        headline = "Cautious Market — Risk Appetite Cooling"
+        tone = (
+            f"Sentiment slipped {abs(wk_diff)} pts this week ({fear_pillars}/7 pillars in Fear), "
+            f"with {weakest['prose']} showing the most caution."
+        )
+        outlook = "Traders are hedging rather than chasing rallies, waiting for clearer macro direction."
+    elif score <= 55:
+        headline = "Balanced Market — No Extreme Positioning"
+        tone = (
+            f"Bulls and bears are evenly split ({greed_pillars} Greed vs. {fear_pillars} Fear), "
+            f"led by {strongest['prose']} ({strongest['score']}/100)."
+        )
+        outlook = f"Volatility is {vix_mood.lower()}, leaving stocks room to move cleanly on earnings or Fed news."
+    elif score <= 74:
+        headline = "Healthy Optimism — Buyers in Control"
+        tone = (
+            f"{greed_pillars} of 7 signals show Greed, powered by {strongest['prose']} "
+            f"({strongest['score']}/100) while volatility stays {vix_mood.lower()}."
+        )
+        outlook = "Uptrend momentum is constructive and not yet at frothy extremes."
+    else:
+        headline = "Extreme Euphoria — Crowded Bullish Positioning"
+        tone = (
+            f"{greed_pillars} of 7 signals are flashing Greed, led by {strongest['prose']} "
+            f"({strongest['score']}/100) and low options hedging."
+        )
+        outlook = "Complacency is high; markets at this level are more vulnerable to sudden profit-taking pullbacks."
+
+    return headline, f"{tone} {outlook}"
+
+
+def _render_pillars_png(pillars: list[dict], width: int = 340, height: int = 138) -> str:
     img = Image.new("L", (width, height), 255)
     draw = ImageDraw.Draw(img)
     f_bold = _load_font(10, bold=True)
@@ -157,33 +221,28 @@ def _render_pillars_png(pillars: list[dict], width: int = 340, height: int = 160
     bar_x1 = width - badge_w
     bar_w = bar_x1 - bar_x0
 
-    # Header & threshold ticks (0, 25, 50, 75, 100)
-    draw.text((2, 1), "7 SENTIMENT PILLARS", fill=85, font=f_xs)
+    draw.text((2, 1), "7 SENTIMENT SIGNALS (0=FEAR, 100=GREED)", fill=85, font=f_xs)
     for mark in (25, 50, 75):
         mx = int(bar_x0 + (mark / 100.0) * bar_w)
-        draw.line([(mx, 14), (mx, height - 4)], fill=170, width=1)
-        draw.text((mx - 5, 1), str(mark), fill=85, font=f_xs)
+        draw.line([(mx, 14), (mx, height - 3)], fill=170, width=1)
 
-    top_y = 16
+    top_y = 15
     row_h = (height - top_y - 2) // max(1, len(pillars))
 
     for idx, p in enumerate(pillars):
         ry = top_y + idx * row_h
-        draw.text((2, ry + 3), p["label"], fill=0, font=f_sm)
+        draw.text((2, ry + 2), p["label"], fill=0, font=f_sm)
 
-        # Track
-        by1, by2 = ry + 4, ry + row_h - 4
+        by1, by2 = ry + 3, ry + row_h - 3
         draw.rounded_rectangle([bar_x0, by1, bar_x1, by2], radius=2, fill=255, outline=170, width=1)
 
-        # Filled bar
         sc = max(2, min(100, p["score"]))
         fill_w = max(4, int((sc / 100.0) * bar_w))
         shade = 0 if sc <= 25 else (85 if sc < 55 else 170)
         draw.rounded_rectangle([bar_x0, by1, bar_x0 + fill_w, by2], radius=2, fill=shade, outline=0, width=1)
 
-        # Score + short rating on right
         right_txt = f"{p['score']:2d} {p['short_rating']}"
-        draw.text((bar_x1 + 6, ry + 3), right_txt, fill=0, font=f_bold if sc <= 25 or sc >= 75 else f_sm)
+        draw.text((bar_x1 + 6, ry + 2), right_txt, fill=0, font=f_bold if sc <= 25 or sc >= 75 else f_sm)
 
     buf = BytesIO()
     img.save(buf, format="PNG", optimize=True)
@@ -191,7 +250,7 @@ def _render_pillars_png(pillars: list[dict], width: int = 340, height: int = 160
 
 
 def fetch_fear_greed() -> dict:
-    """Fetch CNN Fear & Greed Index, 7 sub-indicators, 30D history, and CBOE VIX term structure."""
+    """Fetch CNN Fear & Greed Index, plain-English summary, 7 signals, and VIX mood."""
     now = time.time()
     if _CACHE["data"] is not None and (now - _CACHE["ts"]) < _CACHE_TTL_SECONDS:
         return _CACHE["data"]
@@ -218,12 +277,10 @@ def fetch_fear_greed() -> dict:
     one_month = round(float(fg.get("previous_1_month") or score))
     one_year = round(float(fg.get("previous_1_year") or score))
 
-    # Semicircular needle endpoint on viewBox="0 0 220 128" (center 110, 108)
     nx, ny = _arc_point(score, 110.0, 108.0, 70.0)
     w1_x, w1_y = _arc_point(one_week, 110.0, 108.0, 86.0)
     m1_x, m1_y = _arc_point(one_month, 110.0, 108.0, 86.0)
 
-    # 30-day sparkline from fear_and_greed_historical.data
     hist_points = raw.get("fear_and_greed_historical", {}).get("data", [])
     recent = hist_points[-30:] if len(hist_points) > 30 else hist_points
     spark_pts = []
@@ -241,11 +298,10 @@ def fetch_fear_greed() -> dict:
     min_30d = min(y_vals) if y_vals else score
     max_30d = max(y_vals) if y_vals else score
 
-    # Parse 7 CNN sub-indicators
     pillars: list[dict] = []
     fear_pillars = 0
     greed_pillars = 0
-    for label, abbr, key in _PILLAR_KEYS:
+    for label, prose, key in _PILLAR_KEYS:
         obj = raw.get(key) or {}
         p_score = max(0, min(100, round(float(obj.get("score") or 50))))
         p_rating = _rating_short(obj.get("rating") or "neutral")
@@ -256,19 +312,22 @@ def fetch_fear_greed() -> dict:
         pillars.append(
             {
                 "label": label,
-                "abbr": abbr,
+                "prose": prose,
                 "score": p_score,
                 "short_rating": p_rating,
             }
         )
 
-    pc_data = (raw.get("put_call_options") or {}).get("data") or []
-    put_call_ratio = f"{float(pc_data[-1]['y']):.2f}" if pc_data and pc_data[-1].get("y") is not None else "--"
-
-    hy_data = (raw.get("junk_bond_demand") or {}).get("data") or []
-    hy_spread = f"{float(hy_data[-1]['y']):.2f}%" if hy_data and hy_data[-1].get("y") is not None else "--"
-
     vix_suite = _fetch_vix_suite()
+    takeaway_headline, takeaway_body = _build_plain_summary(
+        score,
+        one_week,
+        vix_suite["vix_mood"],
+        vix_suite["vix_term_regime"],
+        fear_pillars,
+        greed_pillars,
+        pillars,
+    )
 
     result = {
         "title": "Fear & Greed + VIX",
@@ -281,15 +340,14 @@ def fetch_fear_greed() -> dict:
         "delta_day": f"{score - prev_close:+d}",
         "vix": vix_suite["vix"],
         "vix_delta": vix_suite["vix_delta"],
-        "vix9d": vix_suite["vix9d"],
-        "vix3m": vix_suite["vix3m"],
+        "vix_mood": vix_suite["vix_mood"],
         "vix_term_regime": vix_suite["vix_term_regime"],
-        "put_call_ratio": put_call_ratio,
-        "hy_spread": hy_spread,
         "fear_pillars": fear_pillars,
         "greed_pillars": greed_pillars,
+        "takeaway_headline": takeaway_headline,
+        "takeaway_body": takeaway_body,
         "pillars": pillars,
-        "pillars_png": _render_pillars_png(pillars, 340, 160),
+        "pillars_png": _render_pillars_png(pillars, 340, 138),
         "nx": nx,
         "ny": ny,
         "w1_x": w1_x,

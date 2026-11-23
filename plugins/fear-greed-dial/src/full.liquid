@@ -1,6 +1,6 @@
 <div class="layout layout--row flex--top portrait:flex--col gap--medium lg:gap--large">
-  <div class="flex flex--col flex--center shrink-0 w--[300px] lg:w--[320px] portrait:w--full gap--xsmall">
-    <svg viewBox="0 0 220 128" class="w--[236px] h--[136px]">
+  <div class="flex flex--col flex--center shrink-0 w--[296px] lg:w--[312px] portrait:w--full gap--xsmall">
+    <svg viewBox="0 0 220 128" class="w--[232px] h--[134px]">
       <!-- Outer & inner semicircular gauge tracks -->
       <path d="M 24 108 A 86 86 0 0 1 196 108" fill="none" stroke="#000" stroke-width="11" />
       <path d="M 24 108 A 86 86 0 0 1 196 108" fill="none" stroke="#fff" stroke-width="7" />
@@ -30,17 +30,17 @@
       <span class="title title--xlarge lg:title--xxlarge">{{ score }}</span>
       <div class="flex flex--col text--left">
         <span class="label label--small label--inverted px--2">{{ rating }} ({{ delta_day }})</span>
-        <span class="label label--small mt--1">Prev {{ prev_close }} &middot; 1W {{ one_week }} &middot; 1M {{ one_month }} &middot; 1Y {{ one_year }}</span>
+        <span class="label label--small mt--1">1W Ago: {{ one_week }} &middot; 1M Ago: {{ one_month }}</span>
       </div>
     </div>
 
     {% if sparkline != "" %}
       <div class="w--full mt--1">
         <div class="flex flex--row flex--between flex--center-y w--full mb--1">
-          <span class="label label--small">30-DAY SENTIMENT TREND</span>
-          <span class="label label--small">Lo {{ min_30d }} &middot; Hi {{ max_30d }}</span>
+          <span class="label label--small">30-DAY TREND</span>
+          <span class="label label--small">Range {{ min_30d }}–{{ max_30d }}</span>
         </div>
-        <svg viewBox="0 0 240 60" preserveAspectRatio="none" class="w--full h--[56px]">
+        <svg viewBox="0 0 240 60" preserveAspectRatio="none" class="w--full h--[54px]">
           <line x1="0" y1="17" x2="240" y2="17" stroke="#bbb" stroke-width="0.7" stroke-dasharray="2,2" />
           <line x1="0" y1="30" x2="240" y2="30" stroke="#888" stroke-width="0.9" stroke-dasharray="3,2" />
           <line x1="0" y1="43" x2="240" y2="43" stroke="#bbb" stroke-width="0.7" stroke-dasharray="2,2" />
@@ -56,31 +56,20 @@
   <div class="divider--v portrait:hidden"></div>
 
   <div class="stretch-x text--left grow flex flex--col flex--top gap--small">
-    <div class="grid grid--cols-2 gap--small w--full">
-      <div class="bg--gray-70 rounded p--2 text--left">
-        <div class="flex flex--row flex--between flex--center-y w--full">
-          <span class="label label--small">CBOE VIX ({{ vix_delta }})</span>
-          <span class="label label--small label--inverted px--1">{{ vix_term_regime }}</span>
-        </div>
-        <div class="title title--base lg:title--large text--left">{{ vix }}</div>
-        <div class="label label--small text--left">9D {{ vix9d }} &middot; 30D {{ vix }} &middot; 3M {{ vix3m }}</div>
+    <div class="bg--gray-70 rounded p--2 w--full text--left">
+      <div class="flex flex--row flex--between flex--center-y w--full mb--1">
+        <span class="label label--small label--inverted px--2">MARKET TAKEAWAY</span>
+        <span class="label label--small">VIX {{ vix }} &middot; {{ vix_mood }}</span>
       </div>
-
-      <div class="bg--gray-70 rounded p--2 text--left">
-        <div class="flex flex--row flex--between flex--center-y w--full">
-          <span class="label label--small">OPTIONS &amp; CREDIT</span>
-          <span class="label label--small label--outline px--1">{{ fear_pillars }}/7 FEAR</span>
-        </div>
-        <div class="title title--base lg:title--large text--left">P/C {{ put_call_ratio }}</div>
-        <div class="label label--small text--left">HY Spread {{ hy_spread }} &middot; {{ greed_pillars }}/7 Greed</div>
-      </div>
+      <div class="title title--small text--left w--full mb--1">{{ takeaway_headline }}</div>
+      <div class="description text--left w--full">{{ takeaway_body }}</div>
     </div>
 
-    <img src="{{ pillars_png }}" alt="7 CNN Fear and Greed sub-indicators" class="image image--contain w--[340px] h--[160px]" />
+    <img src="{{ pillars_png }}" alt="7 CNN Fear and Greed sub-indicators" class="image image--contain w--[340px] h--[138px]" />
   </div>
 </div>
 
 <div class="title_bar">
   <span class="title">{{ title }}</span>
-  <span class="instance">VIX {{ vix }} ({{ vix_term_regime }}) &middot; P/C {{ put_call_ratio }} &middot; {{ date }}</span>
+  <span class="instance">VIX {{ vix }} ({{ vix_mood }}) &middot; {{ date }}</span>
 </div>
