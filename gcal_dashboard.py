@@ -2,12 +2,17 @@
 
 import base64
 from datetime import date, datetime, time, timedelta, timezone
+import hashlib
+import html
+import hmac
 from io import BytesIO
+import os
 import re
 import time as time_mod
+from urllib.parse import quote, urlencode
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, Response, jsonify, redirect, request
 from PIL import Image, ImageDraw, ImageFont
 import requests
 
@@ -17,7 +22,15 @@ _SESSION = requests.Session()
 _SESSION.headers.update({"User-Agent": "itsaplane-trmnl/1.0 (+https://github.com/ervansetiawan/itsaplane-trmnl)"})
 
 _ICS_CACHE: dict[str, tuple[float, str]] = {}
+_ACCESS_TOKEN_CACHE: dict[str, tuple[float, str]] = {}
+_GCAL_API_CACHE: dict[str, tuple[float, list[dict]]] = {}
 _CACHE_TTL_SECONDS = 60
+
+GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
+GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
+GOOGLE_CALLIST_URL = "https://www.googleapis.com/calendar/v3/users/me/calendarList"
+GOOGLE_EVENTS_URL = "https://www.googleapis.com/calendar/v3/calendars/{cal_id}/events"
+GOOGLE_SCOPE = "https://www.googleapis.com/auth/calendar.readonly"
 
 _WEEKDAY_MAP = {"MO": 0, "TU": 1, "WE": 2, "TH": 3, "FR": 4, "SA": 5, "SU": 6}
 _MEET_PATTERNS = [
@@ -82,6 +95,194 @@ def _fetch_ics_text(url: str) -> str:
     text = resp.text
     _ICS_CACHE[clean_url] = (now_ts, text)
     return text
+
+
+def _token_secret_bytes() -> bytes:
+    secret = (
+        os.environ.get("GCAL_TOKEN_SECRET")
+        or os.environ.get("GOOGLE_CLIENT_SECRET")
+        or "itsaplane-trmnl-default-gcal-secret"
+    )
+    return hashlib.sha256(secret.encode("utf-8")).digest()
+
+
+def _xor_stream(data: bytes, key: bytes, nonce: bytes) -> bytes:
+    out = bytearray(len(data))
+    counter = 0
+    offset = 0
+    while offset < len(data):
+        block = hashlib.sha256(key + nonce + counter.to_bytes(4, "big")).digest()
+        chunk = min(len(block), len(data) - offset)
+        for i in range(chunk):
+            out[offset + i] = data[offset + i] ^ block[i]
+        offset += chunk
+        counter += 1
+    return bytes(out)
+
+
+def seal_refresh_token(refresh_token: str) -> str:
+    """Encrypt and HMAC-sign a user's Google OAuth refresh token for storage in TRMNL settings."""
+    key = _token_secret_bytes()
+    raw = refresh_token.strip().encode("utf-8")
+    nonce = hashlib.sha256(raw + key).digest()[:12]
+    cipher = _xor_stream(raw, key, nonce)
+    payload_b64 = base64.urlsafe_b64encode(nonce + cipher).decode("ascii").rstrip("=")
+    sig = hmac.new(key, payload_b64.encode("ascii"), hashlib.sha256).hexdigest()[:20]
+    return f"gcal1.{payload_b64}.{sig}"
+
+
+def unseal_refresh_token(token_str: str) -> str:
+    """Decrypt and verify a sealed gcal1 token (or return a raw Google refresh token)."""
+    cleaned = token_str.strip()
+    if not cleaned.startswith("gcal1."):
+        return cleaned
+    parts = cleaned.split(".")
+    if len(parts) != 3:
+        raise ValueError("Invalid OAuth token format")
+    _, payload_b64, sig = parts
+    key = _token_secret_bytes()
+    expected_sig = hmac.new(key, payload_b64.encode("ascii"), hashlib.sha256).hexdigest()[:20]
+    if not hmac.compare_digest(sig, expected_sig):
+        raise ValueError("OAuth token signature mismatch")
+    pad = "=" * ((4 - len(payload_b64) % 4) % 4)
+    blob = base64.urlsafe_b64decode(payload_b64 + pad)
+    nonce, cipher = blob[:12], blob[12:]
+    return _xor_stream(cipher, key, nonce).decode("utf-8")
+
+
+def _get_google_access_token(oauth_token_raw: str) -> tuple[str, str]:
+    """Exchange a sealed/raw refresh token for a short-lived Google OAuth access token (cached per user)."""
+    refresh_token = unseal_refresh_token(oauth_token_raw)
+    token_hash = hashlib.sha256(refresh_token.encode("utf-8")).hexdigest()[:16]
+
+    now_ts = time_mod.time()
+    cached = _ACCESS_TOKEN_CACHE.get(token_hash)
+    if cached and now_ts < cached[0]:
+        return cached[1], token_hash
+
+    client_id = (os.environ.get("GOOGLE_CLIENT_ID") or "").strip()
+    client_secret = (os.environ.get("GOOGLE_CLIENT_SECRET") or "").strip()
+    if not client_id or not client_secret:
+        raise ValueError("GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET must be set on the server")
+
+    resp = _SESSION.post(
+        GOOGLE_TOKEN_URL,
+        data={
+            "client_id": client_id,
+            "client_secret": client_secret,
+            "refresh_token": refresh_token,
+            "grant_type": "refresh_token",
+        },
+        timeout=10,
+    )
+    resp.raise_for_status()
+    data = resp.json()
+    access_token = data["access_token"]
+    expires_in = int(data.get("expires_in", 3600))
+    _ACCESS_TOKEN_CACHE[token_hash] = (now_ts + max(60, expires_in - 120), access_token)
+    return access_token, token_hash
+
+
+def _parse_gcal_iso_dt(dt_obj: dict, target_tz) -> tuple[datetime, bool]:
+    if "date" in dt_obj and "dateTime" not in dt_obj:
+        d = datetime.strptime(dt_obj["date"][:10], "%Y-%m-%d").date()
+        return datetime.combine(d, time(0, 0), tzinfo=target_tz), True
+    raw_iso = dt_obj.get("dateTime", "")
+    dt = datetime.fromisoformat(raw_iso.replace("Z", "+00:00"))
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=target_tz)
+    else:
+        dt = dt.astimezone(target_tz)
+    return dt, False
+
+
+def _fetch_gcal_api_events(
+    access_token: str,
+    token_hash: str,
+    cal_id: str,
+    cal_name: str,
+    win_start: datetime,
+    win_end: datetime,
+    target_tz,
+) -> list[dict]:
+    """Fetch and normalize events from a user's Google Calendar via REST API v3."""
+    cache_key = f"{token_hash}:{cal_id}:{win_start.date().isoformat()}"
+    now_ts = time_mod.time()
+    cached = _GCAL_API_CACHE.get(cache_key)
+    if cached and (now_ts - cached[0]) < _CACHE_TTL_SECONDS:
+        return cached[1]
+
+    url = GOOGLE_EVENTS_URL.format(cal_id=quote(cal_id, safe=""))
+    resp = _SESSION.get(
+        url,
+        headers={"Authorization": f"Bearer {access_token}"},
+        params={
+            "singleEvents": "true",
+            "orderBy": "startTime",
+            "timeMin": win_start.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "timeMax": win_end.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "maxResults": 250,
+        },
+        timeout=12,
+    )
+    if resp.status_code == 429:
+        time_mod.sleep(1.1)
+        resp = _SESSION.get(
+            url,
+            headers={"Authorization": f"Bearer {access_token}"},
+            params={
+                "singleEvents": "true",
+                "orderBy": "startTime",
+                "timeMin": win_start.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "timeMax": win_end.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "maxResults": 250,
+            },
+            timeout=12,
+        )
+    resp.raise_for_status()
+    items = resp.json().get("items") or []
+
+    events: list[dict] = []
+    for item in items:
+        if item.get("status") == "cancelled":
+            continue
+        # Skip events the user explicitly declined
+        attendees = item.get("attendees") or []
+        if any(a.get("self") and a.get("responseStatus") == "declined" for a in attendees):
+            continue
+
+        start_obj = item.get("start") or {}
+        end_obj = item.get("end") or {}
+        if not start_obj:
+            continue
+        s_dt, all_day = _parse_gcal_iso_dt(start_obj, target_tz)
+        if end_obj:
+            e_dt, _ = _parse_gcal_iso_dt(end_obj, target_tz)
+        else:
+            e_dt = s_dt + (timedelta(days=1) if all_day else timedelta(hours=1))
+
+        loc_raw = item.get("location") or ""
+        desc_raw = item.get("description") or ""
+        hangout = item.get("hangoutLink") or ""
+        conf_uris = " ".join(
+            ep.get("uri", "")
+            for ep in ((item.get("conferenceData") or {}).get("entryPoints") or [])
+        )
+        meet_tag = _detect_meet_tag(f"{loc_raw} {hangout}", f"{desc_raw} {conf_uris}")
+        events.append(
+            {
+                "title": (item.get("summary") or "(Busy)").strip(),
+                "start": s_dt,
+                "end": e_dt,
+                "all_day": all_day,
+                "location": _clean_location(loc_raw),
+                "meet_tag": meet_tag,
+                "calendar": cal_name,
+            }
+        )
+
+    _GCAL_API_CACHE[cache_key] = (now_ts, events)
+    return events
 
 
 def _unfold_ics(raw: str) -> list[str]:
@@ -666,6 +867,8 @@ def build_gcal_dashboard(
     ics_urls_raw: str = "",
     tz_name: str = "America/Chicago",
     cal_names_raw: str = "",
+    oauth_token_raw: str = "",
+    calendar_ids_raw: str = "",
 ) -> dict:
     """Build the full Google Calendar dashboard payload for TRMNL."""
     target_tz = _resolve_tz(tz_name)
@@ -675,18 +878,29 @@ def build_gcal_dashboard(
     month_start = datetime.combine(today.replace(day=1), time(0, 0), tzinfo=target_tz)
     win_end = datetime.combine(today + timedelta(days=35), time(23, 59), tzinfo=target_tz)
 
+    oauth_token = oauth_token_raw.strip()
+    cal_ids = [c.strip() for c in calendar_ids_raw.split(",") if c.strip()] or ["primary"]
     urls = [u.strip() for u in ics_urls_raw.split(",") if u.strip()]
     names = [n.strip() for n in cal_names_raw.split(",") if n.strip()]
 
-    is_demo = len(urls) == 0
-    if is_demo:
-        all_events = _demo_events(now_dt, target_tz)
-    else:
+    is_demo = (not oauth_token) and (len(urls) == 0)
+    if oauth_token:
+        access_token, token_hash = _get_google_access_token(oauth_token)
+        all_events = []
+        for idx, cid in enumerate(cal_ids):
+            default_lbl = "Personal" if cid == "primary" else f"Cal {idx + 1}"
+            cal_label = names[idx] if idx < len(names) else default_lbl
+            all_events.extend(
+                _fetch_gcal_api_events(access_token, token_hash, cid, cal_label, month_start, win_end, target_tz)
+            )
+    elif urls:
         all_events = []
         for idx, url in enumerate(urls):
             cal_label = names[idx] if idx < len(names) else (f"Cal {idx + 1}" if len(urls) > 1 else "Calendar")
             raw_ics = _fetch_ics_text(url)
             all_events.extend(parse_ics_events(raw_ics, cal_label, month_start, win_end, target_tz))
+    else:
+        all_events = _demo_events(now_dt, target_tz)
 
     day_counts: dict[date, int] = {}
     all_day_today: list[dict] = []
@@ -789,15 +1003,199 @@ def build_gcal_dashboard(
     }
 
 
+def _redirect_uri() -> str:
+    scheme = request.headers.get("X-Forwarded-Proto", request.scheme)
+    return f"{scheme}://{request.host}/gcal/callback"
+
+
+@gcal_dashboard_bp.route("/gcal/auth", methods=["GET"])
+def gcal_auth():
+    """Multi-user Google OAuth 2.0 landing and redirect endpoint."""
+    client_id = (os.environ.get("GOOGLE_CLIENT_ID") or "").strip()
+    client_secret = (os.environ.get("GOOGLE_CLIENT_SECRET") or "").strip()
+    redir = _redirect_uri()
+
+    if not client_id or not client_secret:
+        page = f"""<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>TRMNL Google Calendar OAuth Setup</title>
+<style>body{{font-family:system-ui,sans-serif;max-width:680px;margin:40px auto;padding:0 20px;line-height:1.5;color:#111}}
+code,pre{{background:#f4f4f4;padding:3px 6px;border-radius:4px;font-size:13px}}
+.card{{border:2px solid #111;border-radius:8px;padding:20px;margin-top:20px}}</style></head>
+<body>
+<h1>Editorial Google Calendar &middot; OAuth Setup</h1>
+<div class="card">
+<h3>Server Configuration Needed (One-Time Admin Setup)</h3>
+<p>To enable one-click <strong>Sign in with Google</strong> for TRMNL users, set these two environment variables on Render:</p>
+<ol>
+<li>In <a href="https://console.cloud.google.com/apis/credentials" target="_blank">Google Cloud Console &rarr; Credentials</a>, enable the <strong>Google Calendar API</strong> and create an <strong>OAuth 2.0 Client ID (Web application)</strong>.</li>
+<li>Add this exact <strong>Authorized redirect URI</strong>:<br><pre>{html.escape(redir)}</pre></li>
+<li>In your Render service Environment Variables, set:<br>
+<code>GOOGLE_CLIENT_ID</code> and <code>GOOGLE_CLIENT_SECRET</code></li>
+</ol>
+<p><em>Until configured, users can still connect via their Google Calendar Secret iCal URL (<code>ics_url</code>) or preview Demo Mode.</em></p>
+</div></body></html>"""
+        return Response(page, mimetype="text/html")
+
+    if request.args.get("start") == "1":
+        params = {
+            "client_id": client_id,
+            "redirect_uri": redir,
+            "response_type": "code",
+            "scope": GOOGLE_SCOPE,
+            "access_type": "offline",
+            "prompt": "consent",
+        }
+        return redirect(f"{GOOGLE_AUTH_URL}?{urlencode(params)}")
+
+    page = """<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Connect Google Calendar to TRMNL</title>
+<style>body{font-family:system-ui,sans-serif;max-width:600px;margin:48px auto;padding:0 20px;color:#111;line-height:1.5}
+.card{border:2px solid #111;border-radius:10px;padding:28px;background:#fff}
+.btn{display:inline-block;background:#111;color:#fff;text-decoration:none;padding:12px 22px;border-radius:6px;font-weight:700;margin-top:12px}
+.note{font-size:13px;color:#444;margin-top:18px}</style></head>
+<body>
+<div class="card">
+<h2 style="margin-top:0">Editorial Google Calendar for TRMNL</h2>
+<p>Connect your Google account (read-only <code>calendar.readonly</code> permission) to generate your personal token and choose which calendars to display on your TRMNL ePaper screen.</p>
+<a class="btn" href="/gcal/auth?start=1">Sign in with Google Calendar &rarr;</a>
+<p class="note">Stateless &amp; private: your encrypted token is stored only in your own TRMNL plugin settings, never in a shared database.</p>
+</div></body></html>"""
+    return Response(page, mimetype="text/html")
+
+
+@gcal_dashboard_bp.route("/gcal/callback", methods=["GET"])
+def gcal_callback():
+    """OAuth 2.0 callback that seals the user's refresh token and lets them pick calendars for TRMNL."""
+    err = request.args.get("error")
+    if err:
+        return Response(f"<h3>Google OAuth Error: {html.escape(err)}</h3>", status=400, mimetype="text/html")
+
+    code = (request.args.get("code") or "").strip()
+    if not code:
+        return redirect("/gcal/auth")
+
+    client_id = (os.environ.get("GOOGLE_CLIENT_ID") or "").strip()
+    client_secret = (os.environ.get("GOOGLE_CLIENT_SECRET") or "").strip()
+    if not client_id or not client_secret:
+        return redirect("/gcal/auth")
+
+    token_resp = _SESSION.post(
+        GOOGLE_TOKEN_URL,
+        data={
+            "code": code,
+            "client_id": client_id,
+            "client_secret": client_secret,
+            "redirect_uri": _redirect_uri(),
+            "grant_type": "authorization_code",
+        },
+        timeout=10,
+    )
+    if token_resp.status_code != 200:
+        return Response(
+            f"<h3>Failed to exchange OAuth code ({token_resp.status_code})</h3>",
+            status=400,
+            mimetype="text/html",
+        )
+
+    tok_json = token_resp.json()
+    refresh_token = tok_json.get("refresh_token")
+    access_token = tok_json.get("access_token", "")
+    if not refresh_token:
+        return Response(
+            "<h3>No refresh_token returned. Please <a href='/gcal/auth?start=1'>click here to re-consent</a>.</h3>",
+            status=400,
+            mimetype="text/html",
+        )
+
+    sealed = seal_refresh_token(refresh_token)
+
+    # Fetch user's calendar list so they can toggle calendars interactively
+    cals = []
+    detected_tz = "America/Chicago"
+    try:
+        cl_resp = _SESSION.get(
+            GOOGLE_CALLIST_URL,
+            headers={"Authorization": f"Bearer {access_token}"},
+            timeout=8,
+        )
+        if cl_resp.status_code == 200:
+            for item in cl_resp.json().get("items") or []:
+                cid = item.get("id") or ""
+                summary = item.get("summaryOverride") or item.get("summary") or cid
+                is_primary = bool(item.get("primary"))
+                if is_primary and item.get("timeZone"):
+                    detected_tz = item["timeZone"]
+                cals.append({"id": "primary" if is_primary else cid, "name": summary, "primary": is_primary})
+    except requests.exceptions.RequestException:
+        pass
+
+    if not cals:
+        cals = [{"id": "primary", "name": "Personal", "primary": True}]
+
+    cal_checkboxes = "".join(
+        f'<label style="display:block;margin:6px 0"><input type="checkbox" class="cal-cb" '
+        f'data-id="{html.escape(c["id"])}" data-name="{html.escape(c["name"])}" '
+        f'{"checked" if c["primary"] else ""} onchange="syncCals()"> '
+        f'<strong>{html.escape(c["name"])}</strong> <code>({html.escape(c["id"])})</code></label>'
+        for c in cals
+    )
+
+    page = f"""<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Google Calendar Connected - TRMNL</title>
+<style>body{{font-family:system-ui,sans-serif;max-width:680px;margin:36px auto;padding:0 20px;color:#111;line-height:1.45}}
+.card{{border:2px solid #111;border-radius:10px;padding:24px;margin-bottom:18px}}
+input[type=text]{{width:100%;padding:8px;font-family:monospace;font-size:13px;border:1px solid #333;border-radius:4px;box-sizing:border-box}}
+label.fld{{font-weight:700;display:block;margin-top:14px;margin-bottom:4px}}</style></head>
+<body>
+<div class="card">
+<h2 style="margin-top:0">Google Calendar Connected</h2>
+<p>Copy and paste these values into your <strong>Editorial Google Calendar</strong> plugin settings in TRMNL:</p>
+
+<label class="fld">1. Google OAuth Token (<code>oauth_token</code>)</label>
+<input type="text" readonly value="{html.escape(sealed)}" onclick="this.select()">
+
+<label class="fld">2. Select Calendars to Display</label>
+<div>{cal_checkboxes}</div>
+
+<label class="fld">3. Google Calendar IDs (<code>calendar_ids</code>)</label>
+<input type="text" id="cal_ids" readonly value="primary" onclick="this.select()">
+
+<label class="fld">4. Calendar Labels (<code>calendar_names</code>)</label>
+<input type="text" id="cal_names" readonly value="{html.escape(cals[0]['name'])}" onclick="this.select()">
+
+<label class="fld">5. Timezone (<code>tz</code>)</label>
+<input type="text" readonly value="{html.escape(detected_tz)}" onclick="this.select()">
+</div>
+<script>
+function syncCals() {{
+  const cbs = Array.from(document.querySelectorAll('.cal-cb:checked'));
+  document.getElementById('cal_ids').value = cbs.map(c => c.dataset.id).join(', ') || 'primary';
+  document.getElementById('cal_names').value = cbs.map(c => c.dataset.name).join(', ') || 'Personal';
+}}
+syncCals();
+</script></body></html>"""
+    return Response(page, mimetype="text/html")
+
+
 @gcal_dashboard_bp.route("/gcal/dashboard", methods=["GET"])
 def gcal_dashboard():
     """TRMNL polling endpoint for the Editorial Google Calendar Dashboard."""
+    oauth_token = request.args.get("oauth_token", "")
+    calendar_ids = request.args.get("calendar_ids", "")
     ics_url = request.args.get("ics_url", "")
     tz_name = request.args.get("tz", "America/Chicago")
     cal_names = request.args.get("calendar_names", "")
     try:
-        payload = build_gcal_dashboard(ics_url, tz_name, cal_names)
+        payload = build_gcal_dashboard(
+            ics_urls_raw=ics_url,
+            tz_name=tz_name,
+            cal_names_raw=cal_names,
+            oauth_token_raw=oauth_token,
+            calendar_ids_raw=calendar_ids,
+        )
         return jsonify(payload)
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
     except requests.exceptions.Timeout:
         return jsonify({"error": "Upstream calendar timed out"}), 504
     except requests.exceptions.HTTPError as exc:

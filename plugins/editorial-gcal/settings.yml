@@ -6,7 +6,7 @@ no_screen_padding: 'no'
 dark_mode: 'no'
 static_data: ''
 polling_verb: get
-polling_url: 'https://itsaplane-trmnl.onrender.com/gcal/dashboard?ics_url={{ ics_url | url_encode }}&tz={{ tz | url_encode }}&calendar_names={{ calendar_names | url_encode }}'
+polling_url: 'https://itsaplane-trmnl.onrender.com/gcal/dashboard?oauth_token={{ oauth_token | url_encode }}&calendar_ids={{ calendar_ids | url_encode }}&ics_url={{ ics_url | url_encode }}&tz={{ tz | url_encode }}&calendar_names={{ calendar_names | url_encode }}'
 polling_headers: ''
 refresh_interval: 15
 custom_fields:
@@ -17,10 +17,21 @@ custom_fields:
     description: Editorial Google Calendar planner
     github_url: https://github.com/ervansetiawan/itsaplane-trmnl
     email_address: ervansetiawan@gmail.com
+  - keyname: oauth_token
+    field_type: string
+    name: Google OAuth Token (Recommended)
+    description: Sign in at https://itsaplane-trmnl.onrender.com/gcal/auth and paste your personal OAuth token here.
+    optional: true
+  - keyname: calendar_ids
+    field_type: string
+    name: Google Calendar IDs (for OAuth)
+    description: Comma-separated Calendar IDs from /gcal/auth (defaults to primary).
+    default: primary
+    optional: true
   - keyname: ics_url
     field_type: string
-    name: Google Calendar Secret iCal URL(s)
-    description: Secret address in iCal format (comma-separate multiple calendars). Leave blank for Demo Mode.
+    name: Alternative: Secret iCal URL(s)
+    description: Optional .ics URL(s) if not using Google OAuth. Leave both blank for Demo Mode.
     optional: true
   - keyname: tz
     field_type: string
@@ -31,5 +42,5 @@ custom_fields:
   - keyname: calendar_names
     field_type: string
     name: Calendar Labels (optional)
-    description: Comma-separated names matching your iCal URLs (e.g. Work, Personal).
+    description: Comma-separated names matching your calendars (e.g. Work, Personal).
     optional: true
