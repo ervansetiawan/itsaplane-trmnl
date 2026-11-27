@@ -273,35 +273,57 @@ def _nice_scale_length(meters_per_px, target_px):
 
 
 def _draw_aircraft_chevron(draw, px, py, track_deg, is_ground):
-    """Draws a high-contrast flying aircraft silhouette (with white halo & wake trail) at (px, py)."""
-    if track_deg is None:
-        draw.ellipse([px - 4, py - 4, px + 4, py + 4], fill=WHITE, outline=BLACK, width=2)
-        draw.ellipse([px - 2, py - 2, px + 2, py + 2], fill=BLACK)
-        return
-
-    rad = math.radians(float(track_deg))
+    """Draws a recognizable top-down airplane icon (with white halo & wake trail) at (px, py)."""
+    heading = float(track_deg) if track_deg is not None else 0.0
+    rad = math.radians(heading)
     sin_t, cos_t = math.sin(rad), -math.cos(rad)
-    # Swept-wing aircraft chevron: nose, left wingtip, tail notch, right wingtip
-    pts_local = [(0, 8), (-7, -5), (0, -2), (7, -5)]
-    poly = []
-    for lx, ly in pts_local:
-        rx = px + lx * (-cos_t) + ly * sin_t
-        ry = py + lx * (-sin_t) + ly * cos_t
-        poly.append((round(rx, 1), round(ry, 1)))
 
-    # Heading vector ahead + dotted wake trail behind
-    hx = px + sin_t * 14
-    hy = py + cos_t * 14
-    draw.line([(px, py), (hx, hy)], fill=WHITE, width=3)
-    for step in (7, 11, 15):
+    # Top-down jetliner silhouette: nose (+y), fuselage, swept wings, and tailplane
+    pts_local = [
+        (0.0, 10.5),
+        (1.6, 7.2),
+        (1.6, 2.8),
+        (10.0, -2.0),
+        (10.0, -3.8),
+        (1.6, -1.0),
+        (1.3, -6.2),
+        (4.8, -8.5),
+        (4.8, -10.0),
+        (0.8, -8.8),
+        (0.0, -10.2),
+        (-0.8, -8.8),
+        (-4.8, -10.0),
+        (-4.8, -8.5),
+        (-1.3, -6.2),
+        (-1.6, -1.0),
+        (-10.0, -3.8),
+        (-10.0, -2.0),
+        (-1.6, 2.8),
+        (-1.6, 7.2),
+    ]
+
+    def _rot(scale=1.0):
+        out = []
+        for lx, ly in pts_local:
+            sx_l, sy_l = lx * scale, ly * scale
+            rx = px + sx_l * (-cos_t) + sy_l * sin_t
+            ry = py + sx_l * (-sin_t) + sy_l * cos_t
+            out.append((round(rx, 1), round(ry, 1)))
+        return out
+
+    halo_poly = _rot(1.26)
+    plane_poly = _rot(1.0)
+
+    # Dotted wake trail behind tail
+    for step in (13, 17):
         tx = px - sin_t * step
         ty = py - cos_t * step
-        draw.ellipse([tx - 1.5, ty - 1.5, tx + 1.5, ty + 1.5], fill=WHITE)
-        draw.ellipse([tx - 1, ty - 1, tx + 1, ty + 1], fill=BLACK)
+        draw.ellipse([tx - 2.0, ty - 2.0, tx + 2.0, ty + 2.0], fill=WHITE)
+        draw.ellipse([tx - 1.0, ty - 1.0, tx + 1.0, ty + 1.0], fill=BLACK)
 
-    draw.polygon(poly, fill=WHITE, outline=WHITE)
-    draw.line([(px, py), (hx, hy)], fill=BLACK, width=1)
-    draw.polygon(poly, fill=WHITE if is_ground else BLACK, outline=BLACK)
+    draw.polygon(halo_poly, fill=WHITE, outline=WHITE)
+    draw.line(halo_poly + [halo_poly[0]], fill=WHITE, width=2)
+    draw.polygon(plane_poly, fill=WHITE if is_ground else BLACK, outline=BLACK)
 
 
 def _clamp_to_approach_perimeter(px, py, width, height):
@@ -543,14 +565,12 @@ def render_airport_diagram(iata, lat, lon, width=432, height=324, wind_from_deg=
                     py = py + 24 if py < height / 2 else py - 24
             placed_positions.append((px, py))
 
-            is_gnd = ac.get("alt_baro") == "ground"
+            is_gnd = not _is_airborne(ac)
             _draw_aircraft_chevron(draw, px, py, ac.get("track"), is_gnd)
             cs = (ac.get("flight") or ac.get("r") or "").strip()[:7]
-            alt_lbl = _fmt_map_alt(ac.get("alt_baro"))
-            tag = f"{cs} {alt_lbl}".strip() if cs else alt_lbl
-            if tag and len(placed_positions) <= 5:
-                lbl_y = py - 14 if py > 28 else py + 14
-                _draw_label(draw, tag, (px, lbl_y), ac_font, (width, height))
+            if cs and len(placed_positions) <= 5:
+                lbl_y = py - 15 if py > 30 else py + 15
+                _draw_label(draw, cs, (px, lbl_y), ac_font, (width, height))
 
         _draw_radar_inset(draw, width, height, lat, lon, aircraft, radius_nm=12.0)
 
