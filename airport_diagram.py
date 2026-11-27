@@ -272,7 +272,7 @@ def _nice_scale_length(meters_per_px, target_px):
     return 10000
 
 
-def _draw_aircraft_chevron(draw, px, py, track_deg, is_ground):
+def _draw_aircraft_chevron(draw, px, py, track_deg):
     """Draws a recognizable top-down airplane icon rotated to its exact compass heading at (px, py)."""
     heading = float(track_deg) if track_deg is not None else 0.0
     rad = math.radians(heading)
@@ -280,28 +280,28 @@ def _draw_aircraft_chevron(draw, px, py, track_deg, is_ground):
     fx, fy = math.sin(rad), -math.cos(rad)
     rx_u, ry_u = math.cos(rad), math.sin(rad)
 
-    # Top-down jetliner silhouette: nose (+y), fuselage, swept wings, and tailplane
+    # Top-down jetliner silhouette: pointed nose (+y), forward-set swept wings, slender tailplane (-y)
     pts_local = [
-        (0.0, 10.5),
-        (1.6, 7.2),
-        (1.6, 2.8),
-        (10.0, -2.0),
-        (10.0, -3.8),
-        (1.6, -1.0),
-        (1.3, -6.2),
-        (4.8, -8.5),
-        (4.8, -10.0),
-        (0.8, -8.8),
-        (0.0, -10.2),
-        (-0.8, -8.8),
-        (-4.8, -10.0),
-        (-4.8, -8.5),
-        (-1.3, -6.2),
-        (-1.6, -1.0),
-        (-10.0, -3.8),
-        (-10.0, -2.0),
-        (-1.6, 2.8),
-        (-1.6, 7.2),
+        (0.0, 11.0),
+        (1.5, 7.5),
+        (1.5, 4.2),
+        (10.0, -0.5),
+        (10.0, -2.3),
+        (1.5, 0.4),
+        (1.2, -6.5),
+        (4.5, -8.8),
+        (4.5, -10.2),
+        (0.8, -9.2),
+        (0.0, -10.5),
+        (-0.8, -9.2),
+        (-4.5, -10.2),
+        (-4.5, -8.8),
+        (-1.2, -6.5),
+        (-1.5, 0.4),
+        (-10.0, -2.3),
+        (-10.0, -0.5),
+        (-1.5, 4.2),
+        (-1.5, 7.5),
     ]
 
     def _rot(scale=1.0):
@@ -313,46 +313,12 @@ def _draw_aircraft_chevron(draw, px, py, track_deg, is_ground):
             out.append((round(x_pt, 1), round(y_pt, 1)))
         return out
 
-    halo_poly = _rot(1.26)
+    halo_poly = _rot(1.28)
     plane_poly = _rot(1.0)
-
-    # Dotted wake trail behind tail
-    for step in (13, 17):
-        tx = px - fx * step
-        ty = py - fy * step
-        draw.ellipse([tx - 2.0, ty - 2.0, tx + 2.0, ty + 2.0], fill=WHITE)
-        draw.ellipse([tx - 1.0, ty - 1.0, tx + 1.0, ty + 1.0], fill=BLACK)
 
     draw.polygon(halo_poly, fill=WHITE, outline=WHITE)
     draw.line(halo_poly + [halo_poly[0]], fill=WHITE, width=2)
-    draw.polygon(plane_poly, fill=WHITE if is_ground else BLACK, outline=BLACK)
-
-
-def _clamp_to_approach_perimeter(px, py, width, height):
-    """Projects an off-canvas approach/departure aircraft onto the outer map perimeter along its true bearing."""
-    cx, cy = width / 2.0, height / 2.0
-    min_x, max_x = 34.0, width - 34.0
-    min_y, max_y = 26.0, height - 26.0
-
-    if min_x <= px <= max_x and min_y <= py <= max_y:
-        return px, py
-
-    dx, dy = px - cx, py - cy
-    if dx == 0 and dy == 0:
-        return cx, cy
-
-    scale_x = ((max_x - cx) / dx) if dx > 0 else ((min_x - cx) / dx if dx < 0 else 999.0)
-    scale_y = ((max_y - cy) / dy) if dy > 0 else ((min_y - cy) / dy if dy < 0 else 999.0)
-    s = min(abs(scale_x), abs(scale_y))
-    qx = cx + dx * s
-    qy = cy + dy * s
-
-    # Keep clear of bottom-left scale bar and top-right North arrow
-    if qx < 120 and qy > height - 34:
-        qy = height - 36
-    if qx > width - 36 and qy < 36:
-        qy = 38
-    return qx, qy
+    draw.polygon(plane_poly, fill=BLACK, outline=BLACK)
 
 
 def _is_airborne(ac):
@@ -474,44 +440,50 @@ def render_airport_diagram(iata, lat, lon, width=432, height=324, wind_from_deg=
     for text, pos in label_jobs:
         _draw_label(draw, text, pos, font, (width, height))
 
-    # 5b) Plot flying aircraft on the map (prioritizing airborne over ground) + 12 NM approach radar inset
+    # 5b) Plot aircraft at their true GPS positions inside the map frame (prioritizing airborne over moving surface)
     if aircraft:
         ac_font = _font(9)
-        placed_positions = []
-        airborne_ac = [
-            a for a in aircraft
-            if _is_airborne(a) and a.get("lat") is not None and a.get("lon") is not None
-        ]
-        airborne_ac.sort(key=lambda a: (not bool((a.get("flight") or "").strip()), float(a.get("dst", 99.0))))
+        in_bounds = []
+        for ac in aircraft:
+            alat, alon = ac.get("lat"), ac.get("lon")
+            trk = ac.get("track")
+            if alat is None or alon is None or trk is None:
+                continue
+            airborne = _is_airborne(ac)
+            gs = float(ac.get("gs") or 0.0)
+            if not airborne and gs < 5.0:
+                continue
+            ax, ay = to_merc(float(alat), float(alon))
+            px = (ax - minx) * sx
+            py = (maxy - ay) * sy
+            if 14 <= px <= width - 14 and 14 <= py <= height - 14:
+                in_bounds.append((ac, px, py, airborne, gs))
 
-        if airborne_ac:
-            map_targets = airborne_ac[:6]
-        else:
-            moving_gnd = [
-                a for a in aircraft
-                if float(a.get("gs") or 0) >= 5.0 and a.get("lat") is not None and a.get("lon") is not None
-            ]
-            map_targets = moving_gnd[:3]
+        # Prioritize flying aircraft first, then fastest moving aircraft on runways/taxiways
+        in_bounds.sort(
+            key=lambda item: (
+                not item[3],
+                not bool((item[0].get("flight") or "").strip()),
+                -item[4],
+            )
+        )
 
-        for ac in map_targets:
-            alat, alon = float(ac["lat"]), float(ac["lon"])
-            ax, ay = to_merc(alat, alon)
-            raw_px = (ax - minx) * sx
-            raw_py = (maxy - ay) * sy
-            px, py = _clamp_to_approach_perimeter(raw_px, raw_py, width, height)
+        placed_icons = []
+        placed_labels = []
+        for ac, px, py, _, _ in in_bounds:
+            if len(placed_icons) >= 6:
+                break
+            if any(math.hypot(px - ox, py - oy) < 22 for ox, oy in placed_icons):
+                continue
+            placed_icons.append((px, py))
+            _draw_aircraft_chevron(draw, px, py, ac.get("track"))
 
-            # Nudge slightly if another flying aircraft was projected onto nearly the same perimeter spot
-            for ox, oy in placed_positions:
-                if math.hypot(px - ox, py - oy) < 28:
-                    py = py + 24 if py < height / 2 else py - 24
-            placed_positions.append((px, py))
-
-            is_gnd = not _is_airborne(ac)
-            _draw_aircraft_chevron(draw, px, py, ac.get("track"), is_gnd)
             cs = (ac.get("flight") or ac.get("r") or "").strip()[:7]
-            if cs and len(placed_positions) <= 5:
+            if cs and len(placed_labels) < 5:
                 lbl_y = py - 15 if py > 30 else py + 15
-                _draw_label(draw, cs, (px, lbl_y), ac_font, (width, height))
+                if all(math.hypot(px - lx, lbl_y - ly) > 32 for lx, ly in placed_labels):
+                    placed_labels.append((px, lbl_y))
+                    _draw_label(draw, cs, (px, lbl_y), ac_font, (width, height))
 
     # 6) North arrow (top-right)
     nx, ny = width - 16, 10
