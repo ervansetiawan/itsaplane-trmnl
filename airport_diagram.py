@@ -273,10 +273,12 @@ def _nice_scale_length(meters_per_px, target_px):
 
 
 def _draw_aircraft_chevron(draw, px, py, track_deg, is_ground):
-    """Draws a recognizable top-down airplane icon (with white halo & wake trail) at (px, py)."""
+    """Draws a recognizable top-down airplane icon rotated to its exact compass heading at (px, py)."""
     heading = float(track_deg) if track_deg is not None else 0.0
     rad = math.radians(heading)
-    sin_t, cos_t = math.sin(rad), -math.cos(rad)
+    # Forward unit vector (0°=North/up, 90°=East/right) and orthogonal right-wing unit vector
+    fx, fy = math.sin(rad), -math.cos(rad)
+    rx_u, ry_u = math.cos(rad), math.sin(rad)
 
     # Top-down jetliner silhouette: nose (+y), fuselage, swept wings, and tailplane
     pts_local = [
@@ -306,9 +308,9 @@ def _draw_aircraft_chevron(draw, px, py, track_deg, is_ground):
         out = []
         for lx, ly in pts_local:
             sx_l, sy_l = lx * scale, ly * scale
-            rx = px + sx_l * (-cos_t) + sy_l * sin_t
-            ry = py + sx_l * (-sin_t) + sy_l * cos_t
-            out.append((round(rx, 1), round(ry, 1)))
+            x_pt = px + sx_l * rx_u + sy_l * fx
+            y_pt = py + sx_l * ry_u + sy_l * fy
+            out.append((round(x_pt, 1), round(y_pt, 1)))
         return out
 
     halo_poly = _rot(1.26)
@@ -316,8 +318,8 @@ def _draw_aircraft_chevron(draw, px, py, track_deg, is_ground):
 
     # Dotted wake trail behind tail
     for step in (13, 17):
-        tx = px - sin_t * step
-        ty = py - cos_t * step
+        tx = px - fx * step
+        ty = py - fy * step
         draw.ellipse([tx - 2.0, ty - 2.0, tx + 2.0, ty + 2.0], fill=WHITE)
         draw.ellipse([tx - 1.0, ty - 1.0, tx + 1.0, ty + 1.0], fill=BLACK)
 
@@ -333,9 +335,6 @@ def _clamp_to_approach_perimeter(px, py, width, height):
     min_y, max_y = 26.0, height - 26.0
 
     if min_x <= px <= max_x and min_y <= py <= max_y:
-        # Avoid bottom-right radar inset (width-88..width, height-88..height)
-        if px > width - 92 and py > height - 92:
-            py = height - 96
         return px, py
 
     dx, dy = px - cx, py - cy
@@ -348,75 +347,17 @@ def _clamp_to_approach_perimeter(px, py, width, height):
     qx = cx + dx * s
     qy = cy + dy * s
 
-    # Keep clear of bottom-right 10NM radar inset and bottom-left scale bar
-    if qx > width - 94 and qy > height - 94:
-        qy = min(qy, height - 98)
+    # Keep clear of bottom-left scale bar and top-right North arrow
     if qx < 120 and qy > height - 34:
         qy = height - 36
+    if qx > width - 36 and qy < 36:
+        qy = 38
     return qx, qy
-
-
-def _fmt_map_alt(alt_raw):
-    if alt_raw == "ground":
-        return "GND"
-    if isinstance(alt_raw, (int, float)):
-        alt_i = int(round(alt_raw))
-        if alt_i >= 18000:
-            return f"FL{alt_i // 100:03d}"
-        if alt_i >= 1000:
-            return f"{alt_i / 1000:.1f}k ft"
-        return f"{alt_i}ft"
-    return ""
 
 
 def _is_airborne(ac):
     alt = ac.get("alt_baro")
     return isinstance(alt, (int, float)) and float(alt) > 75.0
-
-
-def _draw_radar_inset(draw, width, height, center_lat, center_lon, aircraft, radius_nm=12.0):
-    """Draws a compact 12 NM approach radar scope in the bottom-right corner (prioritizing flying aircraft)."""
-    box_s = 74
-    pad = 8
-    x0 = width - box_s - pad
-    y0 = height - box_s - pad
-    cx = x0 + box_s // 2
-    cy = y0 + box_s // 2
-    r_outer = (box_s // 2) - 6
-    r_inner = r_outer // 2
-
-    # White card background with black frame
-    draw.rectangle([x0, y0, x0 + box_s, y0 + box_s], fill=WHITE, outline=BLACK, width=1)
-    draw.ellipse([cx - r_outer, cy - r_outer, cx + r_outer, cy + r_outer], outline=BLACK, width=1)
-    draw.ellipse([cx - r_inner, cy - r_inner, cx + r_inner, cy + r_inner], outline=LIGHT, width=1)
-    draw.line([(cx - r_outer, cy), (cx + r_outer, cy)], fill=LIGHT, width=1)
-    draw.line([(cx, cy - r_outer), (cx, cy + r_outer)], fill=LIGHT, width=1)
-
-    f_tiny = _font(9)
-    draw.text((x0 + 3, y0 + 1), "12NM", fill=BLACK, font=f_tiny)
-
-    airborne_only = [a for a in aircraft if _is_airborne(a)]
-    radar_targets = airborne_only if airborne_only else aircraft[:12]
-
-    cos_lat = math.cos(math.radians(center_lat))
-    for ac in radar_targets:
-        alat, alon = ac.get("lat"), ac.get("lon")
-        if alat is None or alon is None:
-            continue
-        dy_nm = (float(alat) - center_lat) * 60.0
-        dx_nm = (float(alon) - center_lon) * 60.0 * cos_lat
-        dist_nm = math.hypot(dx_nm, dy_nm)
-        if dist_nm > radius_nm:
-            continue
-        px = cx + (dx_nm / radius_nm) * r_outer
-        py = cy - (dy_nm / radius_nm) * r_outer
-        trk = ac.get("track")
-        if trk is not None:
-            rad = math.radians(float(trk))
-            vx = px + math.sin(rad) * 6
-            vy = py - math.cos(rad) * 6
-            draw.line([(px, py), (vx, vy)], fill=BLACK, width=1)
-        draw.ellipse([px - 2.2, py - 2.2, px + 2.2, py + 2.2], fill=BLACK)
 
 
 # --------------------------------------------------------------------------- #
@@ -571,8 +512,6 @@ def render_airport_diagram(iata, lat, lon, width=432, height=324, wind_from_deg=
             if cs and len(placed_positions) <= 5:
                 lbl_y = py - 15 if py > 30 else py + 15
                 _draw_label(draw, cs, (px, lbl_y), ac_font, (width, height))
-
-        _draw_radar_inset(draw, width, height, lat, lon, aircraft, radius_nm=12.0)
 
     # 6) North arrow (top-right)
     nx, ny = width - 16, 10
