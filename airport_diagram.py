@@ -272,10 +272,80 @@ def _nice_scale_length(meters_per_px, target_px):
     return 10000
 
 
+def _draw_aircraft_chevron(draw, px, py, track_deg, is_ground):
+    """Draws a high-contrast aircraft target (with white halo) at (px, py)."""
+    if track_deg is None:
+        draw.ellipse([px - 4, py - 4, px + 4, py + 4], fill=WHITE, outline=BLACK, width=2)
+        draw.ellipse([px - 2, py - 2, px + 2, py + 2], fill=BLACK)
+        return
+
+    rad = math.radians(float(track_deg))
+    sin_t, cos_t = math.sin(rad), -math.cos(rad)
+    # Nose, left wingtip, tail notch, right wingtip
+    pts_local = [(0, 6), (-5, -4), (0, -2), (5, -4)]
+    poly = []
+    for lx, ly in pts_local:
+        rx = px + lx * (-cos_t) + ly * sin_t
+        ry = py + lx * (-sin_t) + ly * cos_t
+        poly.append((round(rx, 1), round(ry, 1)))
+
+    # White halo + heading leader line
+    hx = px + sin_t * 11
+    hy = py + cos_t * 11
+    draw.line([(px, py), (hx, hy)], fill=WHITE, width=3)
+    draw.polygon(poly, fill=WHITE, outline=WHITE)
+    draw.line([(px, py), (hx, hy)], fill=BLACK, width=1)
+    draw.polygon(poly, fill=WHITE if is_ground else BLACK, outline=BLACK)
+
+
+def _draw_radar_inset(draw, width, height, center_lat, center_lon, aircraft, radius_nm=10.0):
+    """Draws a compact 10 NM approach radar scope in the bottom-right corner."""
+    box_s = 74
+    pad = 8
+    x0 = width - box_s - pad
+    y0 = height - box_s - pad
+    cx = x0 + box_s // 2
+    cy = y0 + box_s // 2
+    r_outer = (box_s // 2) - 6
+    r_inner = r_outer // 2
+
+    # White card background with black frame
+    draw.rectangle([x0, y0, x0 + box_s, y0 + box_s], fill=WHITE, outline=BLACK, width=1)
+    draw.ellipse([cx - r_outer, cy - r_outer, cx + r_outer, cy + r_outer], outline=BLACK, width=1)
+    draw.ellipse([cx - r_inner, cy - r_inner, cx + r_inner, cy + r_inner], outline=LIGHT, width=1)
+    draw.line([(cx - r_outer, cy), (cx + r_outer, cy)], fill=LIGHT, width=1)
+    draw.line([(cx, cy - r_outer), (cx, cy + r_outer)], fill=LIGHT, width=1)
+
+    f_tiny = _font(9)
+    draw.text((x0 + 3, y0 + 1), "10NM", fill=BLACK, font=f_tiny)
+
+    cos_lat = math.cos(math.radians(center_lat))
+    for ac in aircraft:
+        alat, alon = ac.get("lat"), ac.get("lon")
+        if alat is None or alon is None:
+            continue
+        dy_nm = (float(alat) - center_lat) * 60.0
+        dx_nm = (float(alon) - center_lon) * 60.0 * cos_lat
+        dist_nm = math.hypot(dx_nm, dy_nm)
+        if dist_nm > radius_nm:
+            continue
+        px = cx + (dx_nm / radius_nm) * r_outer
+        py = cy - (dy_nm / radius_nm) * r_outer
+        is_gnd = ac.get("alt_baro") == "ground"
+        trk = ac.get("track")
+        if trk is not None and not is_gnd:
+            rad = math.radians(float(trk))
+            vx = px + math.sin(rad) * 5
+            vy = py - math.cos(rad) * 5
+            draw.line([(px, py), (vx, vy)], fill=BLACK, width=1)
+        r_dot = 1.5 if is_gnd else 2.2
+        draw.ellipse([px - r_dot, py - r_dot, px + r_dot, py + r_dot], fill=DARK if is_gnd else BLACK)
+
+
 # --------------------------------------------------------------------------- #
 # Main render
 # --------------------------------------------------------------------------- #
-def render_airport_diagram(iata, lat, lon, width=432, height=324, wind_from_deg=None):
+def render_airport_diagram(iata, lat, lon, width=432, height=324, wind_from_deg=None, aircraft=None):
     """
     Renders a recognizable 4-shade airport diagram.
 
@@ -385,6 +455,34 @@ def render_airport_diagram(iata, lat, lon, width=432, height=324, wind_from_deg=
 
     for text, pos in label_jobs:
         _draw_label(draw, text, pos, font, (width, height))
+
+    # 5b) Plot live aircraft inside the airport bbox + 10 NM approach radar inset
+    if aircraft:
+        ac_font = _font(9)
+        placed_labels = []
+        # Filter out stationary gate traffic (gs < 2 kt on ground) when active traffic exists
+        active_ac = [
+            a for a in aircraft
+            if a.get("alt_baro") != "ground" or float(a.get("gs") or 0) >= 2.0
+        ]
+        surface_ac = active_ac if len(active_ac) >= 3 else aircraft[:10]
+        for ac in surface_ac:
+            alat, alon = ac.get("lat"), ac.get("lon")
+            if alat is None or alon is None:
+                continue
+            ax, ay = to_merc(float(alat), float(alon))
+            px = (ax - minx) * sx
+            py = (maxy - ay) * sy
+            if 10 <= px <= width - 10 and 10 <= py <= height - 10:
+                is_gnd = ac.get("alt_baro") == "ground"
+                _draw_aircraft_chevron(draw, px, py, ac.get("track"), is_gnd)
+                cs = (ac.get("flight") or ac.get("r") or "").strip()[:7]
+                if cs and len(placed_labels) < 4:
+                    if all(math.hypot(px - lx, py - ly) > 34 for lx, ly in placed_labels):
+                        placed_labels.append((px, py))
+                        _draw_label(draw, cs, (px, max(12, py - 12)), ac_font, (width, height))
+
+        _draw_radar_inset(draw, width, height, lat, lon, aircraft, radius_nm=10.0)
 
     # 6) North arrow (top-right)
     nx, ny = width - 16, 10

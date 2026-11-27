@@ -1,10 +1,10 @@
-<div class="layout layout--row portrait:flex--col gap--medium lg:gap--large">
+<div class="layout layout--row flex--top portrait:flex--col gap--medium lg:gap--large">
   <div class="flex flex--center shrink-0 lg:w--[54cqw] lg:h--[78cqh] portrait:w--full portrait:h--[42cqh]">
     <img src="{{ diagram_data_uri }}" alt="{{ name }} airport diagram" class="image image-dither image--contain w--[432px] h--[324px] lg:w--full lg:h--full portrait:w--full portrait:h--full" />
   </div>
 
-  <div class="stretch-x text--left">
-    <div class="flex flex--row flex--center-y gap--small mb--1">
+  <div class="stretch-x text--left grow flex flex--col flex--top gap--xsmall">
+    <div class="flex flex--row flex--left flex--center-y gap--small w--full">
       <span class="value value--large lg:value--xxlarge">{{ iata }}</span>
       <span class="label label--small lg:label--large label--inverted px--2">{{ icao }}</span>
       {% if flt_cat != '' %}
@@ -12,54 +12,51 @@
       {% endif %}
     </div>
 
-    <div class="title title--small lg:title--large text--left">{{ name }}</div>
-    <div class="label label--small lg:label--large text--left">{{ city }}, {{ country }} · {{ tagline }}</div>
-    <div class="description lg:description--xlarge text--left mt--1 mb--2"><strong>RWY</strong> {{ runways }}</div>
+    <div class="title title--small lg:title--large text--left w--full">{{ name }}</div>
+    <div class="label label--small lg:label--large text--left w--full">{{ city }}, {{ country }} &middot; {{ tagline }}</div>
+    <div class="label label--small lg:label--base text--left w--full"><strong>RWY</strong> {{ runways }} ({{ longest_runway }})</div>
 
-    <div class="divider mb--2"></div>
-
-    <div class="grid grid--cols-2 gap--small lg:gap--medium mb--2">
-      <div class="item bg--gray-70 rounded p--2">
-        <div class="meta"></div>
-        <div class="content">
-          <span class="value value--xsmall lg:value--base">{{ wind }}</span>
-          <span class="label label--small lg:label--base">RWY {{ active_runway }} · {{ wind_components }}</span>
-        </div>
+    <div class="grid grid--cols-2 gap--small w--full mt--1">
+      <div class="bg--gray-70 rounded p--1 text--left">
+        <div class="label label--small text--left"><strong>{{ wind }}</strong></div>
+        <div class="label label--small text--left">RWY {{ active_runway }} &middot; {{ wind_components }}</div>
       </div>
 
-      <div class="item bg--gray-70 rounded p--2">
-        <div class="meta"></div>
-        <div class="content">
-          <span class="value value--xsmall lg:value--base">{% if temp_c != nil %}{{ temp_c }}°C{% else %}--{% endif %}</span>
-          <span class="label label--small lg:label--base">{{ ceiling }} · {{ visibility }}</span>
-        </div>
-      </div>
-
-      <div class="item bg--gray-70 rounded p--2">
-        <div class="meta"></div>
-        <div class="content">
-          <span class="value value--xsmall lg:value--base">{{ traffic_count }}</span>
-          <span class="label label--small lg:label--base">{{ closest_flight }}</span>
-        </div>
-      </div>
-
-      <div class="item bg--gray-70 rounded p--2">
-        <div class="meta"></div>
-        <div class="content">
-          <span class="value value--xsmall lg:value--base">{{ longest_runway }}</span>
-          <span class="label label--small lg:label--base">Elev {{ elevation }}</span>
-        </div>
+      <div class="bg--gray-70 rounded p--1 text--left">
+        <div class="label label--small text--left"><strong>{% if temp_c != nil %}{{ temp_c }}°C{% else %}--{% endif %} &middot; {{ ceiling }}</strong></div>
+        <div class="label label--small text--left">Vis {{ visibility }} &middot; {{ altim }}</div>
       </div>
     </div>
 
-    <div class="flex flex--row flex--between">
-      <span class="label label--small lg:label--large">{{ altim }}</span>
-      <span class="label label--small lg:label--large">{{ local_time }}</span>
+    <div class="bg--gray-70 rounded p--2 w--full text--left mt--1">
+      <div class="flex flex--row flex--between flex--center-y w--full mb--1">
+        <span class="label label--small"><strong>NEARBY AIRCRAFT (10 NM)</strong></span>
+        <span class="label label--small">{{ airborne_count }} AIR &middot; {{ ground_count }} GND</span>
+      </div>
+      {% if nearby_aircraft.size > 0 %}
+        <div class="flex flex--col gap--xsmall w--full">
+          {% for ac in nearby_aircraft limit: 4 %}
+            <div class="flex flex--row flex--between flex--center-y w--full">
+              <div class="flex flex--row flex--left flex--center-y gap--xsmall">
+                {% if ac.is_ground %}
+                  <span class="label label--small label--outline px--1">{{ ac.callsign }}</span>
+                {% else %}
+                  <span class="label label--small label--inverted px--1">{{ ac.callsign }}</span>
+                {% endif %}
+                <span class="label label--small">{{ ac.type }}</span>
+              </div>
+              <span class="label label--small">{{ ac.alt }} &middot; {{ ac.speed }} &middot; {{ ac.dist }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="label label--small text--left w--full">No active ADS-B transponders within 10 NM.</div>
+      {% endif %}
     </div>
   </div>
 </div>
 
 <div class="title_bar">
-  <span class="title">{{ title }}</span>
-  <span class="instance">{{ date }}</span>
+  <span class="title">{{ title }} &middot; {{ iata }}</span>
+  <span class="instance">{{ traffic_count }} &middot; Local {{ local_time }} &middot; {{ date }}</span>
 </div>

@@ -1,10 +1,10 @@
-<div class="layout layout--col gap--small lg:gap--medium">
+<div class="layout layout--col layout--col--top gap--small lg:gap--medium">
   <div class="flex flex--center w--full shrink-0 h--[38cqh] lg:h--[45cqh] lg:portrait:h--[40cqh]">
     <img src="{{ diagram_data_uri }}" alt="{{ name }} airport diagram" class="image image-dither image--contain w--full h--full" />
   </div>
 
-  <div class="stretch-x text--left">
-    <div class="flex flex--row flex--center-y gap--small mb--1">
+  <div class="stretch-x text--left w--full">
+    <div class="flex flex--row flex--left flex--center-y gap--small mb--1">
       <span class="value value--small lg:value--xlarge">{{ iata }}</span>
       <span class="label label--small lg:label--large label--inverted px--2">{{ icao }}</span>
       {% if flt_cat != '' %}
@@ -12,24 +12,16 @@
       {% endif %}
     </div>
     <div class="title title--small lg:title--large text--left">{{ name }}</div>
-    <div class="label label--small lg:label--large text--left mb--1">{{ city }}, {{ country }} · {{ tagline }}</div>
-    <div class="description lg:description--xlarge text--left mb--2"><strong>RWY</strong> {{ runways }}</div>
+    <div class="label label--small text--left mb--1">{{ wind }} (RWY {{ active_runway }}) &middot; {{ traffic_count }}</div>
 
-    <div class="grid grid--cols-2 lg:portrait:grid--cols-1 gap--small">
-      <div class="item bg--gray-70 rounded p--2">
-        <div class="meta"></div>
-        <div class="content">
-          <span class="value value--xsmall lg:value--base">{{ wind }}</span>
-          <span class="label label--small lg:label--base">RWY {{ active_runway }} · {{ wind_components }}</span>
+    <div class="bg--gray-70 rounded p--2 w--full text--left">
+      <div class="label label--small text--left w--full mb--1"><strong>NEARBY AIRCRAFT ({{ airborne_count }} AIR / {{ ground_count }} GND)</strong></div>
+      {% for ac in nearby_aircraft limit: 3 %}
+        <div class="flex flex--row flex--between flex--center-y w--full">
+          <span class="label label--small"><strong>{{ ac.callsign }}</strong> &middot; {{ ac.type }}</span>
+          <span class="label label--small">{{ ac.alt }} &middot; {{ ac.dist }}</span>
         </div>
-      </div>
-      <div class="item bg--gray-70 rounded p--2">
-        <div class="meta"></div>
-        <div class="content">
-          <span class="value value--xsmall lg:value--base">{{ traffic_count }}</span>
-          <span class="label label--small lg:label--base">{{ closest_flight }}</span>
-        </div>
-      </div>
+      {% endfor %}
     </div>
   </div>
 </div>

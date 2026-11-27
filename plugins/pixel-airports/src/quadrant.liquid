@@ -1,19 +1,17 @@
 <div class="layout layout--col gap--small">
-  <div class="flex flex--center w--full h--[70cqh] lg:portrait:h--[50cqh] shrink-0">
+  <div class="flex flex--center w--full h--[66cqh] lg:portrait:h--[50cqh] shrink-0">
     <img src="{{ diagram_data_uri }}" alt="{{ name }} airport diagram" class="image image-dither image--contain w--full h--full" />
   </div>
 
-  <div class="stretch-x text--left">
-    <div class="title title--small lg:title--large text--left">{{ iata }} · {{ name }}</div>
-    <div class="hidden lg:portrait:visible text--left mt--1">
-      <div class="label label--large text--left mb--1">{{ city }}, {{ country }}</div>
-      <div class="description description--xlarge text--left mb--1"><strong>RWY</strong> {{ runways }}</div>
-      <div class="label label--large text--left">{{ wind }} ({{ wind_components }})</div>
+  <div class="stretch-x text--left w--full">
+    <div class="flex flex--row flex--between flex--center-y w--full">
+      <span class="title title--small lg:title--large text--left">{{ iata }} &middot; {{ name }}</span>
+      <span class="label label--small">{{ closest_flight }}</span>
     </div>
   </div>
 </div>
 
 <div class="title_bar">
   <span class="title">{{ title }}</span>
-  <span class="instance">{% if flt_cat != '' %}{{ flt_cat }} · {% endif %}{{ traffic_count }}</span>
+  <span class="instance">{% if flt_cat != '' %}{{ flt_cat }} &middot; {% endif %}{{ traffic_count }}</span>
 </div>

@@ -274,9 +274,46 @@ ADSB_PROVIDERS = [
 ]
 
 
+def _format_ac_entry(ac):
+    callsign = (ac.get("flight") or ac.get("r") or ac.get("hex") or "").strip().upper()
+    ac_type = (ac.get("t") or "").strip().upper()
+    alt_raw = ac.get("alt_baro")
+    is_ground = alt_raw == "ground"
+    if is_ground:
+        alt_str = "GND"
+    elif isinstance(alt_raw, (int, float)):
+        alt_i = int(round(alt_raw))
+        alt_str = f"FL{alt_i // 100:03d}" if alt_i >= 18000 else f"{alt_i:,} ft"
+    else:
+        alt_str = "--"
+
+    rate = ac.get("baro_rate")
+    arrow = ""
+    if not is_ground and isinstance(rate, (int, float)):
+        if rate > 250:
+            arrow = "↑"
+        elif rate < -250:
+            arrow = "↓"
+
+    gs = ac.get("gs")
+    spd_str = f"{int(round(float(gs)))} kt" if isinstance(gs, (int, float)) else "--"
+    dst = float(ac.get("dst", 99.0))
+    return {
+        "callsign": callsign[:8] or "UNKN",
+        "type": ac_type[:4] or "ACFT",
+        "alt": f"{alt_str}{arrow}",
+        "speed": spd_str,
+        "dist": f"{dst:.1f} nm",
+        "is_ground": is_ground,
+        "dst_num": dst,
+        "has_flight": bool((ac.get("flight") or "").strip()),
+    }
+
+
 def fetch_nearby_traffic(lat, lon, radius_nm=10):
     """
-    Fetches live aircraft count and closest callsign within radius_nm.
+    Fetches live aircraft count, airborne/ground breakdown, top nearby aircraft,
+    and raw coordinates within radius_nm.
     Caches for 30s, retries once on 429, and falls back from adsb.fi to adsb.lol.
     """
     cache_key = (round(lat, 3), round(lon, 3), radius_nm)
@@ -293,14 +330,36 @@ def fetch_nearby_traffic(lat, lon, radius_nm=10):
                 if resp.status_code == 200:
                     aircraft = resp.json().get(ac_key, [])
                     count = len(aircraft)
-                    with_callsign = [a for a in aircraft if (a.get("flight") or "").strip()]
+                    airborne_c = sum(1 for a in aircraft if a.get("alt_baro") != "ground")
+                    ground_c = count - airborne_c
+
+                    formatted = [
+                        _format_ac_entry(a)
+                        for a in aircraft
+                        if (a.get("flight") or a.get("r") or "").strip()
+                    ]
+                    # Prioritize airborne + moving ground aircraft over stationary 0 kt gate traffic
+                    formatted.sort(
+                        key=lambda x: (
+                            not x["has_flight"],
+                            x["is_ground"] and x["speed"] == "0 kt",
+                            x["dst_num"],
+                        )
+                    )
+
                     closest_str = "None"
-                    if with_callsign:
-                        closest = min(with_callsign, key=lambda a: float(a.get("dst", 999)))
-                        callsign = (closest.get("flight") or "").strip()
-                        ac_type = closest.get("t") or ""
-                        closest_str = f"{callsign} · {ac_type}" if ac_type else callsign
-                    result = {"traffic_count": count, "closest_flight": closest_str}
+                    if formatted:
+                        c0 = formatted[0]
+                        closest_str = f"{c0['callsign']} · {c0['type']}"
+
+                    result = {
+                        "traffic_count": count,
+                        "airborne_count": airborne_c,
+                        "ground_count": ground_c,
+                        "closest_flight": closest_str,
+                        "nearby_aircraft": formatted[:4],
+                        "raw_aircraft": aircraft,
+                    }
                     _TRAFFIC_CACHE[cache_key] = {"ts": now, "data": result}
                     return result
                 if resp.status_code == 429 and attempt == 0:
@@ -310,7 +369,14 @@ def fetch_nearby_traffic(lat, lon, radius_nm=10):
             except (requests.RequestException, ValueError, TypeError):
                 break
 
-    return {"traffic_count": None, "closest_flight": "--"}
+    return {
+        "traffic_count": None,
+        "airborne_count": 0,
+        "ground_count": 0,
+        "closest_flight": "--",
+        "nearby_aircraft": [],
+        "raw_aircraft": [],
+    }
 
 
 def compute_wind_components(active_runway, wind_speed_kt, wind_dir_deg):
@@ -359,7 +425,11 @@ def airport():
 
     try:
         diagram_uri, info = render_airport_diagram(
-            loc["iata"], loc["lat"], loc["lon"], wind_from_deg=wind_dir_deg
+            loc["iata"],
+            loc["lat"],
+            loc["lon"],
+            wind_from_deg=wind_dir_deg,
+            aircraft=traffic["raw_aircraft"],
         )
     except (requests.RequestException, RuntimeError, OSError) as exc:
         return jsonify({"error": f"Failed to build airport diagram: {exc}"}), 502
@@ -395,7 +465,10 @@ def airport():
             "ceiling": metar["ceiling"],
             "raw_metar": metar["raw_metar"],
             "traffic_count": f"{traffic_count} nearby" if traffic_count is not None else "--",
+            "airborne_count": traffic["airborne_count"],
+            "ground_count": traffic["ground_count"],
             "closest_flight": traffic["closest_flight"],
+            "nearby_aircraft": traffic["nearby_aircraft"],
             "runways": " · ".join(info["runways"]) or "--",
             "runway_count": info["runway_count"],
             "longest_runway": f"{longest:,} m / {longest_ft:,} ft" if longest else "--",
