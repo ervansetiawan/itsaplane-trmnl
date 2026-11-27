@@ -111,7 +111,7 @@ def fetch_airport_features(iata, lat, lon, radius_m=7000):
     return features
 
 
-def compute_bbox(features, center_lat, center_lon, aspect=4 / 3, pad=0.14, min_span_m=2200):
+def compute_bbox(features, center_lat, center_lon, aspect=4 / 3, pad=0.45, min_span_m=3400):
     """Computes a padded Web Mercator bbox framing all runways/terminals at the given aspect."""
     pts = [
         to_merc(c[0], c[1])
@@ -140,7 +140,7 @@ def compute_bbox(features, center_lat, center_lon, aspect=4 / 3, pad=0.14, min_s
 
 def fetch_water_mask(iata, bbox, width, height):
     """Builds a boolean water mask image (L mode, 255 = water) for the bbox from ESRI topo tiles."""
-    path = _cache_path(iata, "_water.png")
+    path = _cache_path(iata, "_water_z2.png")
     if os.path.exists(path):
         mask = Image.open(path).convert("L")
         if mask.size == (width, height):
