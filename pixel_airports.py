@@ -278,7 +278,7 @@ def _format_ac_entry(ac):
     callsign = (ac.get("flight") or ac.get("r") or ac.get("hex") or "").strip().upper()
     ac_type = (ac.get("t") or "").strip().upper()
     alt_raw = ac.get("alt_baro")
-    is_ground = alt_raw == "ground"
+    is_ground = alt_raw == "ground" or (isinstance(alt_raw, (int, float)) and float(alt_raw) <= 75.0)
     if is_ground:
         alt_str = "GND"
     elif isinstance(alt_raw, (int, float)):
@@ -310,7 +310,7 @@ def _format_ac_entry(ac):
     }
 
 
-def fetch_nearby_traffic(lat, lon, radius_nm=10):
+def fetch_nearby_traffic(lat, lon, radius_nm=12):
     """
     Fetches live aircraft count, airborne/ground breakdown, top nearby aircraft,
     and raw coordinates within radius_nm.
@@ -330,7 +330,10 @@ def fetch_nearby_traffic(lat, lon, radius_nm=10):
                 if resp.status_code == 200:
                     aircraft = resp.json().get(ac_key, [])
                     count = len(aircraft)
-                    airborne_c = sum(1 for a in aircraft if a.get("alt_baro") != "ground")
+                    airborne_c = sum(
+                        1 for a in aircraft
+                        if isinstance(a.get("alt_baro"), (int, float)) and float(a.get("alt_baro")) > 75.0
+                    )
                     ground_c = count - airborne_c
 
                     formatted = [
@@ -338,11 +341,11 @@ def fetch_nearby_traffic(lat, lon, radius_nm=10):
                         for a in aircraft
                         if (a.get("flight") or a.get("r") or "").strip()
                     ]
-                    # Prioritize airborne + moving ground aircraft over stationary 0 kt gate traffic
+                    # Strictly prioritize flying aircraft (is_ground=False) first, sorted by distance
                     formatted.sort(
                         key=lambda x: (
+                            x["is_ground"],
                             not x["has_flight"],
-                            x["is_ground"] and x["speed"] == "0 kt",
                             x["dst_num"],
                         )
                     )
