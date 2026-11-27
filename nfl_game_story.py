@@ -196,7 +196,15 @@ def fetch_nfl_game_story(target_date: date | None = None, pick_random: bool = Tr
 
     summary = requests.get(NFL_SUMMARY_URL, params={"event": featured_ev["id"]}, timeout=8).json()
 
-    wp_raw = summary.get("winprobability", [])
+    wp_raw = list(summary.get("winprobability", []))
+    plays_list = summary.get("plays", [])
+    if plays_list and wp_raw:
+        play_order = {str(p.get("id")): idx for idx, p in enumerate(plays_list) if p.get("id") is not None}
+        wp_raw.sort(key=lambda pt: play_order.get(str(pt.get("playId")), len(play_order)))
+    if wp_raw and home_score != away_score:
+        final_home_wp = 1.0 if home_score > away_score else 0.0
+        if abs(float(wp_raw[-1].get("homeWinPercentage", 0.5)) - final_home_wp) > 0.01:
+            wp_raw.append({"homeWinPercentage": final_home_wp, "playId": "final"})
     wp_pts = []
     lead_changes = 0
     prev_fav = None
